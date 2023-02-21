@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Passport.js Implementation</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+    <form action="/users/register" method="post">
+      <!-- You might get a strange error if you don't fill in the input fields so we're hard-coding and requiring the values. -->
+      <!-- I honestly don't know what the problem is. Something to do with passport needing a "messages" property -->
+      <!-- Just make a proper html form and it should hopefully work. -->
+      <input
+        id="name"
+        name="name"
+        type="text"
+        value="name"
+        required
+      /><br>
+      <input
+        id="surname"
+        name="surname"
+        type="text"
+        value="surname"
+        required
+      /><br>
+      <input
+        id="email"
+        name="email"
+        type="text"
+        value="email"
+        required
+      /><br>
+      <input
+        id="phone"
+        name="phone"
+        type="text"
+        value="phone"
+        required
+      /><br>
+      <input
+        id="address"
+        name="address"
+        type="text"
+        value="address"
+        required
+      /><br>
+      <input
+        id="password"
+        name="password"
+        type="text"
+        value="password"
+        required
+      /><br>
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
