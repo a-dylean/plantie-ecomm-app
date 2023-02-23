@@ -1,0 +1,1 @@
+const productsRouter = require('./products');

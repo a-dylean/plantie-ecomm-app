@@ -1,41 +1,59 @@
 const express = require('express');
 const cors = require('cors');
-const pool = require("./database");
+const productsRouter = require('./routes/products');
+const categoriesRouter = require('./routes/categories');
+const usersRouter = require('./routes/users');
+const { v4: uuidv4 } = require('uuid');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+const path = require("path");
+const bodyParser = require("body-parser");
+const passport = require('passport');
 const app = express();
 
 //middleware
+// set up for reading ejs
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: false}));
+
 app.use(express.json());
 app.use(cors());
 
+require('./passport'); // import Passport config
+
+//session config
+app.use(
+    session({
+      genid: (req) => {
+        console.log("1. in genid req.sessionID: ", req.sessionID);
+        return uuidv4();
+      },
+      // where we store the session data. Normally a Database like MongoDB or PostGreSQL
+      // session-file-store package defaults to ./sessions
+      store: new FileStore(),
+      // think of the secret as a "missing puzzle piece".
+      secret: "a private key",
+      resave: false,
+      saveUninitialized: true,
+      ameSite: "none",
+      secure: true,
+    })
+  );
+
+//passport config
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
-    res.send('Hello');
+    console.log('get / req.sessionId; ', req.sessionID);
+    res.send('get index route. /');
 });
 
-app.post('/adduser', (req, res) => {
-    const id = req.body["id"];
-    const name = req.body["name"];
-    const password = req.body["password"];
-    const email = req.body["email"];
 
-    console.log("ID: " + id);
-    console.log("Username: " + name);
-    console.log("Password: " + password);
-    console.log("Email: " + email);
-
-    const insertSTMT = `INSERT INTO users (id, name, password, email) VALUES ('${id}', '${name}' , '${password}', '${email}');`
-
-    pool.query(insertSTMT).then((response) => {
-        console.log("Data saved")
-        console.log(response)
-    })
-    .catch((err) => {
-        console.log(err)
-    })
-
-    console.log(req.body)
-    res.send("Response reseived: " + req.body);
-});
+app.use('/products', productsRouter);
+app.use('/categories', categoriesRouter);
+app.use('/users', usersRouter);
 
 const PORT = process.env.PORT || 4001;
 
