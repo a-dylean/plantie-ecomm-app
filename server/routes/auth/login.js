@@ -13,7 +13,6 @@ loginRouter.post('/', async (req, res, next) => {
         const response = await AuthServiceInstance.login({ email: email, password });
         res.status(200).send(response);
     } catch (err) {
-        console.log(err);
         res.status(500).json({ message: "ERROR"})
     }
 });
