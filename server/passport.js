@@ -1,30 +1,23 @@
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
+const AuthService = require('./services/authService');
+const AuthServiceInstance = new AuthService();
+
 const bcrypt = require("bcrypt");
-const pool = require('./database');
-const checkIfUserExists = require('./helpers');
+const pool = require('./db/database');
+const checkIfUserExists = require('./utils/helpers');
 
 passport.use(new localStrategy(
-    { usernameField: "email", passwordField: "password" },
-    (email, password, done) => {
+    //{ usernameField: "email", passwordField: "password" },
+    async (email, password, done) => {
         try {
-            pool.query(checkIfUserExists(email)).then((response) => {
-                if (response.rowCount === 0) {
-                    return done(null, false, {message: "User not found!"});
-                }
-            })
-            const findPassword = `SELECT password FROM users WHERE email = '${email}';`
-            pool.query(findPassword).then((response) => {
-                const passwordMatches = bcrypt.compare(password, response);
-                if (!passwordMatches) {
-                return done(null,false, {message: "Wrong password!"});
-            }
-            return done(null, user);
-            })
+          const user = await AuthServiceInstance.login({ email: email, password });
+          return done(null, user);
         } catch (err) {
             return done(err) //app error
         }
-    }
+}
+
 ));
 
 passport.serializeUser((user, done) => {
