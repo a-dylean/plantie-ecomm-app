@@ -8,13 +8,12 @@ const pool = require('./db/database');
 const checkIfUserExists = require('./utils/helpers');
 
 passport.use(new localStrategy(
-    //{ usernameField: "email", passwordField: "password" },
     async (email, password, done) => {
         try {
           const user = await AuthServiceInstance.login({ email: email, password });
           return done(null, user);
         } catch (err) {
-            return done(err) //app error
+            return done(err)
         }
 }
 
