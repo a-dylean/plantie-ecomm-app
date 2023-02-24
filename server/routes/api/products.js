@@ -1,7 +1,18 @@
 const express = require('express');
-const pool = require("../../database");
-
+const ProductService = require('../../services/productService');
+//const pool = require("../../db/database");
 productsRouter = express.Router();
+const ProductServiceInstance = new ProductService();
+
+//get all products
+productsRouter.get('/', async (req, res, next) => {
+    try {
+        const allProducts = await pool.query("SELECT * FROM products");
+        res.json(allProducts.rows);
+    } catch (err) {
+        res.status(500).json({ message: "ERROR" });
+    }
+});
 
 //create a product
 productsRouter.post('/', async (req, res) => {
@@ -17,15 +28,7 @@ productsRouter.post('/', async (req, res) => {
     }
 });
 
-//get all products
-productsRouter.get('/', async (req, res, next) => {
-    try {
-        const allProducts = await pool.query("SELECT * FROM products");
-        res.json(allProducts.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
+
 
 //get a product
 productsRouter.get('/:id', async (req, res) => {

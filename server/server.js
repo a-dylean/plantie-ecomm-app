@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-// const productsRouter = require('./routes/products');
+const productsRouter = require('./routes/api/products');
 // const categoriesRouter = require('./routes/categories');
 const usersRouter = require('./routes/api/users');
 const loginRouter = require('./routes/auth/login');
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/users', usersRouter);
-// app.use('/products', productsRouter);
+app.use('/products', productsRouter);
 // app.use('/categories', categoriesRouter);
 
 

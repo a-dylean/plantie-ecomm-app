@@ -39,7 +39,7 @@ module.exports = class AuthService {
         }
         return await UserModuleInstance.create(data);
     } catch(err) {
-        throw createError(500, err)
+        throw createError(500, err);
     }
   };
 
