@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const productsRouter = require('./routes/products');
-const categoriesRouter = require('./routes/categories');
-const usersRouter = require('./routes/users');
+// const productsRouter = require('./routes/products');
+// const categoriesRouter = require('./routes/categories');
+// const usersRouter = require('./routes/users');
+const loginRouter = require('./routes/auth/login');
+const registerRouter = require('./routes/auth/register');
 const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
@@ -32,7 +34,6 @@ app.use(
       // where we store the session data. Normally a Database like MongoDB or PostGreSQL
       // session-file-store package defaults to ./sessions
       store: new FileStore(),
-      // think of the secret as a "missing puzzle piece".
       secret: "a private key",
       resave: false,
       saveUninitialized: true,
@@ -51,9 +52,11 @@ app.get('/', (req, res) => {
 });
 
 
-app.use('/products', productsRouter);
-app.use('/categories', categoriesRouter);
-app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/register', registerRouter);
+// app.use('/products', productsRouter);
+// app.use('/categories', categoriesRouter);
+// app.use('/users', usersRouter);
 
 const PORT = process.env.PORT || 4001;
 
