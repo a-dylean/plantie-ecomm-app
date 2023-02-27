@@ -6,9 +6,8 @@ const UserServiceInstance = new UserService();
 
 usersRouter.get("/", async (req, res) => {
   try {
-    const statement = `SELECT * FROM users`;
-    const result = await pool.query(statement);
-    res.json(result.rows);
+    const allUsers = await pool.query(`SELECT * FROM users`);
+    res.json(allUsers.rows);
   } catch (err) {
     res.status(500).json({ message: "ERROR" });
   }
