@@ -29,11 +29,11 @@ productsRouter.post('/', async (req, res) => {
 //get a product
 productsRouter.get('/:productId', async (req, res) => {
     try {
-        const {productId} = req.params;
-        const selectedProduct = await ProductServiceInstance.get({ id: productId});
+        const { productId } = req.params;
+        const selectedProduct = await ProductServiceInstance.get({ id: productId });
         res.status(200).send(selectedProduct);
     } catch (err) {
-        res.status(500).json({ message: "ERROR"});
+        res.status(500).json({ message: "ERROR" });
     }
 });
 

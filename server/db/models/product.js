@@ -38,9 +38,7 @@ module.exports = class ProductModel {
 
     async findProductsByCategory(category_id) {
         try {
-          const statement = `SELECT *
-                               FROM products
-                               WHERE category_id = $1`;
+          const statement = `SELECT * FROM products WHERE category_id = $1`;
           const values = [category_id];
     
           const result = await pool.query(statement, values);
@@ -57,9 +55,7 @@ module.exports = class ProductModel {
 
     async findProductById(id) {
         try {
-          const statement = `SELECT *
-                               FROM products
-                               WHERE id = $1`;
+          const statement = `SELECT * FROM products WHERE id = $1`;
           const values = [id];
     
           const result = await pool.query(statement, values);
@@ -82,6 +78,7 @@ module.exports = class ProductModel {
         if (result) {
         return "Product has been deleted!";
         }
+        return null;
       } catch(err) {
         throw new Error(err);
       }

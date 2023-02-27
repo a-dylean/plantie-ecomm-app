@@ -4,6 +4,7 @@ const productsRouter = require('./routes/api/products');
 const usersRouter = require('./routes/api/users');
 const loginRouter = require('./routes/auth/login');
 const registerRouter = require('./routes/auth/register');
+const ordersRouter = require('./routes/api/orders');
 const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
@@ -50,12 +51,11 @@ app.get('/', (req, res) => {
     res.send('get index route. /');
 });
 
-
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
-
+app.use('/orders', ordersRouter);
 
 const PORT = process.env.PORT || 4001;
 
