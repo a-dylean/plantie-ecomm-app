@@ -1,6 +1,6 @@
 const express = require('express');
 const ProductService = require('../../services/productService');
-//const pool = require("../../db/database");
+const pool = require("../../db/database");
 productsRouter = express.Router();
 const ProductServiceInstance = new ProductService();
 
@@ -16,57 +16,61 @@ productsRouter.get('/', async (req, res, next) => {
 
 //create a product
 productsRouter.post('/', async (req, res) => {
+    const {name, description, price, available, category_id} = req.body;
     try {
-        const {name, description, price, available, category_id} = req.body;
-        const newProduct = await pool.query(
-            "INSERT INTO products (name, description, price, available, category_id) VALUES ($1, $2, $3, $4, $5) RETURNING *", [name, description, price, available, category_id]
-        );
-
-        res.json(newProduct.rows[0])
+        const newProduct = await ProductServiceInstance.register({ name, description, price, available, category_id });
+        res.status(200).send(newProduct);
     } catch (err) {
-        console.error(err.message);
-    }
-});
-
+        res.status(500).json({ message: "ERROR"});
+}}
+);
 
 
 //get a product
-productsRouter.get('/:id', async (req, res) => {
+productsRouter.get('/:productId', async (req, res) => {
     try {
-        const {id} = req.params;
-        const selectedProduct = await pool.query("SELECT * FROM products WHERE id = $1", [id]
-        );
-        res.json(selectedProduct.rows[0]);
+        const {productId} = req.params;
+        const selectedProduct = await ProductServiceInstance.get({ id: productId});
+        res.status(200).send(selectedProduct);
     } catch (err) {
-        console.error(err.message);
+        res.status(500).json({ message: "ERROR"});
     }
 });
 
 //update a product
-productsRouter.put('/:id', async(req, res) => {
+productsRouter.put('/:productId', async(req, res) => {
     try {
-        const {id} = req.params;
-        const {name, description, price, available, category_id} = req.body;
-        const updateProduct = await pool.query(
-            "UPDATE products SET name = $1, description = $2, price = $3, available = $4, category_id = $5 WHERE id = $6", [name, description, price, available, category_id, id]
-        );
-
-        res.json("Product has been updated!");
+        const { productId } = req.params;
+        const { data } = req.body;
+        const updatedProduct = await ProductServiceInstance.update({ id: productId, ...data});
+        res.status(200).send(updatedProduct);
     } catch (err) {
-        console.error(err.message);
+        res.status(500).json({ message: "ERROR"});
     }
 });
 
 //delete a product
-productsRouter.delete('/:id', async (req, res) => {
+productsRouter.delete('/:productId', async (req, res) => {
     try {
-        const {id} = req.params;
-        const deleteProduct = await pool.query("DELETE FROM products WHERE id = $1", [id]);
-        res.json("Product has been deleted!")
+        const { productId } = req.params;
+        const deleteProduct = await ProductServiceInstance.delete({ id: productId });
+        res.status(204).send(deleteProduct);
     } catch (err) {
-        console.error(err.message);
+        res.status(500).json({ message: "ERROR"});
 
     }
+});
+
+//retrieve products by category
+productsRouter.get('/?category={categoryId}', async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        const selectedProducts = await ProductServiceInstance.filter({ category_id: categoryId });
+        res.status(200).send(selectedProducts);
+    } catch (err) {
+        res.status(500).json({ message: "ERROR"});
+    }
+
 });
 
 module.exports = productsRouter;

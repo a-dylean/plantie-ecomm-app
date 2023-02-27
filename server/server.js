@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const productsRouter = require('./routes/api/products');
-// const categoriesRouter = require('./routes/categories');
 const usersRouter = require('./routes/api/users');
 const loginRouter = require('./routes/auth/login');
 const registerRouter = require('./routes/auth/register');
@@ -56,7 +55,6 @@ app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
-// app.use('/categories', categoriesRouter);
 
 
 const PORT = process.env.PORT || 4001;

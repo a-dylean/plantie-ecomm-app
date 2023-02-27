@@ -27,9 +27,9 @@ module.exports = class ProductService {
 
     //get products by category
     async filter(data) {
-        const { category } = data;
+        const { category_id } = data;
         try {
-            const products = await ProductModelInstance.findProductsByCategory(category);
+            const products = await ProductModelInstance.findProductsByCategory(category_id);
             if (!products) {
                 throw createError(404, "Plants not found!")
             }
@@ -42,6 +42,15 @@ module.exports = class ProductService {
     async register(data) {
         try {
             return await ProductModelInstance.create(data);
+        } catch (err) {
+            throw createError(500, err);
+        }
+    }
+
+    async delete(data) {
+        const { id } = data;
+        try {
+            return await ProductModelInstance.deleteProductById(id);
         } catch (err) {
             throw createError(500, err);
         }

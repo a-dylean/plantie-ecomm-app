@@ -36,12 +36,12 @@ module.exports = class ProductModel {
           }
     }
 
-    async findProductsByCategory(category) {
+    async findProductsByCategory(category_id) {
         try {
           const statement = `SELECT *
                                FROM products
-                               WHERE category = $1`;
-          const values = [category];
+                               WHERE category_id = $1`;
+          const values = [category_id];
     
           const result = await pool.query(statement, values);
     
@@ -73,4 +73,17 @@ module.exports = class ProductModel {
           throw new Error(err);
         }
       }
+
+    async deleteProductById(id) {
+      try {
+        const statement = `DELETE FROM products WHERE id = $1`;
+        const values = [id];
+        const result = await pool.query(statement, values);
+        if (result) {
+        return "Product has been deleted!";
+        }
+      } catch(err) {
+        throw new Error(err);
+      }
+    }
 };
