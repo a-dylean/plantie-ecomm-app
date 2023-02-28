@@ -31,7 +31,7 @@ app.use(
         console.log("1. in genid req.sessionID: ", req.sessionID);
         return uuidv4();
       },
-      // where we store the session data. Normally a Database like MongoDB or PostGreSQL
+      // where we store the session data
       // session-file-store package defaults to ./sessions
       store: new FileStore(),
       secret: "a private key",
