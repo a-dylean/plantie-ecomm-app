@@ -15,7 +15,14 @@ module.exports = class OrderService {
             throw err;
         }
     }
-
+    async getAll() {
+        try {
+            const allProducts = await OrderModelInstance.getAll()
+            return allProducts;
+        } catch (err) {
+            throw err;
+        }
+    }
     async register(data) {
         try {
             return await OrderModelInstance.create(data);

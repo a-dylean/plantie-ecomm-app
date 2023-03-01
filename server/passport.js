@@ -3,10 +3,6 @@ const localStrategy = require("passport-local").Strategy;
 const AuthService = require('./services/authService');
 const AuthServiceInstance = new AuthService();
 
-const bcrypt = require("bcrypt");
-const pool = require('./db/database');
-const checkIfUserExists = require('./utils/helpers');
-
 passport.use(new localStrategy(
     async (email, password, done) => {
         try {
@@ -16,7 +12,6 @@ passport.use(new localStrategy(
             return done(err)
         }
 }
-
 ));
 
 passport.serializeUser((user, done) => {

@@ -1,46 +1,36 @@
-const createError = require('http-errors');
-const UserModule = require('../db/models/user');
+const createError = require("http-errors");
+const UserModule = require("../db/models/user");
 const UserModuleInstance = new UserModule();
-const { compareHash } = require('../utils/helpers');
+const { compareHash } = require("../utils/helpers");
 
 module.exports = class AuthService {
-    async login(data) {
-
+  async login(data) {
     const { email, password } = data;
-
     try {
       const user = await UserModuleInstance.findUserByEmail(email);
       const matchedPassword = await compareHash(password, user.password);
-
       if (!user) {
-        throw createError(401, 'User not found!');
+        throw createError(401, "User not found!");
       }
-
       if (!matchedPassword) {
-        throw createError(401, 'Wrong credentials!');
+        throw createError(401, "Wrong credentials!");
       }
-
       return user;
-
-    } catch(err) {
+    } catch (err) {
       throw createError(500, err);
     }
+  }
 
-  };
-
-    async register(data) {
-
+  async register(data) {
     const { email } = data;
-
     try {
-        const userExists = await UserModuleInstance.findUserByEmail(email);
-        if (userExists) {
-            throw createError(409, 'User with such email already exists!')
-        }
-        return await UserModuleInstance.create(data);
-    } catch(err) {
-        throw createError(500, err);
+      const userExists = await UserModuleInstance.findUserByEmail(email);
+      if (userExists) {
+        throw createError(409, "User with such email already exists!");
+      }
+      return await UserModuleInstance.create(data);
+    } catch (err) {
+      throw createError(500, err);
     }
-  };
-
-}
+  }
+};
