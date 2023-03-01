@@ -12,7 +12,6 @@ passport.use(new localStrategy(
             return done(err)
         }
 }
-
 ));
 
 passport.serializeUser((user, done) => {

@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const productsRouter = require("./routes/products");
+const productsRouter = require("./routes/api/products");
 const usersRouter = require("./routes/api/users");
 const loginRouter = require("./routes/auth/login");
 const registerRouter = require("./routes/auth/register");
@@ -16,24 +16,21 @@ const app = express();
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 const options = {
+  failOnErrors: true,
   definition: {
     openapi: "3.0.0",
     info: {
       title: "Plantie Express API with Swagger",
-      version: "0.1.0",
+      version: "0.1.2",
       description:
         "This is an CRUD API application made with Express and documented with Swagger",
     },
-    servers: [
-      {
-        url: "http://localhost:4001",
-      },
-    ],
   },
-  apis: ["./routes/*.js"],
+  apis: ["./routes/**/*.js"],
 };
 
 const specs = swaggerJsdoc(options);
+console.log(specs)
 
 app.use(
   "/api-docs",
@@ -85,6 +82,8 @@ app.use("/products", productsRouter);
 app.use("/orders", ordersRouter);
 
 const PORT = process.env.PORT || 4001;
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);

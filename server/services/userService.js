@@ -15,13 +15,20 @@ module.exports = class UserService {
       throw err;
     }
   }
-
   async update(data) {
     try {
       const user = await UserModelInstance.update(data);
       return user;
     } catch (err) {
       throw err;
+    }
+  }
+  async delete(data) {
+    const { id } = data;
+    try {
+      return await UserModelInstance.deleteUserById(id);
+    } catch (err) {
+      throw createError(500, err);
     }
   }
 };

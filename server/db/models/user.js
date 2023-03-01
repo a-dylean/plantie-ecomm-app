@@ -6,68 +6,62 @@ module.exports = class UserModel {
     try {
       const statement = pgp.helpers.insert(data, null, "users") + "RETURNING *";
       const result = await pool.query(statement);
-
       if (result.rows?.length) {
         return result.rows[0];
       }
-
       return null;
     } catch (err) {
       throw new Error(err);
     }
   }
-
   async update(data) {
     try {
       const { id, ...params } = data;
-
       const condition = pgp.as.format("WHERE id = ${id} RETURNING *", { id });
       const statement = pgp.helpers.update(params, null, "users") + condition;
-
       const result = await pool.query(statement);
-
       if (result.rows?.length) {
         return result.rows[0];
       }
-
       return null;
     } catch (err) {
       throw new Error(err);
     }
   }
-
   async findUserByEmail(email) {
     try {
-      const statement = `SELECT *
-                           FROM users
-                           WHERE email = $1`;
+      const statement = `SELECT * FROM users WHERE email = $1`;
       const values = [email];
-
       const result = await pool.query(statement, values);
-
       if (result.rows?.length) {
         return result.rows[0];
       }
-
       return null;
     } catch (err) {
       throw new Error(err);
     }
   }
-
   async findUserById(id) {
     try {
-      const statement = `SELECT *
-                           FROM users
-                           WHERE id = $1`;
+      const statement = `SELECT * FROM users WHERE id = $1`;
       const values = [id];
-
       const result = await pool.query(statement, values);
-
       if (result.rows?.length) {
         return result.rows[0];
       }
-
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+  async deleteUserById(id) {
+    try {
+      const statement = `DELETE FROM users WHERE id = $1`;
+      const values = [id];
+      const result = await pool.query(statement, values);
+      if (result) {
+        return "User has been deleted!";
+      }
       return null;
     } catch (err) {
       throw new Error(err);
