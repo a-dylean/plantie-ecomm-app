@@ -1,5 +1,4 @@
 const express = require("express");
-const pool = require("../../db/database");
 usersRouter = express.Router();
 const UserService = require("../../services/userService");
 const UserServiceInstance = new UserService();
@@ -76,15 +75,15 @@ const UserServiceInstance = new UserService();
  *               items:
  *                 $ref: '#/components/schemas/User'
  *         500:
- *           description: Internal server error
+ *           description: Internal server error.
  */
 
-usersRouter.get("/", async (req, res) => {
+ usersRouter.get("/", async (req, res, next) => {
   try {
-    const allUsers = await pool.query(`SELECT * FROM users`);
-    res.json(allUsers.rows);
+    const allUsers = await UserServiceInstance.getAll();
+    res.status(200).send(allUsers);
   } catch (err) {
-    res.status(500).json({ message: "Internal server error" });
+    next(err);
   }
 });
 
@@ -93,14 +92,13 @@ usersRouter.get("/", async (req, res) => {
  * /users/{userId}:
  *   get:
  *     summary: Gets the user by id
+ *     description: Returns selected by id user from the system.
  *     tags: [Users]
  *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: User id
+ *     - in: path
+ *       name: userId
+ *       required: true
+ *       description: User id
  *     responses:
  *       200:
  *         description: Full information about the particular user
@@ -112,13 +110,13 @@ usersRouter.get("/", async (req, res) => {
  *         description: User was not found
  */
 
-usersRouter.get("/:userId", async (req, res) => {
+usersRouter.get("/:userId", async (req, res, next) => {
   try {
     const { userId } = req.params;
     const response = await UserServiceInstance.get({ id: userId });
     res.status(200).send(response);
   } catch (err) {
-    res.status(500).json({ message: "User was not found" });
+    next(err);
   }
 });
 
@@ -127,12 +125,11 @@ usersRouter.get("/:userId", async (req, res) => {
  * /users/{userId}:
  *  put:
  *    summary: Updates the user by id
+ *    description: Updates selected user in the system.
  *    tags: [Users]
  *    parameters:
  *      - in: path
- *        name: id
- *        schema:
- *          type: string
+ *        name: userId
  *        required: true
  *        description: User id
  *    requestBody:
@@ -143,25 +140,25 @@ usersRouter.get("/:userId", async (req, res) => {
  *            $ref: '#/components/schemas/User'
  *    responses:
  *      200:
- *        description: User was updated
+ *        description: User was updated.
  *        content:
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/User'
  *      404:
- *        description: User was not found
+ *        description: User was not found.
  *      500:
- *        description: Internal server error
+ *        description: Internal server error.
  */
 
-usersRouter.put("/:userId", async (req, res) => {
+usersRouter.put("/:userId", async (req, res, next) => {
   try {
     const { userId } = req.params;
     const data = req.body;
     const response = await UserServiceInstance.update({ id: userId, ...data });
     res.status(200).send(response);
   } catch (err) {
-    res.status(404).json({ message: "User was not found" });
+    next(err);
   }
 });
 
@@ -170,17 +167,15 @@ usersRouter.put("/:userId", async (req, res) => {
  * /users/{userId}:
  *   delete:
  *     summary: Removes selected user by id
+ *     description: Deletes selected user in the system.
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id
- *         schema:
- *           type: string
+ *         name: userId
  *         required: true
- *         description: User id
- * 
+ *         description: User id 
  *     responses:
- *       200:
+ *       204:
  *         description: User was deleted
  *       404:
  *         description: User was not found

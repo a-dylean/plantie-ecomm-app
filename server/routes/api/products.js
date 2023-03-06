@@ -1,7 +1,6 @@
 const express = require("express");
-const ProductService = require("../../services/productService");
-const pool = require("../../db/database");
 productsRouter = express.Router();
+const ProductService = require("../../services/productService");
 const ProductServiceInstance = new ProductService();
 
 /**
@@ -71,7 +70,7 @@ productsRouter.get("/", async (req, res, next) => {
     const allProducts = await ProductServiceInstance.getAll();
     res.status(200).send(allProducts);
   } catch (err) {
-    next(err);
+    next(err); 
   }
 });
 
@@ -89,11 +88,13 @@ productsRouter.get("/", async (req, res, next) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Product'
- *   parameters:
- *   - name: productId
- *     in: path
- *     description: ID of product to use
- *     required: true
+ *       '404':
+ *          description: Product was not found
+ *     parameters:
+ *     - name: productId
+ *       in: path
+ *       description: ID of product to use
+ *       required: true
  */
 
 productsRouter.get("/:productId", async (req, res, next) => {
@@ -101,6 +102,47 @@ productsRouter.get("/:productId", async (req, res, next) => {
     const { productId } = req.params;
     const selectedProduct = await ProductServiceInstance.get({ id: productId });
     res.status(200).send(selectedProduct);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * @swagger
+ * /products/{productId}:
+ *  put:
+ *    summary: Updates the product by id
+ *    description: Updates selected product in the system.
+ *    tags: [Products]
+ *    parameters:
+ *      - in: path
+ *        name: productId
+ *        required: true
+ *        description: ID of product to use
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Product'
+ *    responses:
+ *      200:
+ *        description: Product was updated.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Product'
+ *      404:
+ *        description: User was not found.
+ *      500:
+ *        description: Internal server error.     
+ */
+productsRouter.put("/:productId", async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const data = req.body;
+    const response = await ProductServiceInstance.update({ id: productId, ...data });
+    res.status(200).send(response);
   } catch (err) {
     next(err);
   }
@@ -120,8 +162,6 @@ productsRouter.get("/:productId", async (req, res, next) => {
  *           schema:
  *             type: object
  *             properties:
- *               id:
- *                 type: integer
  *               name: 
  *                 type: string
  *               description:
@@ -138,21 +178,23 @@ productsRouter.get("/:productId", async (req, res, next) => {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Product'
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Product'
  *       '500':
  *         description: Internal server error.
  *       
  */
 
 productsRouter.post("/", async (req, res, next) => {
-  const { name, description, price, available, category_id } = req.body;
+  const { name, description, price, available, categoryId } = req.body;
   try {
     const newProduct = await ProductServiceInstance.register({
       name,
       description,
       price,
       available,
-      category_id,
+      categoryId,
     });
     res.status(200).send(newProduct);
   } catch (err) {
@@ -160,78 +202,21 @@ productsRouter.post("/", async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /products/{productId}:
- *   put:
- *     summary: Updates the product by id
- *     description: Updates selected product in the system.
- *     tags: [Products]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: integer
- *               name: 
- *                 type: string
- *               description:
- *                 type: string
- *               price: 
- *                 type: integer
- *               available: 
- *                 type: boolean
- *               category_id: 
- *                 type: integer
- *     responses:
- *       '200':
- *          description: Product information was updated in the system. The response will contain the Product object that was updated.
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Product'
- *       '500':
- *         description: Internal server error
- *   parameters:
- *   - name: productId
- *     in: path
- *     description: ID of product to use
- *     required: true
- *       
- */
-
-productsRouter.put("/:productId", async (req, res, next) => {
-  try {
-    const { productId } = req.params;
-    const { data } = req.body;
-    const updatedProduct = await ProductServiceInstance.update({
-      id: productId,
-      ...data,
-    });
-    res.status(200).send(updatedProduct);
-  } catch (err) {
-    next(err);
-  }
-});
 
 /**
  * @swagger
  * /products/{productId}:
  *   delete:
  *     summary: Removes selected product by id
+ *     description: Deletes selected product in the system.
  *     tags: [Products]
  *     parameters:
  *       - in: path
- *         name: id
- *         schema:
- *           type: string
+ *         name: productId
  *         required: true
  *         description: Product id
  *     responses:
- *       200:
+ *       204:
  *         description: Product was deleted
  *       404:
  *         description: Product was not found

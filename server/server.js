@@ -12,6 +12,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const app = express();
+
 //swagger
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -23,7 +24,7 @@ const options = {
       title: "Plantie Express API with Swagger",
       version: "0.1.2",
       description:
-        "This is an CRUD API application made with Express and documented with Swagger",
+        "This is a CRUD API application made with Express and documented with Swagger",
     },
   },
   apis: ["./routes/**/*.js"],
@@ -39,9 +40,6 @@ app.use(
 );
 
 //middleware
-// set up for reading ejs
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
@@ -82,8 +80,6 @@ app.use("/products", productsRouter);
 app.use("/orders", ordersRouter);
 
 const PORT = process.env.PORT || 4001;
-
-
 
 app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);

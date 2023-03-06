@@ -8,7 +8,19 @@ const AuthServiceInstance = new AuthService();
  * /login:
  *   post:
  *     summary: Authenticates a user
+ *     description: Authenticates a user in the system.
  *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email: 
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful user authentication. The response will contain the User object that was authenticated.
@@ -19,9 +31,9 @@ const AuthServiceInstance = new AuthService();
  *               items:
  *                 $ref: '#/components/schemas/User'
  *       500:
- *         description: Internal server error
+ *         description: Internal server error.
  *       401:
- *         description: Wrong credentials
+ *         description: Wrong credentials.
  */
 
 loginRouter.get('/', (req, res) => {
@@ -30,8 +42,8 @@ loginRouter.get('/', (req, res) => {
 
 loginRouter.post('/', async (req, res, next) => {
     try {
-        const {email, password} = req.body;
-        const response = await AuthServiceInstance.login({ email: email, password });
+        const data = req.body;
+        const response = await AuthServiceInstance.login(data);
         res.status(200).send(response);
     } catch (err) {
         next(err);
