@@ -16,20 +16,7 @@ const AuthServiceInstance = new AuthService();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name: 
- *                 type: string
- *               surname:
- *                 type: string
- *               email: 
- *                 type: string
- *               phone: 
- *                 type: string
- *               address: 
- *                 type: string
- *               password:
- *                 type: string
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
  *         description: Successful user registration. The response will contain the User object that was registered.

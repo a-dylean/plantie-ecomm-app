@@ -41,7 +41,6 @@ const UserServiceInstance = new UserService();
  *           type: string
  *           description: Date of the user account creation
  *       example:
- *         id: 1
  *         name: Bob
  *         surname: Jackson
  *         email: test@test.com
@@ -49,7 +48,7 @@ const UserServiceInstance = new UserService();
  *         address: test 
  *         admin: false
  *         password: securepassword
- *         created_at: 2023-02-23T14:38:34.104Z
+ *         createdAt: 2023-02-23T14:38:34.104Z
  */
 
  /**
