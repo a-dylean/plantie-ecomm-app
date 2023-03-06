@@ -31,12 +31,11 @@ const ProductServiceInstance = new ProductService();
  *           type: integer
  *           description: Id of the category the product belongs to
  *       example:
- *         id: 1
  *         name: Calathea Theo
  *         description: This is a plant with extraordinary patterns that all green addicts would like to have!
  *         price: 75
  *         available: true
- *         category_d: 1
+ *         categoryId: 1
  */
 
 /**
