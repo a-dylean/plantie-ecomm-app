@@ -1,5 +1,5 @@
 const createError = require("http-errors");
-const UserModel = require("../db/models/user");
+const UserModel = require("../models/user");
 const UserModelInstance = new UserModel();
 
 module.exports = class UserService {
@@ -11,6 +11,14 @@ module.exports = class UserService {
         throw createError(404, "User record not found!");
       }
       return user;
+    } catch (err) {
+      throw err;
+    }
+  }
+  async getAll() {
+    try {
+      const allUsers = await UserModelInstance.getAll();
+      return allUsers;
     } catch (err) {
       throw err;
     }

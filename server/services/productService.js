@@ -1,5 +1,5 @@
 const createError = require("http-errors");
-const ProductModel = require("../db/models/product");
+const ProductModel = require("../models/product");
 const ProductModelInstance = new ProductModel();
 
 module.exports = class ProductService {

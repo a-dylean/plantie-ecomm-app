@@ -9,7 +9,27 @@ const AuthServiceInstance = new AuthService();
  * /register:
  *   post:
  *     summary: Registers a new user
+ *     description: Creates a new user in the system.
  *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name: 
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *               email: 
+ *                 type: string
+ *               phone: 
+ *                 type: string
+ *               address: 
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful user registration. The response will contain the User object that was registered.
@@ -20,9 +40,9 @@ const AuthServiceInstance = new AuthService();
  *               items:
  *                 $ref: '#/components/schemas/User'
  *       500:
- *         description: Internal server error
+ *         description: Internal server error.
  *       409:
- *         description: User with such email already exists
+ *         description: User with such email already exists.
  */
 
 registerRouter.get('/', (req, res) => {

@@ -1,7 +1,6 @@
 const express = require("express");
-const OrderService = require('../../services/orderService');
-const pool = require('../../db/database');
 ordersRouter = express.Router();
+const OrderService = require('../../services/orderService');
 const OrderServiceInstance = new OrderService();
 
 /**

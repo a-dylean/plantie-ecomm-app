@@ -1,5 +1,5 @@
 const createError = require("http-errors");
-const UserModule = require("../db/models/user");
+const UserModule = require("../models/user");
 const UserModuleInstance = new UserModule();
 const { compareHash } = require("../utils/helpers");
 
