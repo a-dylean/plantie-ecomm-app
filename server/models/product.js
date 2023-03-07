@@ -70,11 +70,11 @@ module.exports = class ProductModel {
   }
 
 //need to check if it works
-  async findProductsByCategory(categoryId) {
+  async findProductsByCategory(category) {
     try {
         const result = await prisma.product.findMany({
             where: {
-                categoryId: Number(categoryId)
+                categoryId: Number(category)
             }
         })
         return result;

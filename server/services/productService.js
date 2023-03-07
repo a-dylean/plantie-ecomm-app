@@ -33,10 +33,10 @@ module.exports = class ProductService {
   }
   //get products by category
   async filter(data) {
-    const { category_id } = data;
+    const { category } = data;
     try {
       const products = await ProductModelInstance.findProductsByCategory(
-        category_id
+        category
       );
       if (!products) {
         throw createError(404, "Plants not found!");
