@@ -1,8 +1,7 @@
 const express = require('express');
 loginRouter = express.Router();
-const AuthService = require('../../services/authService');
+const AuthService = require('../services');
 const AuthServiceInstance = new AuthService();
-
   /**
  * @swagger
  * /login:

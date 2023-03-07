@@ -1,7 +1,7 @@
 const express = require('express');
 registerRouter = express.Router();
-const { generateHash } = require('../../utils/helpers');
-const AuthService = require('../../services/authService');
+const { generateHash } = require('../../../utils/helpers');
+const AuthService = require('../services');
 const AuthServiceInstance = new AuthService();
 
   /**

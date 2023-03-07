@@ -1,6 +1,6 @@
 const express = require("express");
 usersRouter = express.Router();
-const UserService = require("../../services/userService");
+const UserService = require("./services");
 const UserServiceInstance = new UserService();
 /**
  * @swagger

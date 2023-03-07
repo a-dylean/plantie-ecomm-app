@@ -1,7 +1,7 @@
 const createError = require("http-errors");
-const UserModule = require("../models/user");
+const UserModule = require("../users/model");
 const UserModuleInstance = new UserModule();
-const { compareHash } = require("../utils/helpers");
+const { compareHash } = require("../../utils/helpers");
 
 module.exports = class AuthService {
   async login(data) {
