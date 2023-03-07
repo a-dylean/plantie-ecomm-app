@@ -46,20 +46,20 @@ const UserServiceInstance = new UserService();
  *         surname: Jackson
  *         email: test@test.com
  *         phone: +33 00 00 0000
- *         address: test 
+ *         address: test
  *         admin: false
  *         password: securepassword
  *         createdAt: 2023-02-23T14:38:34.104Z
  */
 
- /**
-  * @swagger
-  * tags:
-  *   name: Users
-  *   description: Users operations
-  */
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: Users operations
+ */
 
- /**
+/**
  * @swagger
  * /users:
  *   get:
@@ -78,7 +78,7 @@ const UserServiceInstance = new UserService();
  *           description: Internal server error.
  */
 
- usersRouter.get("/", async (req, res, next) => {
+usersRouter.get("/", async (req, res, next) => {
   try {
     const allUsers = await UserServiceInstance.getAll();
     res.status(200).send(allUsers);
@@ -139,7 +139,7 @@ usersRouter.get("/:userId", async (req, res, next) => {
  *          schema:
  *             type: object
  *             properties:
- *               name: 
+ *               name:
  *                 type: string
  *               surname:
  *                 type: string
@@ -157,7 +157,7 @@ usersRouter.get("/:userId", async (req, res, next) => {
  *                 email: test@test.com
  *                 password: securepassword
  *                 phone: +33 00 00 0000
- *                 address: test 
+ *                 address: test
  *    responses:
  *      200:
  *        description: User was updated.
@@ -193,7 +193,7 @@ usersRouter.put("/:userId", async (req, res, next) => {
  *       - in: path
  *         name: userId
  *         required: true
- *         description: User id 
+ *         description: User id
  *     responses:
  *       204:
  *         description: User was deleted
@@ -201,13 +201,13 @@ usersRouter.put("/:userId", async (req, res, next) => {
  *         description: User was not found
  */
 
-usersRouter.delete('/:userId', async (req, res, next) => {
+usersRouter.delete("/:userId", async (req, res, next) => {
   try {
-      const { userId } = req.params;
-      const deleteUser = await UserServiceInstance.delete({ id: userId });
-      res.status(204).send(deleteUser);
+    const { userId } = req.params;
+    const deleteUser = await UserServiceInstance.delete({ id: userId });
+    res.status(204).send(deleteUser);
   } catch (err) {
-      next(err);
+    next(err);
   }
 });
 

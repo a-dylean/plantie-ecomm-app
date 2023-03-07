@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 loginRouter = express.Router();
-const AuthService = require('../services');
+const AuthService = require("../services");
 const AuthServiceInstance = new AuthService();
-  /**
+/**
  * @swagger
  * /login:
  *   post:
@@ -16,7 +16,7 @@ const AuthServiceInstance = new AuthService();
  *           schema:
  *             type: object
  *             properties:
- *               email: 
+ *               email:
  *                 type: string
  *               password:
  *                 type: string
@@ -38,18 +38,18 @@ const AuthServiceInstance = new AuthService();
  *         description: Wrong credentials.
  */
 
-loginRouter.get('/', (req, res) => {
-    res.render("login");
+loginRouter.get("/", (req, res) => {
+  res.render("login");
 });
 
-loginRouter.post('/', async (req, res, next) => {
-    try {
-        const data = req.body;
-        const response = await AuthServiceInstance.login(data);
-        res.status(200).send(response);
-    } catch (err) {
-        next(err);
-    }
+loginRouter.post("/", async (req, res, next) => {
+  try {
+    const data = req.body;
+    const response = await AuthServiceInstance.login(data);
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = loginRouter;

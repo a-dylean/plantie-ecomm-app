@@ -1,6 +1,6 @@
 const express = require("express");
 ordersRouter = express.Router();
-const OrderService = require('./services');
+const OrderService = require("./services");
 const OrderServiceInstance = new OrderService();
 
 /**
@@ -28,18 +28,17 @@ const OrderServiceInstance = new OrderService();
  *         id: 1
  *         user_id: 5
  *         created_at: 2023-02-23T14:38:34.104Z
- *         amount: 175  
+ *         amount: 175
  */
 
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: Orders operations
+ */
 
- /**
-  * @swagger
-  * tags:
-  *   name: Orders
-  *   description: Orders operations
-  */
-
-  /**
+/**
  * @swagger
  * /orders:
  *   get:
@@ -58,13 +57,13 @@ const OrderServiceInstance = new OrderService();
  *           description: Internal server error
  */
 
-ordersRouter.get('/', async (req, res, next) => {
-    try {
-        const allProducts = await OrderServiceInstance.getAll();
-        res.status(200).send(allProducts)
-    } catch (err) {
-        next(err);
-    }
+ordersRouter.get("/", async (req, res, next) => {
+  try {
+    const allProducts = await OrderServiceInstance.getAll();
+    res.status(200).send(allProducts);
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -91,14 +90,14 @@ ordersRouter.get('/', async (req, res, next) => {
  *         description: The order was not found
  */
 
-ordersRouter.get('/:orderId', async (req, res) => {
-    try {
-        const { orderId } = req.params;
-        const selectedOrder = await OrderServiceInstance.get({ id: orderId});
-        res.status(200).send(selectedOrder);
-    } catch (err) {
-        next(err);
-    }
+ordersRouter.get("/:orderId", async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const selectedOrder = await OrderServiceInstance.get({ id: orderId });
+    res.status(200).send(selectedOrder);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = ordersRouter;
