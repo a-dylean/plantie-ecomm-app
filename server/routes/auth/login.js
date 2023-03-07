@@ -21,6 +21,9 @@ const AuthServiceInstance = new AuthService();
  *                 type: string
  *               password:
  *                 type: string
+ *             example:
+ *                 email: "test@test.com"
+ *                 password: "securepassword"
  *     responses:
  *       200:
  *         description: Successful user authentication. The response will contain the User object that was authenticated.
