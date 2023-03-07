@@ -62,7 +62,7 @@ const ProductServiceInstance = new ProductService();
  *               $ref: '#/components/schemas/Product'
  *       500:
  *         description: Internal server error.
- * 
+ *
  * /products?category={categoryId}:
  *   get:
  *     summary: Returns the list of products filtered by category

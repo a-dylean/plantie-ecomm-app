@@ -7,9 +7,9 @@ module.exports = class OrderModel {
         data: {
           productId: data.productId,
           quantity: data.quantity,
-          orderId: data.orderId
-        }
-      })
+          orderId: data.orderId,
+        },
+      });
       return result;
     } catch (err) {
       throw new Error(err);
@@ -27,9 +27,9 @@ module.exports = class OrderModel {
     try {
       const result = await prisma.product.findUnique({
         where: {
-          id: Number(id)
-        }
-      })
+          id: Number(id),
+        },
+      });
       return result;
     } catch (err) {
       throw new Error(err);

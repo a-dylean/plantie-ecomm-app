@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 registerRouter = express.Router();
-const { generateHash } = require('../../../utils/helpers');
-const AuthService = require('../services');
+const { generateHash } = require("../../../utils/helpers");
+const AuthService = require("../services");
 const AuthServiceInstance = new AuthService();
 
-  /**
+/**
  * @swagger
  * /register:
  *   post:
@@ -18,7 +18,7 @@ const AuthServiceInstance = new AuthService();
  *           schema:
  *             type: object
  *             properties:
- *               name: 
+ *               name:
  *                 type: string
  *               surname:
  *                 type: string
@@ -36,8 +36,8 @@ const AuthServiceInstance = new AuthService();
  *                 email: test@test.com
  *                 password: securepassword
  *                 phone: +33 00 00 0000
- *                 address: test 
- *         
+ *                 address: test
+ *
  *     responses:
  *       200:
  *         description: Successful user registration. The response will contain the User object that was registered.
@@ -53,19 +53,26 @@ const AuthServiceInstance = new AuthService();
  *         description: User with such email already exists.
  */
 
-registerRouter.get('/', (req, res) => {
-    res.render("register");
+registerRouter.get("/", (req, res) => {
+  res.render("register");
 });
 
-registerRouter.post('/', async (req, res, next) => {
-    const { name, surname, email, phone, address, password } = req.body;
-    const hashedPassword = await generateHash(password);
-    try {
-        const response = await AuthServiceInstance.register({ name, surname, email, phone, address, password: hashedPassword });
-        res.status(200).send(response);
-    } catch (err) {
-        next(err);
-    }
+registerRouter.post("/", async (req, res, next) => {
+  const { name, surname, email, phone, address, password } = req.body;
+  const hashedPassword = await generateHash(password);
+  try {
+    const response = await AuthServiceInstance.register({
+      name,
+      surname,
+      email,
+      phone,
+      address,
+      password: hashedPassword,
+    });
+    res.status(200).send(response);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = registerRouter;

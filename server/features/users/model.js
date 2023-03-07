@@ -13,8 +13,8 @@ module.exports = class UserModel {
           address: data.address,
           password: data.password,
           createdAt: data.createdAt,
-        }
-      })
+        },
+      });
       return result;
     } catch (err) {
       throw new Error(err);
@@ -33,12 +33,12 @@ module.exports = class UserModel {
       const { id, ...params } = data;
       const result = await prisma.user.update({
         where: {
-          id: Number(id)
+          id: Number(id),
         },
         data: {
-          ...params
-        }
-      })
+          ...params,
+        },
+      });
       return result;
     } catch (err) {
       throw new Error(err);
@@ -48,10 +48,10 @@ module.exports = class UserModel {
     try {
       const result = await prisma.user.findUnique({
         where: {
-          email: email
-        }
-      })
-      return result
+          email: email,
+        },
+      });
+      return result;
     } catch (err) {
       throw new Error(err);
     }
@@ -60,10 +60,10 @@ module.exports = class UserModel {
     try {
       const result = await prisma.user.findUnique({
         where: {
-          id: Number(id)
-        }
-      })
-      return result
+          id: Number(id),
+        },
+      });
+      return result;
     } catch (err) {
       throw new Error(err);
     }
@@ -72,8 +72,8 @@ module.exports = class UserModel {
     try {
       const result = await prisma.user.delete({
         where: {
-          id: Number(id)
-        }
+          id: Number(id),
+        },
       });
       if (result) {
         return "User has been deleted!";
