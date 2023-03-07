@@ -61,15 +61,38 @@ const ProductServiceInstance = new ProductService();
  *               $ref: '#/components/schemas/Product'
  *       500:
  *         description: Internal server error.
- *
+ * 
+ * /products?category={categoryId}:
+ *   get:
+ *     summary: Returns the list of products filtered by category
+ *     description: Returns products from the system matching the selected category id.
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: All products are successfully fetched. The response will contain the array of objects.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       500:
+ *         description: Internal server error.
  */
 
+//retrieve products by category
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const allProducts = await ProductServiceInstance.getAll();
-    res.status(200).send(allProducts);
+    const category = req.query.category;
+    if (category) {
+      const selectedProducts = await ProductServiceInstance.filter({
+        category: category,
+      });
+      res.status(200).send(selectedProducts);
+    } else {
+      const allProducts = await ProductServiceInstance.getAll();
+      res.status(200).send(allProducts);
+    }
   } catch (err) {
-    next(err); 
+    next(err);
   }
 });
 
@@ -134,13 +157,16 @@ productsRouter.get("/:productId", async (req, res, next) => {
  *      404:
  *        description: User was not found.
  *      500:
- *        description: Internal server error.     
+ *        description: Internal server error.
  */
 productsRouter.put("/:productId", async (req, res, next) => {
   try {
     const { productId } = req.params;
     const data = req.body;
-    const response = await ProductServiceInstance.update({ id: productId, ...data });
+    const response = await ProductServiceInstance.update({
+      id: productId,
+      ...data,
+    });
     res.status(200).send(response);
   } catch (err) {
     next(err);
@@ -161,15 +187,15 @@ productsRouter.put("/:productId", async (req, res, next) => {
  *           schema:
  *             type: object
  *             properties:
- *               name: 
+ *               name:
  *                 type: string
  *               description:
  *                 type: string
- *               price: 
+ *               price:
  *                 type: integer
- *               available: 
+ *               available:
  *                 type: boolean
- *               category_id: 
+ *               category_id:
  *                 type: integer
  *     responses:
  *       '200':
@@ -182,7 +208,7 @@ productsRouter.put("/:productId", async (req, res, next) => {
  *                  $ref: '#/components/schemas/Product'
  *       '500':
  *         description: Internal server error.
- *       
+ *
  */
 
 productsRouter.post("/", async (req, res, next) => {
@@ -200,7 +226,6 @@ productsRouter.post("/", async (req, res, next) => {
     next(err);
   }
 });
-
 
 /**
  * @swagger
@@ -228,19 +253,6 @@ productsRouter.delete("/:productId", async (req, res, next) => {
       id: productId,
     });
     res.status(204).send(deleteProduct);
-  } catch (err) {
-    next(err);
-  }
-});
-
-//retrieve products by category
-productsRouter.get("/?category={categoryId}", async (req, res, next) => {
-  try {
-    const { categoryId } = req.params;
-    const selectedProducts = await ProductServiceInstance.filter({
-      category_id: categoryId,
-    });
-    res.status(200).send(selectedProducts);
   } catch (err) {
     next(err);
   }
