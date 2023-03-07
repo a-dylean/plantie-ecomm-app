@@ -1,14 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const productsRouter = require("./routes/api/products");
-const usersRouter = require("./routes/api/users");
-const loginRouter = require("./routes/auth/login");
-const registerRouter = require("./routes/auth/register");
-const ordersRouter = require("./routes/api/orders");
+const productsRouter = require("./features/products/routes");
+const usersRouter = require("./features/users/routes");
+const loginRouter = require("./features/auth/routes/login");
+const registerRouter = require("./features/auth/routes/register");
+const ordersRouter = require("./features/orders/routes");
 const { v4: uuidv4 } = require("uuid");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
-const path = require("path");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const app = express();
@@ -43,7 +42,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-require("./passport"); // import Passport config
+require("./utils/passport"); // import Passport config
 
 //session config
 app.use(
