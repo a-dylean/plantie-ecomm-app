@@ -1,6 +1,5 @@
 import { Order, PrismaClient, ProductOrder } from "@prisma/client";
 const prisma = new PrismaClient();
-
 export class OrderModel {
   async create(data: ProductOrder): Promise<ProductOrder> {
     return await prisma.productOrder.create({

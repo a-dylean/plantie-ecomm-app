@@ -39,9 +39,9 @@ model ProductOrder {
 
 model Product {
   id            Int            @id @default(autoincrement())
-  name          String?        @db.VarChar(256)
+  name          String         @db.VarChar(256) @unique 
   description   String?        @db.VarChar(256)
-  price         Decimal?       @db.Money
+  price         Decimal        @db.Money
   available     Boolean        @default(true)
   categoryId    Int?           @map("category_id")
   ProductOrders ProductOrder[]

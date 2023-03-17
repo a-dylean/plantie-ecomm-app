@@ -1,9 +1,19 @@
 import { Product } from "@prisma/client";
 import createHttpError from "http-errors";
 import { ProductModel } from "./model";
+import { ProductCreationParams } from "./model";
 const ProductModelInstance = new ProductModel();
 
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 export class ProductService {
+  async getAll(): Promise<Product[]> {
+    try {
+      return await ProductModelInstance.getAll();
+    } catch (err) {
+      throw err;
+    }
+  }
   async get(id: Product["id"]): Promise<Product> {
     try {
       const product = await ProductModelInstance.findProductById(id);
@@ -15,21 +25,17 @@ export class ProductService {
       throw err;
     }
   }
-  async getAll(): Promise<Product[]> {
+  async register( data: ProductCreationParams): Promise<Product> {
+    return await ProductModelInstance.create(data);
+  }
+  async update(id: number, data: ProductCreationParams): Promise<Product> {
     try {
-      return await ProductModelInstance.getAll();
+      return await ProductModelInstance.update(id, data);
     } catch (err) {
       throw err;
     }
   }
-  async update(data: Product): Promise<Product> {
-    try {
-      return await ProductModelInstance.update(data);
-    } catch (err) {
-      throw err;
-    }
-  }
-  async filter(categoryId: Product["categoryId"]): Promise<Product[]> {
+  async filter(categoryId: number): Promise<Product[]> {
     try {
       const products = await ProductModelInstance.findProductsByCategory(
         categoryId
@@ -42,10 +48,7 @@ export class ProductService {
       throw err;
     }
   }
-  async register(data: Product): Promise<Product> {
-      const newProduct = await ProductModelInstance.create(data);
-      return newProduct;
-  }
+
   async delete(id: Product["id"]): Promise<void> {
     try {
       return await ProductModelInstance.deleteProductById(id);
@@ -53,4 +56,4 @@ export class ProductService {
       throw createHttpError(500);
     }
   }
-};
+}

@@ -1,30 +1,39 @@
-import { PrismaClient, Product } from "@prisma/client";
+import { PrismaClient, Prisma, Product } from "@prisma/client";
+import createHttpError from "http-errors";
 const prisma = new PrismaClient();
 
+export type ProductCreationParams = Pick<
+  Product,
+  "name" | "description" | "price" | "available" | "categoryId"
+>;
+
 export class ProductModel {
-  async create(data: Product): Promise<Product> {
-    const newProduct = await prisma.product.create({
-      data: {
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        available: data.available,
-        categoryId: data.categoryId,
-      },
-    });
-    return newProduct;
-  }
   async getAll(): Promise<Product[]> {
     return await prisma.product.findMany();
   }
-  async update(data: Product): Promise<Product> {
-    const { id, ...params } = data;
+  async create(data: ProductCreationParams): Promise<Product> {
+    try {
+      return await prisma.product.create({
+        data: {
+          ...data,
+        },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2002") {
+          console.log("The product with such name already exists");
+        }
+      }
+      throw err;
+    }
+  }
+  async update(id: number, data: ProductCreationParams): Promise<Product> {
     return await prisma.product.update({
       where: {
         id: id,
       },
       data: {
-        ...params,
+        ...data,
       },
     });
   }
@@ -43,7 +52,7 @@ export class ProductModel {
     });
   }
   async findProductsByCategory(
-    category: Product["categoryId"]
+    category: number
   ): Promise<Product[]> {
     return await prisma.product.findMany({
       where: {
