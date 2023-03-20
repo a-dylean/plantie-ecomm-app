@@ -1,5 +1,4 @@
-import { PrismaClient, Prisma, Product } from "@prisma/client";
-import createHttpError from "http-errors";
+import { PrismaClient, Product } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export type ProductCreationParams = Pick<
@@ -12,20 +11,11 @@ export class ProductModel {
     return await prisma.product.findMany();
   }
   async create(data: ProductCreationParams): Promise<Product> {
-    try {
       return await prisma.product.create({
         data: {
           ...data,
         },
       });
-    } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        if (err.code === "P2002") {
-          console.log("The product with such name already exists");
-        }
-      }
-      throw err;
-    }
   }
   async update(id: number, data: ProductCreationParams): Promise<Product> {
     return await prisma.product.update({

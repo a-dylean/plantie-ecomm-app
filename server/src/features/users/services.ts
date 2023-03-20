@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import createHttpError from "http-errors";
-import { UserModel } from"./model";
+import { UserCreationParams, UserModel } from"./model";
 const UserModelInstance = new UserModel();
 
 export class UserService {
@@ -22,7 +22,7 @@ export class UserService {
       throw err;
     }
   }
-  async update(data: User): Promise<User> {
+  async update(data: User): Promise<UserCreationParams> {
     try {
       return await UserModelInstance.update(data);
     } catch (err) {

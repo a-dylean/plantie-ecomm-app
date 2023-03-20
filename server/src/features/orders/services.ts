@@ -1,6 +1,6 @@
 import { Order, ProductOrder } from "@prisma/client";
 import createError from "http-errors";
-import {OrderModel } from "./model";
+import {OrderCreationParams, OrderModel } from "./model";
 
 const OrderModelInstance = new OrderModel();
 
@@ -23,7 +23,7 @@ export class OrderService {
       throw err;
     }
   }
-  async register(data: ProductOrder): Promise<ProductOrder> {
+  async register(data: OrderCreationParams): Promise<ProductOrder> {
     try {
       return await OrderModelInstance.create(data);
     } catch (err) {

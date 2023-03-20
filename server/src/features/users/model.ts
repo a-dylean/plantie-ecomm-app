@@ -1,16 +1,21 @@
 import { PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
 
+export type UserCreationParams = Pick<
+  User,
+  "name" | "surname" | "email" | "phone" | "address" | "password"
+>;
+
+export type UserLoginParams = Pick<
+  User,
+  "email" | "password"
+>;
+
 export class UserModel {
-  async create(data: User): Promise<User> {
+  async create(data: UserCreationParams): Promise<User> {
     return await prisma.user.create({
       data: {
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        password: data.password
+        ...data
       },
     });
   }

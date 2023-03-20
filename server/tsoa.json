@@ -4,7 +4,9 @@
     "controllerPathGlobs": ["src/**/*/controller.ts"],
     "spec": {
       "outputDirectory": "build",
-      "specVersion": 3
+      "specVersion": 3,
+      "name": "Plantie app API",
+      "description": "CRUD API made with Express"
     },
     "routes": {
       "routesDir": "build"

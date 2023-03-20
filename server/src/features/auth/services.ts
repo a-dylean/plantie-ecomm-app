@@ -1,12 +1,13 @@
 import createHttpError from "http-errors";
-import { UserModel } from "../users/model";
-import { compareHash } from "../../helpers/bcrypt";
+import { UserCreationParams, UserLoginParams, UserModel } from "../users/model";
+import { compareHash, generateHash } from "../../helpers/bcrypt";
 import { User } from "@prisma/client";
 
 const UserModuleInstance = new UserModel();
 
 export class AuthService {
-  async login(email: User["email"], password: User["password"]): Promise<User> {
+  async login(data: UserLoginParams): Promise<User> {
+    const { email, password } = data;
     const user = await UserModuleInstance.findUserByEmail(email);
     if (!user) {
       throw createHttpError(401, "User not found!");
@@ -18,12 +19,13 @@ export class AuthService {
       return user;
     }
   }
-  async register(data: User): Promise<User> {
-    const { email } = data;
+  async register(data: UserCreationParams): Promise<User> {
+    const { email, password } = data;
+    const hashedPassword = await generateHash(password);
     const userExists = await UserModuleInstance.findUserByEmail(email);
     if (userExists) {
       throw createHttpError(409, "User with such email already exists!");
     }
-    return await UserModuleInstance.create(data);
+    return await UserModuleInstance.create({...data,password: hashedPassword} );
   }
 }

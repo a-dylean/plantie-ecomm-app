@@ -6,16 +6,17 @@ import {
   Path,
   Post,
   Put,
-  Query,
   Route,
+  Response,
   SuccessResponse,
+  Tags,
 } from "tsoa";
 import { Product } from "@prisma/client";
 import { ProductService } from "./services";
-import { request } from "http";
 import { ProductCreationParams } from "./model";
 
 @Route("products")
+@Tags("Products")
 export class ProductsController extends Controller {
   /**
    * Retrieves a list of all products in the system.
@@ -39,8 +40,8 @@ export class ProductsController extends Controller {
    * Creates a new product in the system.
    * @param requestBody Details of the product: name, description, price, availability, category ID
    */
-  @SuccessResponse("201", "Product created")
   @Post()
+  @SuccessResponse("201", "Product created")
   public async createProduct(
     @Body() requestBody: ProductCreationParams
   ): Promise<Product> {
@@ -62,11 +63,14 @@ export class ProductsController extends Controller {
     this.setStatus(200);
     return new ProductService().update(productId, requestBody);
   }
-
+  /**
+   * Deletes a product from the system.
+   * @param productId Identifier of the product
+   */
   @SuccessResponse("204", "Product deleted")
   @Delete("{productId}")
   public async deleteProduct(
-    @Path() productId: number, 
+    @Path() productId: number 
   ): Promise<void> {
     this.setStatus(204);
     new ProductService().delete(productId);
