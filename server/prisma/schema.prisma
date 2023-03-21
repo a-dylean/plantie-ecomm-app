@@ -58,8 +58,18 @@ model User {
   phone     String?   @db.VarChar(50)
   address   String?   @db.VarChar(256)
   password  String    @db.VarChar(256)
+  role RoleEnumType? @default(user)
+  verified Boolean? @default(false) 
+  verificationCode String? @db.Text @unique
   createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   orders    Order[]
 
+  @@unique([email, verificationCode])
+  @@index([email, verificationCode])
   @@map("users")
+}
+
+enum RoleEnumType {
+  user
+  admin
 }
