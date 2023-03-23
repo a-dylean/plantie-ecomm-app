@@ -1,19 +1,13 @@
-import {
-    Body,
-    Controller,
-    Post,
-    Route,
-    Tags,
-  } from "tsoa";
-  import { User } from "@prisma/client";
-  import { AuthService } from "./services";
-  import { UserCreationParams, UserLoginParams } from "../users/model";
+import { Body, Controller, Post, Route, Tags } from "tsoa";
+import { User } from "@prisma/client";
+import { AuthService } from "./services";
+import { UserCreationParams, UserLoginParams } from "../users/model";
 
 @Route("login")
 @Tags("Auth")
 export class LoginController extends Controller {
-    @Post()
-    public async login( @Body() requestBody: UserLoginParams): Promise<User> {
+  @Post()
+    public async login( @Body() requestBody: UserLoginParams): Promise<User | string> {
         return new AuthService().login(requestBody);
     }
 }
