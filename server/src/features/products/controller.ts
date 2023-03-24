@@ -7,9 +7,10 @@ import {
   Post,
   Put,
   Route,
-  Response,
   SuccessResponse,
   Tags,
+  Security,
+  Query,
 } from "tsoa";
 import { Product } from "@prisma/client";
 import { ProductService } from "./services";
@@ -19,13 +20,18 @@ import { ProductCreationParams } from "./model";
 @Tags("Products")
 export class ProductsController extends Controller {
   /**
-   * Retrieves a list of all products in the system.
-   * @returns A list of products
+   * Retrieves a list of all products in the system. If product categoru ID is provided, filters the list of products by category.
+   * @param categoryId Identifier of category (number)
+   * @returns List of products
    */
   @Get()
   public async getProducts(
+    @Query() categoryId?: number | null
   ): Promise<Product[]> {
-    return new ProductService().getAll();
+    if (!categoryId) {
+      return new ProductService().getAll();
+    }
+    return new ProductService().filter(categoryId);
   }
   /**
    * Retrieves the detailes of a particular product provided the unique product ID.
@@ -40,6 +46,7 @@ export class ProductsController extends Controller {
    * Creates a new product in the system.
    * @param requestBody Details of the product: name, description, price, availability, category ID
    */
+  @Security("jwt", ["admin"])
   @Post()
   @SuccessResponse("201", "Product created")
   public async createProduct(
@@ -54,6 +61,7 @@ export class ProductsController extends Controller {
    * @param requestBody Details of the product: name, description, price, availability, category ID
    * @returns Updated product
    */
+  @Security("jwt", ["admin"])
   @SuccessResponse("200", "Product information updated")
   @Put("{productId}")
   public async updateProduct(
@@ -67,11 +75,10 @@ export class ProductsController extends Controller {
    * Deletes a product from the system.
    * @param productId Identifier of the product
    */
+  @Security("jwt", ["admin"])
   @SuccessResponse("204", "Product deleted")
   @Delete("{productId}")
-  public async deleteProduct(
-    @Path() productId: number 
-  ): Promise<void> {
+  public async deleteProduct(@Path() productId: number): Promise<void> {
     this.setStatus(204);
     new ProductService().delete(productId);
     return;

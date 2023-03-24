@@ -1,11 +1,8 @@
-import {
-  UserAuthenticationParams,
-  UserCreationParams,
-  UserLoginParams,
-  UserModel,
-} from "../users/model";
+import { UserCreationParams, UserLoginParams, UserModel } from "../users/model";
 import { compareHash, generateHash } from "../../helpers/bcrypt";
 import { createAuthToken } from "../../helpers/jwt";
+import { User } from "@prisma/client";
+import { AuthError } from "../../helpers/errors";
 
 const UserModuleInstance = new UserModel();
 
@@ -13,12 +10,15 @@ export class AuthService {
   async login(data: UserLoginParams): Promise<any> {
     const { email, password } = data;
     const user = await UserModuleInstance.findUserByEmail(email);
+    if (!user) {
+      throw new AuthError("User not found");
+    }
     if (user && (await compareHash(password, user.password))) {
       const token = createAuthToken({
         id: user.id,
         name: user.name,
         email: user.email,
-        scopes: [user.role]
+        scopes: [user.role],
       });
       return {
         id: user.id,
@@ -27,16 +27,15 @@ export class AuthService {
         token: token,
       };
     } else {
-      return;
+      throw new AuthError("Wrong password");
     }
   }
-  async register(data: UserCreationParams): Promise<any> {
-    const { email, password } = data;
+  async register(data: UserCreationParams): Promise<User> {
+    const { password } = data;
     const hashedPassword = await generateHash(password);
-    const userExists = await UserModuleInstance.findUserByEmail(email);
-    if (userExists) {
-      throw new Error("User with such email already exists!");
-    }
-    return await UserModuleInstance.create({...data,password: hashedPassword} );
+    return await UserModuleInstance.create({
+      ...data,
+      password: hashedPassword,
+    });
   }
 }

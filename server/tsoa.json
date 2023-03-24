@@ -14,8 +14,7 @@
         "bearerFormat": "JWT",
         "scopes": {
           "admin": "view users"
-        }
-          
+        }   
       }
     }
   }, 

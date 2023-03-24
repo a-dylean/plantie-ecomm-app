@@ -1,8 +1,7 @@
 import { Product } from "@prisma/client";
-import createHttpError from "http-errors";
+import { NotFoundError } from "../../helpers/errors";
 import { ProductModel } from "./model";
 import { ProductCreationParams } from "./model";
-import { Prisma } from "@prisma/client";
 const ProductModelInstance = new ProductModel();
 
 export class ProductService {
@@ -12,11 +11,11 @@ export class ProductService {
   async get(id: Product["id"]): Promise<Product> {
     const product = await ProductModelInstance.findProductById(id);
     if (!product) {
-      throw createHttpError(404, "Plant not found!");
+      throw new NotFoundError("Product not found");
     }
     return product;
   }
-  async register( data: ProductCreationParams): Promise<Product> {
+  async register(data: ProductCreationParams): Promise<Product> {
     return await ProductModelInstance.create(data);
   }
   async update(id: number, data: ProductCreationParams): Promise<Product> {
@@ -26,9 +25,11 @@ export class ProductService {
     const products = await ProductModelInstance.findProductsByCategory(
       categoryId
     );
+    if (!products) {
+      throw new NotFoundError("Products of the selected category not found");
+    }
     return products;
   }
-
   async delete(id: Product["id"]): Promise<void> {
     return await ProductModelInstance.deleteProductById(id);
   }

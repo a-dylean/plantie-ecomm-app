@@ -6,22 +6,13 @@ export type UserCreationParams = Pick<
   "name" | "surname" | "email" | "phone" | "address" | "password" | "role"
 >;
 
-export type UserAuthenticationParams = Pick<
-  User,
-  "name" | "email" | "id" | "role"
->;
-
-export type UserLoginParams = Pick<
-  User,
-  "email" | "password"
->;
+export type UserLoginParams = Pick<User, "email" | "password">;
 
 export class UserModel {
   async create(data: UserCreationParams): Promise<User> {
     return await prisma.user.create({
       data: {
         ...data,
-        verified: true
       },
     });
   }
