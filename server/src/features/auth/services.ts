@@ -1,29 +1,41 @@
-import createHttpError from "http-errors";
-import { UserModel } from "../users/model";
-import { compareHash } from "../../helpers/bcrypt";
+import { UserCreationParams, UserLoginParams, UserModel } from "../users/model";
+import { compareHash, generateHash } from "../../helpers/bcrypt";
+import { createAuthToken } from "../../helpers/jwt";
 import { User } from "@prisma/client";
+import { AuthError } from "../../helpers/errors";
 
 const UserModuleInstance = new UserModel();
 
 export class AuthService {
-  async login(email: User["email"], password: User["password"]): Promise<User> {
+  async login(data: UserLoginParams): Promise<any> {
+    const { email, password } = data;
     const user = await UserModuleInstance.findUserByEmail(email);
     if (!user) {
-      throw createHttpError(401, "User not found!");
+      throw new AuthError("User not found");
+    }
+    if (user && (await compareHash(password, user.password))) {
+      const token = createAuthToken({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        scopes: [user.role],
+      });
+      return {
+        id: user.id,
+        name: user.name,
+        email: email,
+        token: token,
+      };
     } else {
-      const matchedPassword = await compareHash(password, user.password);
-      if (!matchedPassword) {
-        throw createHttpError(401, "Wrong credentials!");
-      }
-      return user;
+      throw new AuthError("Wrong password");
     }
   }
-  async register(data: User): Promise<User> {
-    const { email } = data;
-    const userExists = await UserModuleInstance.findUserByEmail(email);
-    if (userExists) {
-      throw createHttpError(409, "User with such email already exists!");
-    }
-    return await UserModuleInstance.create(data);
+  async register(data: UserCreationParams): Promise<User> {
+    const { password } = data;
+    const hashedPassword = await generateHash(password);
+    return await UserModuleInstance.create({
+      ...data,
+      password: hashedPassword,
+    });
   }
 }

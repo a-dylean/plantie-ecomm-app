@@ -1,0 +1,25 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*/controller.ts"],
+  "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3,
+    "name": "Plantie app API",
+    "description": "CRUD API made with Express",
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "scopes": {
+          "admin": "view users"
+        }   
+      }
+    }
+  }, 
+  "routes": {
+    "routesDir": "build",
+    "authenticationModule": "src/features/auth/authmiddleware.ts"
+  }
+}
