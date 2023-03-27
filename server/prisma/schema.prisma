@@ -10,20 +10,23 @@ datasource db {
 model Category {
   id           Int       @id @default(autoincrement())
   categoryName String?   @unique @map("category_name") @db.VarChar(100)
-  products     Product[]
+  product      Product[]
 
-  @@map("categories")
+  @@map("category")
 }
 
 model Order {
-  id            Int            @id @default(autoincrement())
-  userId        Int?           @map("user_id")
-  createdAt     DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
-  amount        Decimal?       @db.Money
-  users         User?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ProductOrders ProductOrder[]
+  id           Int            @id @default(autoincrement())
+  userId       Int?           @map("user_id")
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
+  amount       Decimal?       @db.Money
+  user         User?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ProductOrder ProductOrder[]
+  Product      Product?       @relation(fields: [productId], references: [id])
+  productId    Int?
 
-  @@map("orders")
+  @@map("order")
 }
 
 model ProductOrder {
@@ -31,42 +34,46 @@ model ProductOrder {
   productId Int?     @map("product_id")
   quantity  Int?
   orderId   Int?     @map("order_id")
-  products  Product? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "checkout_product_id_fkey")
-  orders    Order?   @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "checkout_product_id_fkey")
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@map("product_orders")
+  @@map("product_order")
 }
 
 model Product {
-  id            Int            @id @default(autoincrement())
-  name          String         @db.VarChar(256) @unique 
-  description   String?        @db.VarChar(256)
-  price         Decimal        @db.Money
-  available     Boolean        @default(true)
-  categoryId    Int?           @map("category_id")
-  ProductOrders ProductOrder[]
-  categories    Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id           Int            @id @default(autoincrement())
+  name         String         @unique @db.VarChar(256)
+  description  String         @db.Text
+  price        Decimal        @db.Money
+  available    Boolean        @default(true)
+  categoryId   Int?           @map("category_id")
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
+  orders       Order[]
+  category     Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ProductOrder ProductOrder[]
 
-  @@map("products")
+  @@map("product")
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(256)
-  surname   String    @db.VarChar(256)
-  email     String    @unique @db.VarChar(256)
-  phone     String?   @db.VarChar(50)
-  address   String?   @db.VarChar(256)
-  password  String    @db.VarChar(256)
-  role RoleEnumType? @default(user)
-  verified Boolean? @default(false) 
-  verificationCode String? @db.Text @unique
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
-  orders    Order[]
+  id               Int           @id @default(autoincrement())
+  name             String        @db.VarChar(256)
+  surname          String        @db.VarChar(256)
+  email            String        @unique @db.VarChar(256)
+  phone            String?       @db.VarChar(50)
+  address          String?       @db.VarChar(256)
+  password         String        @db.VarChar(256)
+  role             RoleEnumType @default(user)
+  verified         Boolean?      @default(false)
+  verificationCode String?       @unique @db.Text
+  createdAt        DateTime?     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime?     @updatedAt @map("updated_at") @db.Timestamp(6)
+  orders           Order[]
 
   @@unique([email, verificationCode])
   @@index([email, verificationCode])
-  @@map("users")
+  @@map("user")
 }
 
 enum RoleEnumType {
