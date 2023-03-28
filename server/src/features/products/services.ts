@@ -15,13 +15,13 @@ export class ProductService {
     }
     return product;
   }
-  async register(data: ProductCreationParams): Promise<Product> {
+  async create(data: ProductCreationParams): Promise<Product> {
     return await ProductModelInstance.create(data);
   }
   async update(id: number, data: ProductCreationParams): Promise<Product> {
     return await ProductModelInstance.update(id, data);
   }
-  async filter(categoryId: number): Promise<Product[]> {
+  async filterByCategory(categoryId: number): Promise<Product[]> {
     const products = await ProductModelInstance.findProductsByCategory(
       categoryId
     );

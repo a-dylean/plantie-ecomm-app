@@ -31,6 +31,6 @@ export class registerRouter extends Controller {
   public async register(
     @Body() requestBody: UserCreationParams
   ): Promise<User> {
-    return new AuthService().register(requestBody);
+    return new AuthService().create(requestBody);
   }
 }

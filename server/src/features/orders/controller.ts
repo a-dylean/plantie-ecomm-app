@@ -46,6 +46,6 @@ export class OrdersController extends Controller {
     @Body() requestBody: OrderCreationParams
   ): Promise<ProductOrder> {
     this.setStatus(201);
-    return new OrderService().register(requestBody);
+    return new OrderService().create(requestBody);
   }
 }

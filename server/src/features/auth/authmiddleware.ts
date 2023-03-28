@@ -2,6 +2,7 @@ import { Request as ExRequest } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../../config";
 import { AuthError } from "../../helpers/errors";
+
 export const expressAuthentication = async (
   req: ExRequest,
   securityName: string,

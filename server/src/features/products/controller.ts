@@ -31,7 +31,7 @@ export class ProductsController extends Controller {
     if (!categoryId) {
       return new ProductService().getAll();
     }
-    return new ProductService().filter(categoryId);
+    return new ProductService().filterByCategory(categoryId);
   }
   /**
    * Retrieves the detailes of a particular product provided the unique product ID.
@@ -53,7 +53,7 @@ export class ProductsController extends Controller {
     @Body() requestBody: ProductCreationParams
   ): Promise<Product> {
     this.setStatus(201);
-    return new ProductService().register(requestBody);
+    return new ProductService().create(requestBody);
   }
   /**
    *Updates the detailes of a particular product provided the unique product ID.

@@ -7,6 +7,6 @@ export const generateHash = async (password: string) => {
     return hashedPassword;
   };
   
-export const compareHash = (password: User["password"], hashedPassword: User["password"]) => {
+export const validatePassword = (password: User["password"], hashedPassword: User["password"]) => {
     return bcrypt.compare(password, hashedPassword);
   };
