@@ -26,7 +26,7 @@ export const ProductsContainer = () => {
             justifyContent="flex-start"
           >
               {Object.values(products).map((product) =>
-                <Grid key={product.id}><ProductItem  id={product.id} name={product.name} description={product.description} price={product.price} available={product.available} categoryId={product.categoryId} createdAt={product.createdAt} updatedAt={product.updatedAt}/>
+                <Grid key={product.id}><ProductItem  id={product.id} name={product.name} description={product.description} price={product.price} available={product.available} categoryId={product.categoryId} createdAt={product.createdAt} updatedAt={product.updatedAt} picture={product.picture}/>
               </Grid>)}
           </Grid>
         </Box>

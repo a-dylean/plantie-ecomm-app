@@ -11,12 +11,12 @@ import { ProductModel } from "../../app/interfaces";
 
 export const ProductItem = (product: ProductModel) => {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: 345, height: 650 }}>
       <CardMedia
         component="img"
         alt="product img"
         height="400"
-        image="https://bergamotte.imgix.net/qss0l52zgrorp6z7rztziu6v7453?ixlib=rails-4.2.0&auto=format%2Ccompress&fit=crop&q=65&ar=4%3A5&w=2048"
+        image={product.picture}
       />
       <CardContent>
         <Box display="flex" justifyContent="space-between">
@@ -27,7 +27,7 @@ export const ProductItem = (product: ProductModel) => {
             ${product.price}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary" component="div">
+        <Typography variant="body2" color="text.secondary" component="div" height={"8rem"}>
           {product.description}
         </Typography>
       </CardContent>

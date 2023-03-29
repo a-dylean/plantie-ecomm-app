@@ -6,7 +6,8 @@ export interface ProductModel {
     "available": boolean,
     "categoryId": number,
     "createdAt": string,
-    "updatedAt": string
+    "updatedAt": string,
+    "picture": string
 }
 
 export interface UserModel {
