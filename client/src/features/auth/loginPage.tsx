@@ -7,10 +7,31 @@ import {
   FormControlLabel,
   Checkbox,
   Link,
+  Alert,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { loginUser } from "../users/usersSlice";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 export const LoginForm = () => {
+  const dispatch = useAppDispatch();
+  const {error, loading, userInfo} = useAppSelector((state) => state.users)
+
+  const { register, handleSubmit } = useForm()
+  const navigate = useNavigate();
+ 
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/me')
+    }
+  }, [navigate, userInfo])
+
+  const submitForm = (data: any) => {
+    dispatch(loginUser(data))
+  }
+
   return (
     <>
       <Container sx={{ mt: 8 }}>
@@ -18,7 +39,8 @@ export const LoginForm = () => {
           <Typography component="h1" variant="h1">
             Sign in
           </Typography>
-          <form>
+          {error && <Alert severity="error">{error}</Alert>}
+          <form name="login-form" onSubmit={handleSubmit(submitForm)}>
             <TextField
               color="secondary"
               variant="outlined"
@@ -27,9 +49,9 @@ export const LoginForm = () => {
               fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
+              {...register('email')}
             />
             <TextField
               color="secondary"
@@ -37,11 +59,11 @@ export const LoginForm = () => {
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              {...register('password')}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="secondary" />}
@@ -60,7 +82,7 @@ export const LoginForm = () => {
                 Forgot password?
               </Link>
               <Link href="/auth/register" variant="body2" color="secondary">
-                {"Don't have an account? Sign Up"}
+                Don't have an account? Sign Up
               </Link>
             </Box>
           </form>

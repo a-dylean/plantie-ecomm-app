@@ -9,8 +9,31 @@ import {
   Link,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { UserModel } from "../../app/interfaces";
+import { addUser } from "../users/usersSlice";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { userInfo } from "os";
 export const RegistrationForm = () => {
+
+  const { loading, userInfo, error, success } = useAppSelector((state) => state.users);
+  const dispatch = useAppDispatch();
+  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // redirect user to login page if registration was successful
+    if (success) navigate('/auth/login')
+    // redirect authenticated user to profile screen
+    if (userInfo) navigate('/me')
+  }, [navigate, userInfo, success])
+
+  const submitForm = (data: any) => {
+    data.email = data.email.toLowerCase();
+    dispatch(addUser(data))
+  }
   return (
     <>
       <Container sx={{ mt: 8 }}>
@@ -18,19 +41,19 @@ export const RegistrationForm = () => {
         <Typography component="h1" variant="h1" sx={{ mb: 2 }}>
           Sign up
         </Typography>
-        <form>
+        <form name="registration-form" onSubmit={handleSubmit(submitForm)}>
           <Grid container spacing={2}>
             <Grid xs={12} sm={6}>
               <TextField
                 color="secondary"
-                autoComplete="fname"
-                name="firstName"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
+                id="name"
                 label="First Name"
                 autoFocus
+                type="text"
+                {...register('name')}
               />
             </Grid>
             <Grid xs={12} sm={6}>
@@ -39,10 +62,9 @@ export const RegistrationForm = () => {
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
+                id="surname"
                 label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                {...register('surname')}
               />
             </Grid>
             <Grid xs={12}>
@@ -53,9 +75,8 @@ export const RegistrationForm = () => {
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
                 type="email"
-                autoComplete="email"
+                {...register('email')}
               />
             </Grid>
             <Grid xs={12}>
@@ -64,11 +85,10 @@ export const RegistrationForm = () => {
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                {...register('password')}
               />
             </Grid>
             <Grid xs={12}>
@@ -76,11 +96,12 @@ export const RegistrationForm = () => {
                 color="secondary"
                 variant="outlined"
                 fullWidth
-                name="phone"
                 label="Phone number"
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 type="tel"
+                helperText="Insert your number starting with country code, without any additional symbols. Ex.: 3307485601"
                 id="phone"
-                autoComplete="phone"
+                {...register('phone')}
               />
             </Grid>
             <Grid xs={12}>
@@ -88,10 +109,9 @@ export const RegistrationForm = () => {
                 color="secondary"
                 variant="outlined"
                 fullWidth
-                name="address"
                 label="Home address"
                 id="address"
-                autoComplete="address"
+                {...register('address')}
               />
             </Grid>
             <Grid xs={12}>
