@@ -8,10 +8,20 @@ import {
   Box,
 } from "@mui/material";
 import { ProductModel } from "../../app/interfaces";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectProduct } from "./productSlice";
 
 export const ProductItem = (product: ProductModel) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+ 
   return (
-    <Card sx={{ width: 345, height: 650 }}>
+    <Card sx={{ width: 345, height: 666 }} >
+      <Box onClick={() => {dispatch(selectProduct(product));
+      navigate(`/products/${product.id}`)
+       }}
+      >
       <CardMedia
         component="img"
         alt="product img"
@@ -31,9 +41,10 @@ export const ProductItem = (product: ProductModel) => {
           {product.description}
         </Typography>
       </CardContent>
+      </Box>
       <CardActions>
         <Button
-          sx={{ m: "0 auto", width: "100%" }}
+          sx={{ m: "auto", width: "100%" }}
           variant="outlined"
           size="small"
           color="secondary"

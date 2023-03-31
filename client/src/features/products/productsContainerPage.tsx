@@ -16,7 +16,7 @@ export const ProductsContainer = () => {
   
   return (
     <>
-      <Container sx={{ mt: 10 }}>
+      <Container >
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
