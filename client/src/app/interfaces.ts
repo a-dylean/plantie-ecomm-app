@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface ProductModel {
     "id": number, 
     "name": string,
@@ -11,13 +13,19 @@ export interface ProductModel {
 }
 
 export interface UserModel {
-    "id": number, 
-    "name": string,
-    "surname": string,
-    "email": string,
-    "password": string,
-    "phone": string,
-    "address": string,
-    "createdAt": string,
-    "updatedAt": string
+    "name": string | null,
+    "surname": string | null,
+    "email": string | null,
+    "password": string | null,
+    "phone": string | null,
+    "address": string | null
 }
+
+export interface LoginModel {
+    "email": string,
+    "password": string
+}
+
+export interface Props {
+    children: ReactNode;
+  }

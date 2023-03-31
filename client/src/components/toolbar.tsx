@@ -1,4 +1,3 @@
-import React from "react";
 import { AppBar, Toolbar, Typography, Container, Button, IconButton, Divider, Link } from "@mui/material";
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import LoginIcon from '@mui/icons-material/Login';

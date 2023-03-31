@@ -33,4 +33,11 @@ export const theme = createTheme({
               }
             `,
         },
+        MuiContainer: {
+            styleOverrides: {
+                root: {
+                    marginTop: "5rem"
+                }
+            }
+        }
 }})
