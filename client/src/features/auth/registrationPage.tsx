@@ -1,5 +1,4 @@
 import {
-  Container,
   Typography,
   Box,
   Button,
@@ -10,34 +9,55 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { UserModel } from "../../app/interfaces";
 import { addUser } from "../users/usersSlice";
-import { useForm } from "react-hook-form";
+import {
+  Controller,
+  useForm,
+  SubmitHandler,
+  FieldValues,
+} from "react-hook-form";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { userInfo } from "os";
-export const RegistrationForm = () => {
+import { Layout } from "../../app/layout";
+import {
+  MuiTelInput,
+  MuiTelInputContinent,
+  matchIsValidTel,
+} from "mui-tel-input";
 
-  const { loading, userInfo, error, success } = useAppSelector((state) => state.users);
+export const RegistrationForm = () => {
+  const { userInfo, success } = useAppSelector(
+    (state) => state.users
+  );
   const dispatch = useAppDispatch();
-  const { register, handleSubmit } = useForm();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const { register, control, handleSubmit } = useForm<FieldValues>({
+    defaultValues: {
+      name: "",
+      surname: "",
+      email: "",
+      password: "",
+      phone: "",
+      address: "",
+    },
+  });
+  const continents: MuiTelInputContinent[] = ["EU"];
 
   useEffect(() => {
     // redirect user to login page if registration was successful
-    if (success) navigate('/auth/login')
+    if (success) navigate("/auth/login");
     // redirect authenticated user to profile screen
-    if (userInfo) navigate('/me')
-  }, [navigate, userInfo, success])
+    if (userInfo) navigate("/me");
+  }, [navigate, userInfo, success]);
 
-  const submitForm = (data: any) => {
+  const submitForm: SubmitHandler<FieldValues> = (data) => {
     data.email = data.email.toLowerCase();
-    dispatch(addUser(data))
-  }
+    dispatch(addUser(data));
+  };
   return (
-    <>
-      <Container sx={{ mt: 8 }}>
-      <Box sx={{m: "0 auto", width: "50%"}}>
+    <Layout>
+      <Box sx={{ m: "0 auto", width: "50%" }}>
         <Typography component="h1" variant="h1" sx={{ mb: 2 }}>
           Sign up
         </Typography>
@@ -53,7 +73,7 @@ export const RegistrationForm = () => {
                 label="First Name"
                 autoFocus
                 type="text"
-                {...register('name')}
+                {...register("name")}
               />
             </Grid>
             <Grid xs={12} sm={6}>
@@ -64,7 +84,7 @@ export const RegistrationForm = () => {
                 fullWidth
                 id="surname"
                 label="Last Name"
-                {...register('surname')}
+                {...register("surname")}
               />
             </Grid>
             <Grid xs={12}>
@@ -76,7 +96,7 @@ export const RegistrationForm = () => {
                 id="email"
                 label="Email Address"
                 type="email"
-                {...register('email')}
+                {...register("email")}
               />
             </Grid>
             <Grid xs={12}>
@@ -88,20 +108,28 @@ export const RegistrationForm = () => {
                 label="Password"
                 type="password"
                 id="password"
-                {...register('password')}
+                {...register("password")}
               />
             </Grid>
             <Grid xs={12}>
-              <TextField
-                color="secondary"
-                variant="outlined"
-                fullWidth
-                label="Phone number"
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                type="tel"
-                helperText="Insert your number starting with country code, without any additional symbols. Ex.: 3307485601"
-                id="phone"
-                {...register('phone')}
+              <Controller
+                name="phone"
+                control={control}
+                rules={{ validate: matchIsValidTel }}
+                render={({ field, fieldState }) => (
+                  <MuiTelInput
+                    {...field}
+                    fullWidth
+                    color="secondary"
+                    forceCallingCode
+                    defaultCountry={"FR"}
+                    continents={continents}
+                    helperText={
+                      fieldState.invalid ? "Phone number is invalid" : ""
+                    }
+                    error={fieldState.invalid}
+                  />
+                )}
               />
             </Grid>
             <Grid xs={12}>
@@ -111,13 +139,18 @@ export const RegistrationForm = () => {
                 fullWidth
                 label="Home address"
                 id="address"
-                {...register('address')}
+                {...register("address")}
               />
             </Grid>
             <Grid xs={12}>
               <FormControlLabel
                 control={
-                  <Checkbox value="allowExtraEmails" color="secondary" defaultChecked size="small"/>
+                  <Checkbox
+                    value="allowExtraEmails"
+                    color="secondary"
+                    defaultChecked
+                    size="small"
+                  />
                 }
                 label="I want to receive inspiration, marketing promotions and updates via email."
               />
@@ -130,8 +163,7 @@ export const RegistrationForm = () => {
             Already have an account? Sign in
           </Link>
         </form>
-        </Box>
-      </Container>
-    </>
+      </Box>
+    </Layout>
   );
 };
