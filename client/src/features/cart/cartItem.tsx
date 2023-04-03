@@ -13,12 +13,20 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { CartItemModel, ProductModel } from "../../app/interfaces";
 import { useAppDispatch } from "../../app/hooks";
-import { removeCartItem } from "./cartSlice";
+import { addCartItem, removeCartItemByPiece, removeCartItem } from "./cartSlice";
 export const CartItem = (product: ProductModel) => {
+    const totalPerItem =(product.quantity * Number(product.price)).toFixed(2);
     const dispatch = useAppDispatch();
     const removeFromCart = () => {
-        dispatch(removeCartItem({product}))
-        console.log(product.id)
+        dispatch(removeCartItemByPiece(product));
+    }
+
+    const addToCart = () => {
+        dispatch(addCartItem(product));
+    }
+
+    const removeEntirely = () => {
+        dispatch(removeCartItem(product));
     }
   return (
     <>
@@ -40,18 +48,18 @@ export const CartItem = (product: ProductModel) => {
               justifyContent: "space-between",
             }}
           >
-            <IconButton color="secondary" onClick={removeFromCart}>
+            <IconButton color="secondary" onClick={removeFromCart} disableRipple >
               <RemoveCircleOutlineIcon />
             </IconButton>
             <p>{product.quantity}</p>
-            <IconButton color="secondary">
+            <IconButton color="secondary" onClick={addToCart} disableRipple>
               <AddCircleOutlineIcon />
             </IconButton>
           </Box>
           <Typography component="div" sx={{ width: "30px" }}>
-            ${product.quantity * Number(product.price)}
+            ${totalPerItem}
           </Typography>
-          <IconButton >
+          <IconButton onClick={removeEntirely} disableRipple>
             <HighlightOffIcon color="secondary" />
           </IconButton>
         </Box>
