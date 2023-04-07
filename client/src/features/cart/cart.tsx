@@ -1,8 +1,9 @@
-import { Typography, Box, styled, Card, List, Button } from "@mui/material";
+import { Typography, Box, styled, List, Button } from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
-import { CartItemModel, ProductModel } from "../../app/interfaces";
+import { CartItemModel, Product } from "../../app/interfaces";
 import { backgroundColor } from "../../components/theme";
 import { CartItem } from "./cartItem";
+import { useNavigate } from "react-router-dom";
 
 const CartBox = styled("div")(({ theme }) => ({
   backgroundColor: backgroundColor,
@@ -11,8 +12,8 @@ const CartBox = styled("div")(({ theme }) => ({
 }));
 
 export const Cart = () => {
-  const products: ProductModel[] = useAppSelector((state) => state.cart.cart);
-
+  const navigate = useNavigate();
+  const products: Product[] = useAppSelector((state) => state.cart.cart);
   const calculateTotal = (items: CartItemModel[]) =>
     items.reduce((acc, item) => acc + item.quantity * Number(item.price), 0);
 
@@ -40,11 +41,11 @@ export const Cart = () => {
           <Typography>So far empty...</Typography>
         ) : (
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button color="secondary" variant="outlined">
+            <Button color="secondary" variant="outlined" onClick={()=>navigate("/checkout")}>
               Go to checkout
             </Button>
             <Typography variant="h6">
-              Total: ${calculateTotal(products).toFixed(2)}
+              Total: €{calculateTotal(products).toFixed(2)}
             </Typography>
           </Box>
         )}

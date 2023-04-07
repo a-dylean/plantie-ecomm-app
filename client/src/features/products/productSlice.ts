@@ -1,10 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
-import { ProductModel } from "../../app/interfaces";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import { Product } from "../../app/interfaces";
 
 type InitialState = {
-    products: ProductModel[],
-    selectedProduct: ProductModel | null,
+    products: Product[],
+    selectedProduct: Product | null,
     loading: boolean
 }
 
@@ -13,14 +12,7 @@ const initialState: InitialState = {
     selectedProduct: null,
     loading: false
 }
-export const getProducts = createAsyncThunk(
-    "products/getProducts",
-    async () => {
-        const response = await axios.get("http://localhost:4001/products");
-        console.log(response)
-        return response?.data;
-    }
-)
+
 export const productsSlice = createSlice({
     name: "products",
     initialState,
@@ -29,19 +21,6 @@ export const productsSlice = createSlice({
             state.selectedProduct = payload;
         }
     },
-    extraReducers(builder) {
-        builder
-        .addCase(getProducts.pending, state => {
-            state.loading = true;
-        })
-        .addCase(getProducts.fulfilled, (state, {payload}) => {
-            state.loading = false;
-            state.products = payload;
-        })
-        .addCase(getProducts.rejected, state => {
-            state.loading = false;
-        })  
-    }
 });
 
 export const {selectProduct} = productsSlice.actions;

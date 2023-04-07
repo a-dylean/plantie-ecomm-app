@@ -1,21 +1,69 @@
-import { AppBar, Toolbar, Typography, Container, Button, IconButton, Divider, Link } from "@mui/material";
-import LocalMallIcon from '@mui/icons-material/LocalMall';
-import LoginIcon from '@mui/icons-material/Login';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Drawer,
+  Box,
+  Badge,
+} from "@mui/material";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import LoginIcon from "@mui/icons-material/Login";
+import { Cart } from "../features/cart/cart";
+import { useState } from "react";
+import { getTotalItems } from "../helpers/cartFunctions";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useNavigate } from "react-router-dom";
+import Face4Icon from "@mui/icons-material/Face4";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { clearCart } from "../features/cart/cartSlice";
 
 export const Topbar = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch()
+  const [cartOpen, setCartOpen] = useState(false);
+  const cart = useAppSelector((state) => state.cart.cart);
+  const token = localStorage.getItem("userToken");
+const handleLogout = () => {
+  dispatch(clearCart());
+  localStorage.removeItem("userToken");
+  navigate("/auth/login");
+}
   return (
     <>
-      <AppBar elevation={0} sx={{borderBottom: "1px solid #DEDEDE"}}>
-        <Toolbar variant="dense" >
-          <Typography variant="h1" sx={{ flexGrow: 1, textAlign: "center" }}><Link color="secondary" href="/products/all" underline="none">Plantie</Link></Typography>
+      <AppBar
+        elevation={0}
+        sx={{
+          borderBottom: "1px solid #DEDEDE",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar variant="dense">
+          <Typography
+            component="h1"
+            variant="h1"
+            sx={{ flexGrow: 1, textAlign: "center" }}
+            onClick={() => navigate("/products/all")}
+          >
+            Plantie
+          </Typography>
+          <IconButton onClick={() => setCartOpen(true)}>
+            <LocalMallIcon />
+            <Badge badgeContent={getTotalItems(cart)} color="secondary" />
+          </IconButton>
+          <IconButton onClick={() => {token ? navigate("/me") : navigate("/auth/login")}}>
+            <Face4Icon />
+          </IconButton>
           <IconButton >
-            <LocalMallIcon/>
-          </IconButton> 
-          <IconButton href="/auth/login">
-            <LoginIcon/>
+            {token ? <LogoutIcon onClick={handleLogout}/> : <LoginIcon onClick={() => navigate("/auth/login")}/>}
           </IconButton>
         </Toolbar>
       </AppBar>
+      <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
+        <Box sx={{ mt: "3rem" }}>
+          <Cart />
+        </Box>
+      </Drawer>
     </>
   );
 };

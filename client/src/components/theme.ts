@@ -1,19 +1,19 @@
 import { createTheme } from "@mui/material";
 
-const backgroundColor = "#f7f6f3";
+export const backgroundColor = "#f7f6f3";
 
 export const theme = createTheme({
     palette: {
         primary: {
             main: "#f0f1ed", //light
             light: "#9c73d2", //main
-            dark: "#84bf35"
+            dark: "#84bf35",
         },
         secondary: {
             main: "#4f21a5",
             light: "#daecc3",
-            dark: "#a9d273"
-        },
+            dark: "#9c73d2"
+        }
     },
     typography: {
         allVariants: {
@@ -23,6 +23,13 @@ export const theme = createTheme({
             fontFamily: 'Fasthand',
             fontSize: "3rem",
             color: "#4f21a5"
+        },
+        h5:
+        {
+            fontFamily: 'Roboto Slab',
+        },
+        body2: {
+            fontFamily: 'Roboto',
         }
     },
     components: {
@@ -39,5 +46,20 @@ export const theme = createTheme({
                     marginTop: "5rem"
                 }
             }
-        }
+        },
+        MuiDrawer: {
+            styleOverrides: {
+                paper: {
+                    height: "auto",
+                    borderRadius: "0.5rem"
+                }
+            }
+        },
+        MuiListItem: {
+            styleOverrides: {
+                root: {
+                    display: "block"
+                }
+            }
+        },
 }})

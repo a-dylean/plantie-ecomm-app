@@ -13,6 +13,7 @@ import { RegistrationForm } from "../features/auth/registrationPage";
 import { LoginForm } from "../features/auth/loginPage";
 import { ProfilePage } from "../features/users/profilePage";
 import { ProductPage } from "../features/products/productPage";
+import { StripeForm } from "../features/checkout/stripe";
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
             <Route path="auth/register" element={<RegistrationForm/>}/>
             <Route path="auth/login" element={<LoginForm/>}/>
             <Route path="me" element={<ProfilePage/>}/>
+            {/* <Route path="checkout" element={<StripeForm/>}/> */}
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

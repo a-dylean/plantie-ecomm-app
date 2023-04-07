@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Path,
   Query,
   Route,
@@ -11,6 +12,9 @@ import {
 } from "tsoa";
 import { User } from "@prisma/client";
 import { UserService } from "./services";
+import { decodeAuthToken } from "../../helpers/jwt";
+import { stringify } from "querystring";
+import { tokenToString } from "typescript";
 
 @Route("users")
 @Tags("Users")
@@ -32,7 +36,7 @@ export class UsersController extends Controller {
   @Security("jwt", ["admin"])
   @Get("{userId}")
   public async getUser(@Path() userId: number): Promise<User> {
-    return new UserService().get(userId);
+    return new UserService().getUserById(userId);
   }
   /**
    * Deletes a user from the system.
@@ -58,7 +62,8 @@ export class ProfileController extends Controller {
    */
   @Security("jwt")
   @Get()
-  public async getUserProfile(@Query() userId: number): Promise<User> {
-    return new UserService().get(userId);
+  public async getUserProfile(@Header('Authorization') token: string): Promise<User> {
+    const userId = Object.values(decodeAuthToken(token.slice(7)))[0]
+    return new UserService().getUserById(Number(userId)); 
   }
 }

@@ -8,15 +8,12 @@ import {
   Link,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { addUser } from "../users/usersSlice";
 import {
   Controller,
   useForm,
   SubmitHandler,
   FieldValues,
 } from "react-hook-form";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../../app/layout";
 import {
@@ -24,41 +21,34 @@ import {
   MuiTelInputContinent,
   matchIsValidTel,
 } from "mui-tel-input";
+import { useCreateNewUserMutation } from "../api/apiSlice";
+import { enqueueSnackbar, SnackbarProvider } from "notistack";
 
 export const RegistrationForm = () => {
-  const { userInfo, success } = useAppSelector(
-    (state) => state.users
-  );
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const { register, control, handleSubmit } = useForm<FieldValues>({
-    defaultValues: {
-      name: "",
-      surname: "",
-      email: "",
-      password: "",
-      phone: "",
-      address: "",
-    },
-  });
+  const { register, control, handleSubmit } = useForm();
   const continents: MuiTelInputContinent[] = ["EU"];
+  const [createUser] = useCreateNewUserMutation();
 
-  useEffect(() => {
-    // redirect user to login page if registration was successful
-    if (success) navigate("/auth/login");
-    // redirect authenticated user to profile screen
-    if (userInfo) navigate("/me");
-  }, [navigate, userInfo, success]);
-
-  const submitForm: SubmitHandler<FieldValues> = (data) => {
-    data.email = data.email.toLowerCase();
-    dispatch(addUser(data));
+  const submitForm: SubmitHandler<FieldValues> = async (data) => {
+    try {
+      data.email = data.email.toLowerCase();
+      const result = await createUser(data).unwrap();
+      navigate("/auth/login");
+    } catch (error: any) {
+      enqueueSnackbar(error.data.message, { variant: "error" });
+    }
   };
   return (
     <Layout>
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      />
       <Box sx={{ m: "0 auto", width: "50%" }}>
-        <Typography component="h1" variant="h1" sx={{ mb: 2 }}>
+        <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
           Sign up
         </Typography>
         <form name="registration-form" onSubmit={handleSubmit(submitForm)}>

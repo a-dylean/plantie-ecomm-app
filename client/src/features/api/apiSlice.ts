@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FieldValues } from "react-hook-form";
-import { LoginModel, LoginResponse, ProductModel, UserModel } from "../../app/interfaces";
+import { Login, LoginResponse, Product, User } from "../../app/interfaces";
 import { RootState } from "../../app/store";
 
 const baseUrl = "http://localhost:4001/";
 
-type UserModelResponse = UserModel;
+type UserResponse = User;
 
 const baseQuery = fetchBaseQuery({
   baseUrl,
@@ -34,10 +34,10 @@ export const apiSlice = createApi({
         body: parameters
       }),
     }),
-    getCurrentUserDetails: builder.query<UserModelResponse, void>({
+    getCurrentUserDetails: builder.query<UserResponse, void>({
       query: () => 'me',
     }),
-    getProducts: builder.query<ProductModel[], void>({
+    getProducts: builder.query<Product[], void>({
       query: () => 'products',
     }),
   }),

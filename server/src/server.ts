@@ -2,6 +2,7 @@ import express, {
   Response as ExResponse,
   Request as ExRequest,
   NextFunction,
+  RequestHandler,
 } from "express";
 import { ValidateError } from "tsoa";
 import { NotFoundError } from "./helpers/errors";
@@ -17,12 +18,14 @@ import { Prisma } from "@prisma/client";
 import { AuthError } from "./helpers/errors";
 import { PORT } from "../config";
 import { validationErrorHandler, uniquenessValidationErrorHandler} from "./helpers/errors";
+import Stripe from 'stripe';
+import {loadStripe} from '@stripe/stripe-js';
 
 const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({ origin: "http://localhost:4001", credentials: true }));
+app.use(cors({ credentials: true }));
 app.use(
   session({
     secret: "secretcode",

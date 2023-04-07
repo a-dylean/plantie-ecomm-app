@@ -11,10 +11,10 @@ import {
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { CartItemModel, ProductModel } from "../../app/interfaces";
+import { CartItemModel, Product } from "../../app/interfaces";
 import { useAppDispatch } from "../../app/hooks";
 import { addCartItem, removeCartItemByPiece, removeCartItem } from "./cartSlice";
-export const CartItem = (product: ProductModel) => {
+export const CartItem = (product: Product) => {
     const totalPerItem =(product.quantity * Number(product.price)).toFixed(2);
     const dispatch = useAppDispatch();
     const removeFromCart = () => {
@@ -40,7 +40,7 @@ export const CartItem = (product: ProductModel) => {
           }}
         >
           <Typography component="div" sx={{ width: "200px" }}>
-            {product.name} <br /> ${Number(product.price).toFixed(2)}
+            {product.name} <br /> €{Number(product.price).toFixed(2)}
           </Typography>
           <Box
             sx={{
@@ -57,7 +57,7 @@ export const CartItem = (product: ProductModel) => {
             </IconButton>
           </Box>
           <Typography component="div" sx={{ width: "30px" }}>
-            ${totalPerItem}
+          €{totalPerItem}
           </Typography>
           <IconButton onClick={removeEntirely} disableRipple>
             <HighlightOffIcon color="secondary" />

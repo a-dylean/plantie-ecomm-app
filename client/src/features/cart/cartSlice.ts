@@ -1,6 +1,5 @@
-import { SatelliteAlt } from "@mui/icons-material";
 import { createSlice } from "@reduxjs/toolkit";
-import { CartItemModel, ProductModel } from "../../app/interfaces";
+import { CartItemModel, Product } from "../../app/interfaces";
 
 type InitialState = {
     cart: CartItemModel[],
@@ -41,11 +40,13 @@ export const cartSlice = createSlice({
                   return [...acc, item];
                 }
               }, [] as CartItemModel[])
-
+        },
+        clearCart: (state) => {
+          state.cart = []
         }
     }
 })
 
-export const {addCartItem, removeCartItemByPiece, removeCartItem } = cartSlice.actions;
+export const {addCartItem, removeCartItemByPiece, removeCartItem, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

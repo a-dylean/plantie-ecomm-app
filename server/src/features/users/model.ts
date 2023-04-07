@@ -1,9 +1,10 @@
 import { PrismaClient, User } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 export type UserCreationParams = Pick<
   User,
-  "name" | "surname" | "email" | "phone" | "address" | "password" | "role"
+  "name" | "surname" | "email" | "phone" | "address" | "password"
 >;
 
 export type UserLoginParams = Pick<User, "email" | "password">;

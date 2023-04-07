@@ -49,7 +49,7 @@ model Product {
   categoryId   Int?           @map("category_id")
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
-  picture      String? 
+  picture      String?
   orders       Order[]
   category     Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
@@ -58,18 +58,18 @@ model Product {
 }
 
 model User {
-  id               Int           @id @default(autoincrement())
-  name             String        @db.VarChar(256)
-  surname          String        @db.VarChar(256)
-  email            String        @unique @db.VarChar(256)
-  phone            String?       @db.VarChar(50)
-  address          String?       @db.VarChar(256)
-  password         String        @db.VarChar(256)
+  id               Int          @id @default(autoincrement())
+  name             String?      @db.VarChar(256)
+  surname          String?      @db.VarChar(256)
+  email            String       @unique @db.VarChar(256)
+  phone            String?      @db.VarChar(50)
+  address          String?      @db.VarChar(256)
+  password         String       @db.VarChar(256)
   role             RoleEnumType @default(user)
-  verified         Boolean?      @default(false)
-  verificationCode String?       @unique @db.Text
-  createdAt        DateTime?     @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime?     @updatedAt @map("updated_at") @db.Timestamp(6)
+  verified         Boolean?     @default(false)
+  verificationCode String?      @unique @db.Text
+  createdAt        DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime?    @updatedAt @map("updated_at") @db.Timestamp(6)
   orders           Order[]
 
   @@unique([email, verificationCode])

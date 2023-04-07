@@ -7,7 +7,7 @@ import { setupListeners } from "@reduxjs/toolkit/dist/query/react";
 
 export const store: any = configureStore({
     reducer: {
-       //products: productsReducer,
+       products: productsReducer,
        users: usersReducer,
        cart: cartReducer,
        [apiSlice.reducerPath]: apiSlice.reducer

@@ -4,7 +4,7 @@ import { UserModel } from "./model";
 const UserModelInstance = new UserModel();
 
 export class UserService {
-  async get(id: User["id"]): Promise<User> {
+  async getUserById(id: User["id"]): Promise<User> {
     const user = await UserModelInstance.findUserById(id);
     if (!user) {
       throw new NotFoundError("User not found");

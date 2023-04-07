@@ -6,19 +6,25 @@ import {
   Button,
   Typography,
   Box,
+  IconButton,
+  Collapse,
 } from "@mui/material";
-import { ProductModel } from "../../app/interfaces";
+import { Product } from "../../app/interfaces";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { selectProduct } from "./productSlice";
+import { addCartItem } from "../cart/cartSlice";
 
-export const ProductItem = (product: ProductModel) => {
+export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
- 
+  const addToCart = () => {
+    dispatch(addCartItem(product))
+}
   return (
-    <Card sx={{ width: 345, height: 666 }} >
-      <Box onClick={() => {dispatch(selectProduct(product));
+    <Card sx={{ width: 345, height: 670 }} >
+      <Box onClick={()=>dispatch(selectProduct(product))}>
+      <Box onClick={() => {
       navigate(`/products/${product.id}`)
        }}
       >
@@ -34,25 +40,26 @@ export const ProductItem = (product: ProductModel) => {
             {product.name}
           </Typography>
           <Typography variant="h6" component="div">
-            ${product.price}
+          €{product.price}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary" component="div" height={"8rem"}>
+        <Typography variant="body2" color="text.secondary" component="div" height={"8rem"} sx={{ wordBreak: "break-word" }} >
           {product.description}
         </Typography>
       </CardContent>
       </Box>
       <CardActions>
         <Button
-          sx={{ m: "auto", width: "100%" }}
+          sx={{width: "100%" }}
           variant="outlined"
           size="small"
           color="secondary"
           disableElevation
+          onClick={addToCart}
         >
           Add to cart
         </Button>
-      </CardActions>
+      </CardActions></Box>
     </Card>
   );
 };
