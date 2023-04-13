@@ -19,7 +19,9 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   // reducerPath: "api",
   baseQuery,
+  tagTypes: ['Product'],
   endpoints: (builder) => ({
+    //USERS
     createNewUser: builder.mutation<FieldValues, {}>({
       query: (parameters) => ({
         url: 'register',
@@ -37,10 +39,65 @@ export const apiSlice = createApi({
     getCurrentUserDetails: builder.query<UserResponse, void>({
       query: () => 'me',
     }),
+    //PRODUCTS
     getProducts: builder.query<Product[], void>({
       query: () => 'products',
     }),
+    getProduct: builder.query<Product, {}> ({
+      query: (parameters) => ({
+        url: `products/${parameters}`,
+        method: 'GET'
+      })
+    }),
+    //CART AND ORDERS
+    createOrder: builder.mutation({
+      query: (parameters) => ({
+        url: 'orders',
+        method: 'POST',
+        body: parameters
+      })
+    }),
+    addToCart: builder.mutation({
+      query: (parameters) => ({
+        url: 'orders/product_order',
+        method: 'POST',
+        body: parameters
+      })
+    }),
+    getDraftOrder: builder.query({
+      query: (parameters) => ({
+        url: `orders/draft/${parameters}`,
+        method: 'GET'
+      }),
+      providesTags: ['Product'],
+    }),
+    getProductOrderPerOrder: builder.query({
+      query: (parameters) => ({
+        url: `orders/product_order/order/${parameters}`,
+        method: 'GET'
+      }),
+      providesTags: ['Product'],
+    }),
+    getProductOrderByProductId: builder.query({
+      query: (productId: number) => ({
+        url: `orders/product_order/item/${productId}`,
+        method: 'GET'
+      }),
+      providesTags: ['Product'],
+    }),
+    deleteProductOrder: builder.mutation({
+      query: (parameters) => ({
+        url: `orders/product_order/delete/${parameters}`,
+        method: 'DELETE'
+      })
+    }),
+    incrementProductOrder: builder.mutation({
+      query: (parameters) => ({
+        url: `orders/increment/${parameters}`,
+        method: 'POST',
+      })
+    })
   }),
 });
 
-export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation } = apiSlice;
+export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation, useCreateOrderMutation, useAddToCartMutation, useGetDraftOrderQuery, useGetProductOrderPerOrderQuery, useDeleteProductOrderMutation, useIncrementProductOrderMutation, useGetProductOrderByProductIdQuery, useGetProductQuery } = apiSlice;

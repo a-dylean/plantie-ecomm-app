@@ -14,16 +14,31 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { selectProduct } from "./productSlice";
 import { addCartItem } from "../cart/cartSlice";
+import { useAddToCartMutation, useCreateOrderMutation, useGetCurrentUserDetailsQuery, useGetDraftOrderQuery } from "../api/apiSlice";
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const addToCart = () => {
-    dispatch(addCartItem(product))
+  const [createOrderInDB] = useCreateOrderMutation();
+  const {
+    data: user
+  } = useGetCurrentUserDetailsQuery();
+  const userId = user?.id;
+  const [createProductOrder] = useAddToCartMutation();
+  const { data: order } = useGetDraftOrderQuery(userId);
+  const addToCart = async () => {
+     await createOrderInDB({userId: userId});
+     await dispatch(addCartItem(product));
+     createProductOrder({
+      productId: product.id,
+      quantity: 1,
+      orderId: order.id,
+    });
 }
+
   return (
     <Card sx={{ width: 345, height: 670 }} >
-      <Box onClick={()=>dispatch(selectProduct(product))}>
+      <Box onClick={(): Product =>dispatch(selectProduct(product))}>
       <Box onClick={() => {
       navigate(`/products/${product.id}`)
        }}

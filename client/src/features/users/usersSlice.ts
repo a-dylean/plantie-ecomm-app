@@ -19,9 +19,9 @@ const initialState: InitialState = {
   success: false,
 };
 
-export const logoutUser = () => {
-  localStorage.removeItem("userToken");
-};
+// export const logoutUser = () => {
+//   localStorage.removeItem("userToken");
+// };
 
 export const usersSlice = createSlice({
   name: "users",

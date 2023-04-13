@@ -17,10 +17,11 @@ model Category {
 
 model Order {
   id           Int            @id @default(autoincrement())
-  userId       Int?           @map("user_id")
-  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  userId       Int            @map("user_id")
+  createdAt    DateTime?       @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   amount       Decimal?       @db.Money
+  status       String         @default("draft")
   user         User?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
   Product      Product?       @relation(fields: [productId], references: [id])
@@ -32,7 +33,7 @@ model Order {
 model ProductOrder {
   id        Int      @id(map: "checkout_pkey") @default(autoincrement())
   productId Int?     @map("product_id")
-  quantity  Int?
+  quantity  Int      @default(0)
   orderId   Int?     @map("order_id")
   product   Product? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "checkout_product_id_fkey")
   order     Order?   @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)

@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Path,
   Post,
+  Query,
+  Request,
   Route,
   Security,
   SuccessResponse,
@@ -11,7 +14,7 @@ import {
 } from "tsoa";
 import { Order, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
-import { OrderCreationParams } from "./model";
+import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 
 @Route("orders")
 @Tags("Orders")
@@ -40,12 +43,63 @@ export class OrdersController extends Controller {
    * @param requestBody Details of the order
    */
   @Security("jwt")
+  @Post("/product_order")
+  public async createProductOrder(
+    @Body() requestBody: ProductOrderCreationParams
+  ): Promise<ProductOrder> {
+    this.setStatus(201);
+    return new OrderService().createProductOrder(requestBody);
+  }
+
+  @Security("jwt")
   @SuccessResponse("201", "Order created")
   @Post()
   public async createOrder(
     @Body() requestBody: OrderCreationParams
-  ): Promise<ProductOrder> {
+  ): Promise<Order | undefined> {
     this.setStatus(201);
-    return new OrderService().create(requestBody);
+    return new OrderService().createOrder(requestBody);
   }
+
+  @Security("jwt")
+  @Get("/draft/{draft_order}")
+  public async getOrderByUserId(
+    @Path() draft_order: number
+  ): Promise<Order | null> {
+    return new OrderService().getOrderByUserId(draft_order);
+  }
+
+  @Security("jwt")
+  @Get("/product_order/order/{order_id}")
+  public async getProductOrderPerOrder(
+    @Path() order_id: number
+  ): Promise<ProductOrder[]|null> {
+    return new OrderService().getProductOrderPerOrder(order_id);
+  }
+
+  @Security("jwt")
+  @Get("/product_order/item/{product_id}")
+  public async getProductOrderByProductId(
+    @Path() product_id: number
+  ): Promise<ProductOrder|null> {
+    return new OrderService().getProductOrderByProductId(product_id);
+  }
+
+  @Security("jwt")
+  @Delete("/product_order/delete/{product_id}")
+  public async deleteProductOrderById(
+    @Path() product_id: number
+  ): Promise<void> {
+    return new OrderService().deleteProductOrderById(product_id);
+  }
+
+  @Security("jwt")
+  @Post("/increment/{productOrderId}")
+  public async incrementProductOrder(
+    @Path() productOrderId: number
+  ): Promise<ProductOrder|null> {
+    return new OrderService().incrementProductOrderItem(productOrderId);
+  }
+
+
 }

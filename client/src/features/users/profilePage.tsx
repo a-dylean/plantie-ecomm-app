@@ -19,6 +19,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useNavigate } from "react-router-dom";
 import { clearCart } from "../cart/cartSlice";
+import { OrdersInfo } from "../orders/ordersInfo";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -107,6 +108,7 @@ export const ProfilePage = () => {
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                 <Typography variant="h5">Orders information</Typography>
+                <OrdersInfo/>
                 </TabPanel>
               </Box>
             </Grid>

@@ -4,7 +4,14 @@ import { CartItemModel, Product } from "../../app/interfaces";
 import { backgroundColor } from "../../components/theme";
 import { CartItem } from "./cartItem";
 import { useNavigate } from "react-router-dom";
-
+import {
+  useGetCurrentUserDetailsQuery,
+  useGetDraftOrderQuery,
+  useGetProductOrderByProductIdQuery,
+  useGetProductOrderPerOrderQuery,
+} from "../api/apiSlice";
+import { useMemo } from "react";
+import CircularProgress from '@mui/material/CircularProgress';
 const CartBox = styled("div")(({ theme }) => ({
   backgroundColor: backgroundColor,
   width: "600px",
@@ -13,31 +20,45 @@ const CartBox = styled("div")(({ theme }) => ({
 
 export const Cart = () => {
   const navigate = useNavigate();
-  const products: Product[] = useAppSelector((state) => state.cart.cart);
-  const calculateTotal = (items: CartItemModel[]) =>
-    items.reduce((acc, item) => acc + item.quantity * Number(item.price), 0);
+  //const products: Product[] = useAppSelector((state) => state.cart.cart);
+  const { data: user } = useGetCurrentUserDetailsQuery();
+  const userId = user!.id;
+  const draftOrder = useGetDraftOrderQuery(userId);
+  console.log(draftOrder);
+  console.log(draftOrder.data?.id);
+  const { data: OrderItems = [], isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    error,
+    refetch } = useGetProductOrderPerOrderQuery(
+    Number(draftOrder.data?.id)
+  );
+
+  let content;
+
+  if (isLoading) {
+    content = <CircularProgress />
+  } else if (isSuccess) {
+    const renderedItems = OrderItems.map((product: any) => (<List key={product.id}><CartItem id={product.productId} quantity={product.quantity}/>
+      </List>))
+
+      content = <div>{renderedItems}</div>
+
+  } else if (isError) {
+    content = <div>{error.toString()}</div>
+  }
+
+  const calculateTotal = (items: any) =>
+  //get price from Product table!!
+    items.reduce((acc: number, item: { quantity: number; price: any; }) => acc + item.quantity * Number(item.price), 0);
 
   return (
     <>
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
-        {Object.values(products).map((product) => (
-          <List key={product.id}>
-            <CartItem
-              id={product.id}
-              name={product.name}
-              description={product.description}
-              price={product.price}
-              available={product.available}
-              categoryId={product.categoryId}
-              createdAt={product.createdAt}
-              updatedAt={product.updatedAt}
-              picture={product.picture}
-              quantity={product.quantity}
-            />
-          </List>
-        ))}
-        {products.length === 0 ? (
+        {content}
+        {OrderItems.length === 0 ? (
           <Typography>So far empty...</Typography>
         ) : (
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -45,7 +66,7 @@ export const Cart = () => {
               Go to checkout
             </Button>
             <Typography variant="h6">
-              Total: €{calculateTotal(products).toFixed(2)}
+              Total: €{calculateTotal(OrderItems).toFixed(2)}
             </Typography>
           </Box>
         )}
