@@ -30,7 +30,6 @@ export const CartItem = ({ id, quantity }: any) => {
   const [decrement] = useDecrementProductOrderMutation();
   const [deleteItem] = useDeleteProductOrderMutation();
   const [count, setCount] = useState(quantity);
-  const newCount = cartItemInfo?.quantity;
   const totalPerItem = (count * Number(productInfo?.price)).toFixed(2);
   const addToCart = () => {
     increment(cartItemInfoId)
@@ -47,12 +46,12 @@ export const CartItem = ({ id, quantity }: any) => {
   const removeEntirely = () => {
     deleteItem(cartItemInfoId)
       .unwrap()
-      .then(() => setCount(false))
+      .then()
       .catch((error) => console.error(error));
   };
   return (
     <>
-      {productInfo && cartItemInfo && count && (
+      {productInfo && (
         <div>
           <ListItem dense>
             <Box

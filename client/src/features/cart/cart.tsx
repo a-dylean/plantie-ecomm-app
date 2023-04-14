@@ -47,11 +47,9 @@ export const Cart = () => {
   } else if (isError) {
     content = <div>{error.toString()}</div>
   }
-
   const calculateTotal = (items: any) =>
   //get price from Product table!!
     items.reduce((acc: number, item: { quantity: number; price: any; }) => acc + item.quantity * Number(item.price), 0);
-
   return (
     <>
       <CartBox>

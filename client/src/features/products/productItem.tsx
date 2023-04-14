@@ -32,10 +32,10 @@ export const ProductItem = (product: Product) => {
   const addToCart = async () => {
     await createOrderInDB({ userId: user!.id });
     //await dispatch(addCartItem(product));
-    createProductOrder({
+    await createProductOrder({
       productId: product.id,
-      quantity: 1,
       orderId: order!.id,
+      quantity: 1
     });
   };
 

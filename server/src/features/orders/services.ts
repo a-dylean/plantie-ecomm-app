@@ -14,7 +14,7 @@ export class OrderService {
   async getAll(): Promise<Order[]> {
     return await OrderModelInstance.getAll();
   }
-  async createProductOrder(data: ProductOrderCreationParams): Promise<ProductOrder> {
+  async createProductOrder(data: ProductOrderCreationParams): Promise<ProductOrder|undefined> {
     return await OrderModelInstance.createProductOrder(data);
   }
   async createOrder(data: OrderCreationParams): Promise<Order | undefined> {

@@ -19,7 +19,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   // reducerPath: "api",
   baseQuery,
-  tagTypes: ['Product'],
+  tagTypes: ['Product', 'CartItem', 'Order'],
   endpoints: (builder) => ({
     //USERS
     createNewUser: builder.mutation<FieldValues, {}>({
@@ -42,12 +42,14 @@ export const apiSlice = createApi({
     //PRODUCTS
     getProducts: builder.query<Product[], void>({
       query: () => 'products',
+      providesTags: ['Product']
     }),
     getProduct: builder.query<Product, {}> ({
       query: (parameters) => ({
         url: `products/${parameters}`,
         method: 'GET'
-      })
+      }),
+      providesTags: ['Product']
     }),
     //CART AND ORDERS
     createOrder: builder.mutation<Order, {}>({
@@ -75,18 +77,20 @@ export const apiSlice = createApi({
         url: `orders/product_order/order/${parameters}`,
         method: 'GET'
       }),
+      providesTags: ['CartItem']
     }),
     getProductOrderByProductId: builder.query<CartItem, {}>({
       query: (productId: number) => ({
         url: `orders/product_order/item/${productId}`,
         method: 'GET'
       }),
+      providesTags: ['CartItem']
     }),
     deleteProductOrder: builder.mutation<CartItem, number|undefined>({
       query: (parameters) => ({
         url: `orders/product_order/delete/${parameters}`,
         method: 'DELETE'
-      })
+      }),
     }),
     incrementProductOrder: builder.mutation<CartItem, number|undefined>({
       query: (parameters) => ({

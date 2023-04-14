@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 export type ProductOrderCreationParams = Pick<
   ProductOrder,
-  "productId" | "quantity" | "orderId"
+  "productId" | "orderId" | "quantity"
 >;
 
 export type OrderCreationParams = Pick<Order, "userId">;
@@ -11,15 +11,23 @@ export type OrderCreationParams = Pick<Order, "userId">;
 export class OrderModel {
   async createProductOrder(
     data: ProductOrderCreationParams
-  ): Promise<ProductOrder> {
-    return await prisma.productOrder.create({
+  ): Promise<ProductOrder | undefined> {
+    const productId = data.productId;
+    const productOrder = await prisma.productOrder.findMany({
+      where: {
+        productId: productId
+      }
+    })
+
+    if (productOrder.length === 0) {
+      return await prisma.productOrder.create({
       data: {
         ...data,
       },
     });
+    }
   }
   async createOrder(data: OrderCreationParams): Promise<Order | undefined> {
-    //check if draft order exists for a user
     const userId = data.userId;
     const draftOrder = await prisma.order.findMany({
       where: {

@@ -46,7 +46,7 @@ export class OrdersController extends Controller {
   @Post("/product_order")
   public async createProductOrder(
     @Body() requestBody: ProductOrderCreationParams
-  ): Promise<ProductOrder> {
+  ): Promise<ProductOrder|undefined> {
     this.setStatus(201);
     return new OrderService().createProductOrder(requestBody);
   }
