@@ -9,8 +9,8 @@ import {
   useGetDraftOrderQuery,
   useGetProductOrderByProductIdQuery,
   useGetProductOrderPerOrderQuery,
+  useGetUserCartQuery,
 } from "../api/apiSlice";
-import { useMemo } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 const CartBox = styled("div")(({ theme }) => ({
   backgroundColor: backgroundColor,
@@ -21,19 +21,18 @@ const CartBox = styled("div")(({ theme }) => ({
 export const Cart = () => {
   const navigate = useNavigate();
   //const products: Product[] = useAppSelector((state) => state.cart.cart);
-  const { data: user } = useGetCurrentUserDetailsQuery();
-  const userId = user!.id;
-  const draftOrder = useGetDraftOrderQuery(userId);
-  console.log(draftOrder);
-  console.log(draftOrder.data?.id);
+  // const { data: user } = useGetCurrentUserDetailsQuery();
+  // const userId = user!.id;
+  // const draftOrder = useGetDraftOrderQuery(userId);
+  // console.log(draftOrder);
+  // console.log(draftOrder.data?.id);
+  // const draftOrderId = draftOrder.data!.id
   const { data: OrderItems = [], isLoading,
     isFetching,
     isSuccess,
     isError,
     error,
-    refetch } = useGetProductOrderPerOrderQuery(
-    Number(draftOrder.data?.id)
-  );
+    refetch } = useGetUserCartQuery();
 
   let content;
 

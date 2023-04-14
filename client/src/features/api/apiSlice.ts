@@ -1,6 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { FetchBaseQueryError, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FieldValues } from "react-hook-form";
-import { Login, LoginResponse, Product, User } from "../../app/interfaces";
+import { CartItem, Login, LoginResponse, Order, Product, User } from "../../app/interfaces";
 import { RootState } from "../../app/store";
 
 const baseUrl = "http://localhost:4001/";
@@ -50,54 +50,85 @@ export const apiSlice = createApi({
       })
     }),
     //CART AND ORDERS
-    createOrder: builder.mutation({
+    createOrder: builder.mutation<Order, {}>({
       query: (parameters) => ({
         url: 'orders',
         method: 'POST',
         body: parameters
       })
     }),
-    addToCart: builder.mutation({
+    addToCart: builder.mutation<CartItem, {}>({
       query: (parameters) => ({
         url: 'orders/product_order',
         method: 'POST',
         body: parameters
       })
     }),
-    getDraftOrder: builder.query({
+    getDraftOrder: builder.query<Order, number>({
       query: (parameters) => ({
         url: `orders/draft/${parameters}`,
         method: 'GET'
       }),
-      providesTags: ['Product'],
     }),
-    getProductOrderPerOrder: builder.query({
+    getProductOrderPerOrder: builder.query<CartItem[], number>({
       query: (parameters) => ({
         url: `orders/product_order/order/${parameters}`,
         method: 'GET'
       }),
-      providesTags: ['Product'],
     }),
-    getProductOrderByProductId: builder.query({
+    getProductOrderByProductId: builder.query<CartItem, {}>({
       query: (productId: number) => ({
         url: `orders/product_order/item/${productId}`,
         method: 'GET'
       }),
-      providesTags: ['Product'],
     }),
-    deleteProductOrder: builder.mutation({
+    deleteProductOrder: builder.mutation<CartItem, number|undefined>({
       query: (parameters) => ({
         url: `orders/product_order/delete/${parameters}`,
         method: 'DELETE'
       })
     }),
-    incrementProductOrder: builder.mutation({
+    incrementProductOrder: builder.mutation<CartItem, number|undefined>({
       query: (parameters) => ({
         url: `orders/increment/${parameters}`,
         method: 'POST',
       })
+    }),
+    decrementProductOrder: builder.mutation<CartItem, number|undefined>({
+      query: (parameters) => ({
+        url: `orders/decrement/${parameters}`,
+        method: 'POST',
+      })
+    }),
+    getUserCart: builder.query<CartItem[], void>({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        const userResponse = await fetchWithBQ('me')
+        if (userResponse.error)
+          return { error: userResponse.error as FetchBaseQueryError }
+        const user = userResponse.data as User
+        const orderResponse = await fetchWithBQ(`orders/draft/${user.id}`)
+        if (orderResponse.error)
+        return {error: orderResponse.error as FetchBaseQueryError}
+        const order = orderResponse.data as Order 
+        const cart = await fetchWithBQ(`orders/product_order/order/${order.id}`)
+        return cart.data
+        ? { data: cart.data as CartItem[] }
+        : { error: cart.error as FetchBaseQueryError }
+      }
+    }),
+    getUserOrder: builder.query<Order, void>({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        const userResponse = await fetchWithBQ('me')
+        if (userResponse.error)
+          return { error: userResponse.error as FetchBaseQueryError }
+        const user = userResponse.data as User
+        const order = await fetchWithBQ(`orders/draft/${user.id}`)
+        return order.data
+        ? { data: order.data as Order }
+        : { error: order.error as FetchBaseQueryError }
+      }
     })
   }),
 });
 
-export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation, useCreateOrderMutation, useAddToCartMutation, useGetDraftOrderQuery, useGetProductOrderPerOrderQuery, useDeleteProductOrderMutation, useIncrementProductOrderMutation, useGetProductOrderByProductIdQuery, useGetProductQuery } = apiSlice;
+export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation, useCreateOrderMutation, useAddToCartMutation, useGetDraftOrderQuery, useGetProductOrderPerOrderQuery, useDeleteProductOrderMutation, useIncrementProductOrderMutation, useGetProductOrderByProductIdQuery, useGetProductQuery, useGetUserCartQuery, useGetUserOrderQuery, useDecrementProductOrderMutation } = apiSlice;

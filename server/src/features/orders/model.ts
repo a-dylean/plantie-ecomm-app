@@ -67,10 +67,10 @@ export class OrderModel {
       }
     })
   }
-  async deleteProductOrderById(id: Product["id"]): Promise<void> {
-   await prisma.productOrder.deleteMany({
+  async deleteProductOrderById(id: ProductOrder["id"]): Promise<void> {
+   await prisma.productOrder.delete({
       where: {
-        productId: id
+        id: id
       }
     })
   }

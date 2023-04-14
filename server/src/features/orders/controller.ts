@@ -86,11 +86,11 @@ export class OrdersController extends Controller {
   }
 
   @Security("jwt")
-  @Delete("/product_order/delete/{product_id}")
+  @Delete("/product_order/delete/{productOrderId}")
   public async deleteProductOrderById(
-    @Path() product_id: number
+    @Path() productOrderId: number
   ): Promise<void> {
-    return new OrderService().deleteProductOrderById(product_id);
+    return new OrderService().deleteProductOrderById(productOrderId);
   }
 
   @Security("jwt")
@@ -99,6 +99,14 @@ export class OrdersController extends Controller {
     @Path() productOrderId: number
   ): Promise<ProductOrder|null> {
     return new OrderService().incrementProductOrderItem(productOrderId);
+  }
+
+  @Security("jwt")
+  @Post("/decrement/{productOrderId}")
+  public async decrementProductOrder(
+    @Path() productOrderId: number
+  ): Promise<ProductOrder|null> {
+    return new OrderService().decrementProductOrderItem(productOrderId);
   }
 
 

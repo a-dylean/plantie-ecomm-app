@@ -11,6 +11,7 @@ import {
 } from "./cartSlice";
 import {
   useAddToCartMutation,
+  useDecrementProductOrderMutation,
   useDeleteProductOrderMutation,
   useGetCurrentUserDetailsQuery,
   useGetDraftOrderQuery,
@@ -19,41 +20,39 @@ import {
   useGetProductQuery,
   useIncrementProductOrderMutation,
 } from "../api/apiSlice";
+import { useState } from "react";
 export const CartItem = ({ id, quantity }: any) => {
-  //const dispatch = useAppDispatch();
-  const { data: user } = useGetCurrentUserDetailsQuery();
-  const userId = user!.id;
-
-  const { data: order } = useGetDraftOrderQuery(Number(userId));
-  const { data: cart } = useGetProductOrderPerOrderQuery(order.id);
-  const [increment] = useIncrementProductOrderMutation();
-  const [deleteItem] = useDeleteProductOrderMutation();
-  const cartItemInfo = useGetProductOrderByProductIdQuery(id);
-  console.log(cartItemInfo);
-console.log(cart)
+  const { data: cartItemInfo } = useGetProductOrderByProductIdQuery(id);
   const { data: productInfo } = useGetProductQuery(id);
-  console.log(productInfo?.name);
-  const totalPerItem = (quantity * Number(productInfo?.price)).toFixed(2);
+  const cartItemInfoId = cartItemInfo?.id;
+
+  const [increment] = useIncrementProductOrderMutation();
+  const [decrement] = useDecrementProductOrderMutation();
+  const [deleteItem] = useDeleteProductOrderMutation();
+  const [count, setCount] = useState(quantity);
+  const newCount = cartItemInfo?.quantity;
+  const totalPerItem = (count * Number(productInfo?.price)).toFixed(2);
   const addToCart = () => {
-    //dispatch(addCartItem(product));
-    increment(cartItemInfo.data.id)
+    increment(cartItemInfoId)
       .unwrap()
+      .then((payload) => setCount(payload.quantity))
       .catch((error) => console.error("rejected", error));
   };
-
   const removeFromCart = () => {
-    //dispatch(removeCartItemByPiece(product));
-    deleteItem(id)
+    decrement(cartItemInfoId)
       .unwrap()
-      .then(() => console.log("hello"))
+      .then((payload) => setCount(payload.quantity))
       .catch((error) => console.error(error));
   };
   const removeEntirely = () => {
-    //dispatch(removeCartItem(product));
+    deleteItem(cartItemInfoId)
+      .unwrap()
+      .then(() => setCount(false))
+      .catch((error) => console.error(error));
   };
   return (
     <>
-      {productInfo && (
+      {productInfo && cartItemInfo && count && (
         <div>
           <ListItem dense>
             <Box
@@ -81,8 +80,7 @@ console.log(cart)
                 >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
-                {quantity}
-                {/* <p>{quantity}</p> */}
+                {count}
                 <IconButton color="secondary" onClick={addToCart} disableRipple>
                   <AddCircleOutlineIcon />
                 </IconButton>

@@ -46,3 +46,19 @@ export interface LoginResponse {
     name: string,
     token: string
 }
+
+export interface CartItem {
+    id: number,
+    productId: number,
+    quantity: number,
+    orderId: number
+}
+
+export interface Order {
+    amount: number,
+    createdAt: Date,
+    updatedAt: Date,
+    id: number,
+    status: string,
+    userId: number
+}
