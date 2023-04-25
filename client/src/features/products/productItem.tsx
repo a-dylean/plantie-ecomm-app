@@ -5,20 +5,16 @@ import {
   CardMedia,
   Button,
   Typography,
-  Box,
-  IconButton,
-  Collapse,
+  Box
 } from "@mui/material";
 import { Product } from "../../app/interfaces";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { selectProduct } from "./productSlice";
-import { addCartItem } from "../cart/cartSlice";
 import {
   useAddToCartMutation,
   useCreateOrderMutation,
   useGetCurrentUserDetailsQuery,
-  useGetDraftOrderQuery,
   useGetUserOrderQuery,
 } from "../api/apiSlice";
 
@@ -31,10 +27,10 @@ export const ProductItem = (product: Product) => {
   const {data: order} = useGetUserOrderQuery();
   const addToCart = async () => {
     await createOrderInDB({ userId: user!.id });
-    //await dispatch(addCartItem(product));
     await createProductOrder({
       productId: product.id,
       orderId: order!.id,
+      price: product.price,
       quantity: 1
     });
   };

@@ -1,23 +1,17 @@
 import { Typography } from "@mui/material";
-import { useGetCurrentUserDetailsQuery, useGetDraftOrderQuery, useGetProductOrderPerOrderQuery } from "../api/apiSlice";
+import { useGetCurrentUserDetailsQuery, useGetDraftOrderQuery, useGetUserOrderQuery } from "../api/apiSlice";
 
 export const OrdersInfo = () => {
-  const {
-    data: user,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetCurrentUserDetailsQuery();
-  const userId = user!.id;
-  const draftOrder = useGetDraftOrderQuery(userId);
-  const {data: productItem} = useGetProductOrderPerOrderQuery(
-    Number(draftOrder.data?.id)
-  );
+  const {data: order} = useGetUserOrderQuery()
 
 
   return (
     <>
+    <div>
+     Id: {order?.id} <br/>
+     Status: {order?.status} <br/>
+     Created at: {order?.createdAt.toString()}
+    </div>
     </>
   )
 }

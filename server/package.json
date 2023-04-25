@@ -1,6 +1,9 @@
 {
   "name": "ecomm-app-project",
   "version": "1.0.0",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "description": "",
   "main": "server.js",
   "scripts": {

@@ -19,7 +19,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   // reducerPath: "api",
   baseQuery,
-  tagTypes: ['Product', 'CartItem', 'Order'],
+  tagTypes: ['Product', 'CartItem', 'Order', 'Cart', 'User'],
   endpoints: (builder) => ({
     //USERS
     createNewUser: builder.mutation<FieldValues, {}>({
@@ -35,6 +35,7 @@ export const apiSlice = createApi({
         method: 'POST',
         body: parameters
       }),
+      invalidatesTags: ['User']
     }),
     getCurrentUserDetails: builder.query<UserResponse, void>({
       query: () => 'me',
@@ -64,7 +65,8 @@ export const apiSlice = createApi({
         url: 'orders/product_order',
         method: 'POST',
         body: parameters
-      })
+      }),
+      invalidatesTags: ['Cart'],
     }),
     getDraftOrder: builder.query<Order, number>({
       query: (parameters) => ({
@@ -72,13 +74,12 @@ export const apiSlice = createApi({
         method: 'GET'
       }),
     }),
-    getProductOrderPerOrder: builder.query<CartItem[], number>({
-      query: (parameters) => ({
-        url: `orders/product_order/order/${parameters}`,
-        method: 'GET'
-      }),
-      providesTags: ['CartItem']
-    }),
+    // getProductOrderPerOrder: builder.query<CartItem[], number>({
+    //   query: (parameters) => ({
+    //     url: `orders/product_order/order/${parameters}`,
+    //     method: 'GET'
+    //   })
+    // }),
     getProductOrderByProductId: builder.query<CartItem, {}>({
       query: (productId: number) => ({
         url: `orders/product_order/item/${productId}`,
@@ -91,20 +92,23 @@ export const apiSlice = createApi({
         url: `orders/product_order/delete/${parameters}`,
         method: 'DELETE'
       }),
+      invalidatesTags: ['Cart'],
     }),
     incrementProductOrder: builder.mutation<CartItem, number|undefined>({
       query: (parameters) => ({
         url: `orders/increment/${parameters}`,
         method: 'POST',
-      })
+      }),
+      invalidatesTags: ['Cart'],
     }),
     decrementProductOrder: builder.mutation<CartItem, number|undefined>({
       query: (parameters) => ({
         url: `orders/decrement/${parameters}`,
         method: 'POST',
-      })
+      }),
+      invalidatesTags: ['Cart'],
     }),
-    getUserCart: builder.query<CartItem[], void>({
+    getUserCart: builder.query<CartItem[], {}>({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
         const userResponse = await fetchWithBQ('me')
         if (userResponse.error)
@@ -118,7 +122,8 @@ export const apiSlice = createApi({
         return cart.data
         ? { data: cart.data as CartItem[] }
         : { error: cart.error as FetchBaseQueryError }
-      }
+      },
+      providesTags: ['Cart']
     }),
     getUserOrder: builder.query<Order, void>({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
@@ -135,4 +140,4 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation, useCreateOrderMutation, useAddToCartMutation, useGetDraftOrderQuery, useGetProductOrderPerOrderQuery, useDeleteProductOrderMutation, useIncrementProductOrderMutation, useGetProductOrderByProductIdQuery, useGetProductQuery, useGetUserCartQuery, useGetUserOrderQuery, useDecrementProductOrderMutation } = apiSlice;
+export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation, useCreateOrderMutation, useAddToCartMutation, useGetDraftOrderQuery, useDeleteProductOrderMutation, useIncrementProductOrderMutation, useGetProductOrderByProductIdQuery, useGetProductQuery, useGetUserCartQuery, useGetUserOrderQuery, useDecrementProductOrderMutation } = apiSlice;

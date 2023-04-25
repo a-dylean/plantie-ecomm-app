@@ -62,4 +62,12 @@ export const theme = createTheme({
                 }
             }
         },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    color: '#9c73d2',
+                    fontWeight: 'bold'
+                }
+            }
+        }
 }})

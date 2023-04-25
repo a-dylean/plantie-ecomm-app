@@ -1,17 +1,25 @@
-import { Container, Typography, Button, Card, CardMedia, CardContent } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Typography, Button, Card, CardMedia, CardContent } from "@mui/material";
+import { useAppSelector } from "../../app/hooks";
 import { Layout } from "../../app/layout";
-import { addCartItem } from "../cart/cartSlice";
+import { useCreateOrderMutation, useAddToCartMutation, useGetCurrentUserDetailsQuery, useGetUserOrderQuery } from "../api/apiSlice";
 
 export const ProductPage = () => {
   const product = useAppSelector((state) => state.products.selectedProduct);
-  const dispatch = useAppDispatch();
-  const addToCart = () => {
-    dispatch(addCartItem(product))
-}
+  const [createOrderInDB] = useCreateOrderMutation();
+  const [createProductOrder] = useAddToCartMutation();
+  const { data: user } = useGetCurrentUserDetailsQuery();
+  const { data: order } = useGetUserOrderQuery();
+  const addToCart = async () => {
+    await createOrderInDB({ userId: user!.id });
+    await createProductOrder({
+      productId: product.id,
+      orderId: order!.id,
+      price: product.price,
+      quantity: 1
+    });
+  };
   return (
-    <>
-      <Layout>
+    <> {product && (<Layout>
         <Card sx={{ display: "flex", flexDirection: "row" }}>
           <CardMedia
             component="img"
@@ -25,7 +33,7 @@ export const ProductPage = () => {
             <Typography variant="h6">{`Availability: ${
               product.available ? "in stock" : "out of stock"
             }`}</Typography>
-            <Typography variant="h6">{`Price: ${product.price}$`}</Typography>
+            <Typography variant="h6">{`Price: ${product.price}€`}</Typography>
             <Button           sx={{ m: "auto", width: "100%" }}
           variant="outlined"
           size="small"
@@ -35,7 +43,8 @@ export const ProductPage = () => {
             </Button>
           </CardContent>
         </Card>
-      </Layout>
+      </Layout>)}
+      
     </>
   );
 };

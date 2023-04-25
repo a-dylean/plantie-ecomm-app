@@ -62,11 +62,11 @@ export class OrdersController extends Controller {
   }
 
   @Security("jwt")
-  @Get("/draft/{draft_order}")
+  @Get("/draft/{user_id}")
   public async getOrderByUserId(
-    @Path() draft_order: number
+    @Path() user_id: number
   ): Promise<Order | null> {
-    return new OrderService().getOrderByUserId(draft_order);
+    return new OrderService().getOrderByUserId(user_id);
   }
 
   @Security("jwt")

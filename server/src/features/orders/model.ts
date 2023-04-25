@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 export type ProductOrderCreationParams = Pick<
   ProductOrder,
-  "productId" | "orderId" | "quantity"
+  "productId" | "orderId" | "quantity" | "price"
 >;
 
 export type OrderCreationParams = Pick<Order, "userId">;

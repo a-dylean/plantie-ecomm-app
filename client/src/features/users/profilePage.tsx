@@ -64,7 +64,7 @@ export const ProfilePage = () => {
   } = useGetCurrentUserDetailsQuery();
   const navigate = useNavigate();
   const logoutUser = () => {
-    dispatch(clearCart());
+    //dispatch(clearCart());
     localStorage.removeItem("userToken"); 
     navigate("/auth/login");
   };

@@ -2,21 +2,10 @@ import { Typography, Box, IconButton, ListItem, Divider } from "@mui/material";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { CartItemModel, Product } from "../../app/interfaces";
-import { useAppDispatch } from "../../app/hooks";
 import {
-  addCartItem,
-  removeCartItemByPiece,
-  removeCartItem,
-} from "./cartSlice";
-import {
-  useAddToCartMutation,
   useDecrementProductOrderMutation,
   useDeleteProductOrderMutation,
-  useGetCurrentUserDetailsQuery,
-  useGetDraftOrderQuery,
   useGetProductOrderByProductIdQuery,
-  useGetProductOrderPerOrderQuery,
   useGetProductQuery,
   useIncrementProductOrderMutation,
 } from "../api/apiSlice";
@@ -25,7 +14,6 @@ export const CartItem = ({ id, quantity }: any) => {
   const { data: cartItemInfo } = useGetProductOrderByProductIdQuery(id);
   const { data: productInfo } = useGetProductQuery(id);
   const cartItemInfoId = cartItemInfo?.id;
-
   const [increment] = useIncrementProductOrderMutation();
   const [decrement] = useDecrementProductOrderMutation();
   const [deleteItem] = useDeleteProductOrderMutation();
@@ -70,6 +58,7 @@ export const CartItem = ({ id, quantity }: any) => {
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center"
                 }}
               >
                 <IconButton

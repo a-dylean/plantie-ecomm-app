@@ -12,20 +12,24 @@ import LoginIcon from "@mui/icons-material/Login";
 import { Cart } from "../features/cart/cart";
 import { useState } from "react";
 import { getTotalItems } from "../helpers/cartFunctions";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
 import Face4Icon from "@mui/icons-material/Face4";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { clearCart } from "../features/cart/cartSlice";
+import { useGetUserCartQuery } from "../features/api/apiSlice";
 
 export const Topbar = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
   const [cartOpen, setCartOpen] = useState(false);
-  const cart = useAppSelector((state) => state.cart.cart);
+  const { data: OrderItems = [], isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    error,
+    refetch } = useGetUserCartQuery({
+      refetchOnMountOrArgChange: true,
+    });
   const token = localStorage.getItem("userToken");
 const handleLogout = () => {
-  dispatch(clearCart());
   localStorage.removeItem("userToken");
   navigate("/auth/login");
 }
@@ -49,7 +53,7 @@ const handleLogout = () => {
           </Typography>
           <IconButton onClick={() => setCartOpen(true)}>
             <LocalMallIcon />
-            <Badge badgeContent={getTotalItems(cart)} color="secondary" />
+            <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />
           </IconButton>
           <IconButton onClick={() => {token ? navigate("/me") : navigate("/auth/login")}}>
             <Face4Icon />
