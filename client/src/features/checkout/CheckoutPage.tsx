@@ -5,7 +5,6 @@ export const CheckoutPage = () => {
     const {data: order} = useGetUserOrderQuery();
     const {data: productOrderInfo} = useGetUserCartQuery();
     const [deleteItem] = useDeleteProductOrderMutation();
-    
     const [pay] = usePayMutation()
     const handleClick = () => {
         pay(order!.id);
