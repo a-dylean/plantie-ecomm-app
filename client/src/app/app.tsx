@@ -14,6 +14,7 @@ import { LoginForm } from "../features/auth/loginPage";
 import { ProfilePage } from "../features/users/profilePage";
 import { ProductPage } from "../features/products/productPage";
 import { StripeForm } from "../features/checkout/stripe";
+import { CheckoutPage } from "../features/checkout/CheckoutPage";
 
 export const App = () => {
   return (
@@ -28,6 +29,7 @@ export const App = () => {
             <Route path="auth/login" element={<LoginForm/>}/>
             <Route path="me" element={<ProfilePage/>}/>
             {/* <Route path="checkout" element={<StripeForm/>}/> */}
+            <Route path="checkout" element={<CheckoutPage/>}/>
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

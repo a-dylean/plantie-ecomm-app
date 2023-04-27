@@ -72,6 +72,13 @@ export class OrdersController extends Controller {
     this.setStatus(201);
     return new OrderService().createOrder(requestBody);
   }
+  @Security("jwt")
+  @Put("/pay/{order_id}")
+  public async pay(
+    @Path() order_id: number
+  ): Promise<Order> {
+    return new OrderService().paymentRecieved(order_id);
+  }
 }
 
 @Route("product_orders")

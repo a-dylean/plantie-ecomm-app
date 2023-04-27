@@ -8,7 +8,6 @@ import { ValidateError } from "tsoa";
 import { NotFoundError } from "./helpers/errors";
 import { RegisterRoutes } from "../build/routes";
 import cors from "cors";
-import passport from "passport";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import swaggerUI from "swagger-ui-express";
@@ -16,12 +15,35 @@ import swaggerJson from "../build/swagger.json";
 import bodyParser from "body-parser";
 import { Prisma } from "@prisma/client";
 import { AuthError } from "./helpers/errors";
-import { PORT } from "../config";
-import { validationErrorHandler, uniquenessValidationErrorHandler} from "./helpers/errors";
-import Stripe from 'stripe';
-import {loadStripe} from '@stripe/stripe-js';
+import { PORT, STRIPE_SK } from "../config";
+import {
+  validationErrorHandler,
+  uniquenessValidationErrorHandler,
+} from "./helpers/errors";
+import path from "path";
+
+//STRIPE
+import Stripe from "stripe";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripe = new Stripe(STRIPE_SK, {
+  apiVersion: "2022-11-15",
+  typescript: true,
+});
+
+const createCustomer = async () => {
+  const params: Stripe.CustomerCreateParams = {
+    description: 'test customer',
+  };
+
+  const customer: Stripe.Customer = await stripe.customers.create(params);
+
+  console.log(customer.id);
+};
+createCustomer();
 
 const app = express();
+const resolve = path.resolve;
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,8 +56,6 @@ app.use(
   })
 );
 app.use(cookieParser());
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 RegisterRoutes(app);
 
@@ -78,6 +98,10 @@ app.use(function errorHandler(
   }
   next();
 });
+
+app.post("/create-checkout-session", (req, res) => {
+  res.json({ url: "Hi"})
+})
 
 app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);

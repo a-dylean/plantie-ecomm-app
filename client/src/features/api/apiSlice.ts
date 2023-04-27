@@ -111,6 +111,13 @@ export const apiSlice = createApi({
       },
       providesTags: (result, error, id) => [{ type: "Orders", id: "LIST" }],
     }),
+    pay: builder.mutation<Order, number>({
+      query: (orderId) => ({
+        url: `orders/pay/${orderId}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "Orders", id }],
+    }),
     getDraftOrder: builder.query<Order, number>({
       query: (userId) => `orders/draft/${userId}`,
       providesTags: (result, error, id) => [{ type: "Orders", id }],
@@ -153,22 +160,10 @@ export const apiSlice = createApi({
         { type: "ProductOrders", id },
       ],
     }),
+    getUserOrders: builder.query<Order[], number> ({
+      query: (userId) => `/orders/${userId}`
+    })
   }),
 });
 
-export const {
-  useGetCurrentUserDetailsQuery,
-  useGetProductsQuery,
-  useCreateNewUserMutation,
-  useLoginUserMutation,
-  useCreateOrderMutation,
-  useAddToCartMutation,
-  useGetDraftOrderQuery,
-  useDeleteProductOrderMutation,
-  useGetProductOrderByOrderIdQuery,
-  useGetProductQuery,
-  useGetUserCartQuery,
-  useGetUserOrderQuery,
-  useUpdateQuantityMutation,
-  useGetProductOrderByProductIdQuery,
-} = apiSlice;
+export const { useGetCurrentUserDetailsQuery, useGetProductsQuery, useCreateNewUserMutation, useLoginUserMutation, useCreateOrderMutation, useAddToCartMutation, useGetDraftOrderQuery, useDeleteProductOrderMutation, useGetProductOrderByProductIdQuery, useGetProductQuery, useGetUserCartQuery, useGetUserOrderQuery, useUpdateQuantityMutation, usePayMutation, useGetUserOrdersQuery } = apiSlice;

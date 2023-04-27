@@ -18,7 +18,6 @@ import { useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useNavigate } from "react-router-dom";
-import { clearCart } from "../cart/cartSlice";
 import { OrdersInfo } from "../orders/ordersInfo";
 
 interface TabPanelProps {
@@ -64,7 +63,6 @@ export const ProfilePage = () => {
   } = useGetCurrentUserDetailsQuery();
   const navigate = useNavigate();
   const logoutUser = () => {
-    //dispatch(clearCart());
     localStorage.removeItem("userToken"); 
     navigate("/auth/login");
   };
