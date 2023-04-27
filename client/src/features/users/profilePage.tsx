@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { useAppDispatch } from "../../app/hooks";
 import { Layout } from "../../app/layout";
-import { useGetCurrentUserDetailsQuery } from "../api/apiSlice";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Image } from "mui-image";
 import { theme } from "../../components/theme";
@@ -19,6 +18,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useNavigate } from "react-router-dom";
 import { OrdersInfo } from "../orders/ordersInfo";
+import { useGetCurrentUserDetailsQuery } from "./usersApi";
 
 interface TabPanelProps {
   children?: React.ReactNode;

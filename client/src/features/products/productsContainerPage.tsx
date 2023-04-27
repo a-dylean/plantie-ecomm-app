@@ -2,7 +2,7 @@ import { ProductItem } from "./productItem";
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Layout } from "../../app/layout";
-import { useGetProductsQuery } from "../api/apiSlice";
+import { useGetProductsQuery } from "./productsApi";
 
 export const ProductsContainer = () => {
   const {data: products = [], isError, isLoading} = useGetProductsQuery();

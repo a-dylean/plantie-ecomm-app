@@ -1,7 +1,8 @@
 import { Typography, Button, Card, CardMedia, CardContent } from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
 import { Layout } from "../../app/layout";
-import { useCreateOrderMutation, useAddToCartMutation, useGetCurrentUserDetailsQuery, useGetUserOrderQuery } from "../api/apiSlice";
+import { useAddToCartMutation, useCreateOrderMutation, useGetUserOrderQuery } from "../orders/ordersApi";
+import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
 
 export const ProductPage = () => {
   const product = useAppSelector((state) => state.products.selectedProduct);

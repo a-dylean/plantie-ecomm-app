@@ -1,9 +1,7 @@
 import { CircularProgress, List } from "@mui/material";
-import {
-  useGetCurrentUserDetailsQuery,
-  useGetUserOrdersQuery,
-} from "../api/apiSlice";
 import { Order } from "./orderItem";
+import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
+import { useGetUserOrdersQuery } from "./ordersApi";
 
 export const OrdersInfo = () => {
   const {

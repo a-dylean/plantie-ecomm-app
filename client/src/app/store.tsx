@@ -1,14 +1,15 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import productsReducer from "../features/products/productSlice";
-import { apiSlice } from "../features/api/apiSlice"
+//import { apiSlice } from "../features/api/apiSlice";
+import { emptySplitApi } from "../features/api/emptySplitApi";
 import { setupListeners } from "@reduxjs/toolkit/dist/query/react";
 
 export const store: any = configureStore({
     reducer: {
        products: productsReducer,
-       [apiSlice.reducerPath]: apiSlice.reducer
+       [emptySplitApi.reducerPath]: emptySplitApi.reducer
     },
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(apiSlice.middleware)
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(emptySplitApi.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>

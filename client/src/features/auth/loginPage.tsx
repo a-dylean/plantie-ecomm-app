@@ -10,9 +10,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { Layout } from "../../app/layout";
-import { useLoginUserMutation } from "../api/apiSlice";
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { isApiResponse } from "../../helpers/errors";
+import { useLoginUserMutation } from "../users/usersApi";
 
 export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();

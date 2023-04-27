@@ -21,8 +21,8 @@ import {
   MuiTelInputContinent,
   matchIsValidTel,
 } from "mui-tel-input";
-import { useCreateNewUserMutation } from "../api/apiSlice";
 import { enqueueSnackbar, SnackbarProvider } from "notistack";
+import { useCreateNewUserMutation } from "../users/usersApi";
 
 export const RegistrationForm = () => {
   const navigate = useNavigate();

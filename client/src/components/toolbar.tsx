@@ -15,7 +15,8 @@ import { getTotalItems } from "../helpers/cartFunctions";
 import { useNavigate } from "react-router-dom";
 import Face4Icon from "@mui/icons-material/Face4";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useGetUserCartQuery } from "../features/api/apiSlice";
+import { useGetUserCartQuery } from "../features/orders/ordersApi";
+
 
 export const Topbar = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const handleLogout = () => {
           </Typography>
           <IconButton onClick={() => setCartOpen(true)}>
             <LocalMallIcon />
-            <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />
+            {token && <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />}
           </IconButton>
           <IconButton onClick={() => {token ? navigate("/me") : navigate("/auth/login")}}>
             <Face4Icon />

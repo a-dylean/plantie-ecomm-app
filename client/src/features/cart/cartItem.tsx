@@ -2,13 +2,9 @@ import { Typography, Box, IconButton, ListItem, Divider } from "@mui/material";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import {
-  useDeleteProductOrderMutation,
-  useGetProductOrderByProductIdQuery,
-  useGetProductQuery,
-  useUpdateQuantityMutation,
-} from "../api/apiSlice";
 import { useState } from "react";
+import { useGetProductOrderByProductIdQuery, useDeleteProductOrderMutation, useUpdateQuantityMutation } from "../orders/ordersApi";
+import { useGetProductQuery } from "../products/productsApi";
 
 export const CartItem = ({ id, quantity }: any) => {
   const { data: productInfo } = useGetProductQuery(id);

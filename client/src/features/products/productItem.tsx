@@ -12,11 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { selectProduct } from "./productSlice";
 import {
-  useAddToCartMutation,
-  useCreateOrderMutation,
   useGetCurrentUserDetailsQuery,
-  useGetUserOrderQuery,
-} from "../api/apiSlice";
+} from "../users/usersApi";
+import { useAddToCartMutation, useCreateOrderMutation, useGetUserOrderQuery } from "../orders/ordersApi";
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();

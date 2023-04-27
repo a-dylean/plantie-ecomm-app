@@ -2,11 +2,9 @@ import { Typography, Box, styled, List, Button } from "@mui/material";
 import { backgroundColor } from "../../components/theme";
 import { CartItem } from "./cartItem";
 import { useNavigate } from "react-router-dom";
-import {
-  useGetUserCartQuery,
-} from "../api/apiSlice";
 import CircularProgress from '@mui/material/CircularProgress';
 import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
+import { useGetUserCartQuery } from "../orders/ordersApi";
 const CartBox = styled("div")(({ theme }) => ({
   backgroundColor: backgroundColor,
   width: "600px",
@@ -14,13 +12,13 @@ const CartBox = styled("div")(({ theme }) => ({
 }));
 
 export const Cart = () => {
+  const token = localStorage.getItem("userToken");
   const navigate = useNavigate(); 
   const { data: OrderItems = [], 
     isLoading,
     isSuccess,
     isError,
-    error } = useGetUserCartQuery( );
-
+    error } = useGetUserCartQuery();
   let content;
 
   if (isLoading) {
