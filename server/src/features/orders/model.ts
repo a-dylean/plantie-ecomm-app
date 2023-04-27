@@ -1,4 +1,5 @@
 import { Order, PrismaClient, Product, ProductOrder, User } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 export type ProductOrderCreationParams = Pick<
@@ -13,12 +14,13 @@ export class OrderModel {
     data: ProductOrderCreationParams
   ): Promise<ProductOrder | undefined> {
     const productId = data.productId;
+    const orderId = data.orderId;
     const productOrder = await prisma.productOrder.findMany({
       where: {
-        productId: productId
+        productId: productId,
+        orderId: orderId
       }
     })
-
     if (productOrder.length === 0) {
       return await prisma.productOrder.create({
       data: {
@@ -42,10 +44,13 @@ export class OrderModel {
       },
     });
     }
-    //return; 
   }
-  async getAll(): Promise<Order[]> {
-    return await prisma.order.findMany();
+  async getAll(id: User["id"]): Promise<Order[]> {
+    return await prisma.order.findMany({
+      where: {
+        userId: id
+      }
+    });
   }
   async findOrderById(id: Order["id"]): Promise<Order|null> {
     return await prisma.order.findUnique({
@@ -64,17 +69,7 @@ export class OrderModel {
       }
     });
   }
-  async findProductOrderPerOrder(id: Order["id"]): Promise<ProductOrder[]|null> {
-    return await prisma.productOrder.findMany({
-      where: {
-        orderId: id
-      },
-      distinct: ['productId'],
-      orderBy: {
-        id: "desc"
-      }
-    })
-  }
+
   async deleteProductOrderById(id: ProductOrder["id"]): Promise<void> {
    await prisma.productOrder.delete({
       where: {
@@ -82,28 +77,14 @@ export class OrderModel {
       }
     })
   }
-  async incrementProductOrderItem(id: ProductOrder["id"]): Promise<ProductOrder|null> {
+  async updateQuantity(id: ProductOrder["id"], count: number): Promise<ProductOrder> {
     return await prisma.productOrder.update({
       where: {
-        id: id,
+        id: id
       },
       data: {
-        quantity: {
-          increment: 1,
-        },
-      },
-    })
-  }
-  async decrementProductOrderItem(id: ProductOrder["id"]): Promise<ProductOrder> {
-    return await prisma.productOrder.update({
-      where: {
-        id: id,
-      },
-      data: {
-        quantity: {
-          decrement: 1,
-        },
-      },
+        quantity: count
+      }
     })
   }
   async findProductOrderByProductId(id: Product["id"]): Promise<ProductOrder|null> {
@@ -115,6 +96,16 @@ export class OrderModel {
         id: "desc"
       }
     });
+  }
+  async getCart(id: Order["id"]): Promise<ProductOrder[]|null>{
+    return await prisma.productOrder.findMany({
+      where: {
+        orderId: id
+      },
+      orderBy: {
+        id: "desc"
+      }
+    })
   }
 }
  

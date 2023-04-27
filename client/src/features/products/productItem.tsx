@@ -5,7 +5,7 @@ import {
   CardMedia,
   Button,
   Typography,
-  Box
+  Box,
 } from "@mui/material";
 import { Product } from "../../app/interfaces";
 import { useNavigate } from "react-router-dom";
@@ -24,14 +24,15 @@ export const ProductItem = (product: Product) => {
   const [createOrderInDB] = useCreateOrderMutation();
   const [createProductOrder] = useAddToCartMutation();
   const { data: user } = useGetCurrentUserDetailsQuery();
-  const {data: order} = useGetUserOrderQuery();
+  const { data: order } = useGetUserOrderQuery();
+
   const addToCart = async () => {
     await createOrderInDB({ userId: user!.id });
     await createProductOrder({
       productId: product.id,
       orderId: order!.id,
       price: product.price,
-      quantity: 1
+      quantity: 1,
     });
   };
 

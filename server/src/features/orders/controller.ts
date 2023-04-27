@@ -5,8 +5,7 @@ import {
   Get,
   Path,
   Post,
-  Query,
-  Request,
+  Put,
   Route,
   Security,
   SuccessResponse,
@@ -20,16 +19,16 @@ import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 @Tags("Orders")
 export class OrdersController extends Controller {
   /**
-   * Retrieves a list of all orders in the system.
+   * Retrieves a list of all orders in the system for the particular user.
    * @returns List of orders
    */
-  @Security("jwt", ["admin"])
-  @Get()
-  public async getOrders(): Promise<Order[]> {
-    return new OrderService().getAll();
+  @Security("jwt")
+  @Get("/{userId}")
+  public async getOrders(@Path() userId: number): Promise<Order[]> {
+    return new OrderService().getAll(userId);
   }
   /**
-   * Retrieves the detailes of a particular order provided the unique product ID.
+   * Retrieves the detailes of a particular order provided the unique order ID.
    * @param orderId Identifier of the order
    * @returns Order
    */
@@ -38,19 +37,32 @@ export class OrdersController extends Controller {
   public async getOrder(@Path() orderId: number): Promise<Order | null> {
     return new OrderService().get(orderId);
   }
+
   /**
-   * Creates a new order in the system.
-   * @param requestBody Details of the order
+   * Returns draft order provided the unique user ID.
    */
   @Security("jwt")
-  @Post("/product_order")
-  public async createProductOrder(
-    @Body() requestBody: ProductOrderCreationParams
-  ): Promise<ProductOrder|undefined> {
-    this.setStatus(201);
-    return new OrderService().createProductOrder(requestBody);
+  @Get("/draft/{user_id}")
+  public async getOrderByUserId(
+    @Path() user_id: number
+  ): Promise<Order | null> {
+    return new OrderService().getOrderByUserId(user_id);
   }
 
+  /**
+   * Returns user's cart (list of cart items) provided the order ID.
+   */
+  @Security("jwt")
+  @Get("/{orderId}/product_orders")
+  public async getCart(
+    @Path() orderId: number
+  ): Promise<ProductOrder[] | null> {
+    return new OrderService().getCart(orderId);
+  }
+  /**
+   * Creates a new draft order in the system.
+   * @param requestBody Details of the order
+   */
   @Security("jwt")
   @SuccessResponse("201", "Order created")
   @Post()
@@ -60,54 +72,55 @@ export class OrdersController extends Controller {
     this.setStatus(201);
     return new OrderService().createOrder(requestBody);
   }
+}
 
+@Route("product_orders")
+@Tags("ProductOrders")
+export class ProductOrdersController extends Controller {
+  /**
+   * Returns a ProductOrder provided the product ID.
+   */
   @Security("jwt")
-  @Get("/draft/{user_id}")
-  public async getOrderByUserId(
-    @Path() user_id: number
-  ): Promise<Order | null> {
-    return new OrderService().getOrderByUserId(user_id);
-  }
-
-  @Security("jwt")
-  @Get("/product_order/order/{order_id}")
-  public async getProductOrderPerOrder(
-    @Path() order_id: number
-  ): Promise<ProductOrder[]|null> {
-    return new OrderService().getProductOrderPerOrder(order_id);
-  }
-
-  @Security("jwt")
-  @Get("/product_order/item/{product_id}")
+  @Get("/{productId}")
   public async getProductOrderByProductId(
-    @Path() product_id: number
-  ): Promise<ProductOrder|null> {
-    return new OrderService().getProductOrderByProductId(product_id);
+    @Path() productId: number
+  ): Promise<ProductOrder | null> {
+    return new OrderService().getProductOrderByProductId(productId);
   }
-
+  /**
+   * Creates a new ProductOrder in the system.
+   * @param requestBody Details of the order
+   */
   @Security("jwt")
-  @Delete("/product_order/delete/{productOrderId}")
+  @Post()
+  public async createProductOrder(
+    @Body() requestBody: ProductOrderCreationParams
+  ): Promise<ProductOrder | undefined> {
+    this.setStatus(201);
+    return new OrderService().createProductOrder(requestBody);
+  }
+  /**
+   * Updates ProductOrder quantity provided the unique ProductOrder ID.
+   */
+  @Security("jwt")
+  @Put("/{productOrderId}")
+  public async updateQuantity(
+    @Path() productOrderId: number,
+    @Body() requestBody: { quantity: number }
+  ): Promise<ProductOrder | null> {
+    return new OrderService().updateQuantity(
+      productOrderId,
+      requestBody.quantity
+    );
+  }
+  /**
+   * Deletes cart item from the cart provided the unique cart item ID.
+   */
+  @Security("jwt")
+  @Delete("/{productOrderId}")
   public async deleteProductOrderById(
     @Path() productOrderId: number
   ): Promise<void> {
     return new OrderService().deleteProductOrderById(productOrderId);
   }
-
-  @Security("jwt")
-  @Post("/increment/{productOrderId}")
-  public async incrementProductOrder(
-    @Path() productOrderId: number
-  ): Promise<ProductOrder|null> {
-    return new OrderService().incrementProductOrderItem(productOrderId);
-  }
-
-  @Security("jwt")
-  @Post("/decrement/{productOrderId}")
-  public async decrementProductOrder(
-    @Path() productOrderId: number
-  ): Promise<ProductOrder|null> {
-    return new OrderService().decrementProductOrderItem(productOrderId);
-  }
-
-
 }

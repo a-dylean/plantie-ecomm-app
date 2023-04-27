@@ -3,36 +3,33 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
-  useDecrementProductOrderMutation,
   useDeleteProductOrderMutation,
   useGetProductOrderByProductIdQuery,
   useGetProductQuery,
-  useIncrementProductOrderMutation,
+  useUpdateQuantityMutation,
 } from "../api/apiSlice";
 import { useState } from "react";
+
 export const CartItem = ({ id, quantity }: any) => {
-  const { data: cartItemInfo } = useGetProductOrderByProductIdQuery(id);
   const { data: productInfo } = useGetProductQuery(id);
-  const cartItemInfoId = cartItemInfo?.id;
-  const [increment] = useIncrementProductOrderMutation();
-  const [decrement] = useDecrementProductOrderMutation();
+  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(id);
+  const [update] = useUpdateQuantityMutation();
   const [deleteItem] = useDeleteProductOrderMutation();
-  const [count, setCount] = useState(quantity);
+  let [count, setCount] = useState(quantity);
   const totalPerItem = (count * Number(productInfo?.price)).toFixed(2);
+
   const addToCart = () => {
-    increment(cartItemInfoId)
-      .unwrap()
-      .then((payload) => setCount(payload.quantity))
-      .catch((error) => console.error("rejected", error));
+    setCount(++count);
+    return update({ id: productOrderInfo!.id, quantity: count });
   };
   const removeFromCart = () => {
-    decrement(cartItemInfoId)
-      .unwrap()
-      .then((payload) => setCount(payload.quantity))
-      .catch((error) => console.error(error));
+    while (count > 0) {
+      setCount(--count);
+      return update({ id: productOrderInfo!.id, quantity: count });
+    }
   };
   const removeEntirely = () => {
-    deleteItem(cartItemInfoId)
+    deleteItem(productOrderInfo!.id)
       .unwrap()
       .then()
       .catch((error) => console.error(error));
@@ -58,7 +55,7 @@ export const CartItem = ({ id, quantity }: any) => {
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <IconButton

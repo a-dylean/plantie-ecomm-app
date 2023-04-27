@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import {
   useGetUserCartQuery,
 } from "../api/apiSlice";
-
 import CircularProgress from '@mui/material/CircularProgress';
 import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
 const CartBox = styled("div")(({ theme }) => ({
@@ -16,22 +15,18 @@ const CartBox = styled("div")(({ theme }) => ({
 
 export const Cart = () => {
   const navigate = useNavigate(); 
-
-  const { data: OrderItems = [], isLoading,
-    isFetching,
+  const { data: OrderItems = [], 
+    isLoading,
     isSuccess,
     isError,
-    error,
-    refetch } = useGetUserCartQuery({
-      refetchOnMountOrArgChange: true,
-    });
+    error } = useGetUserCartQuery( );
 
   let content;
 
   if (isLoading) {
     content = <CircularProgress />
   } else if (isSuccess) {
-    const renderedItems = OrderItems.map((product: any) => (<List key={product.id}><CartItem id={product.productId} quantity={product.quantity}/>
+    const renderedItems = OrderItems.map((product) => (<List key={product.id}><CartItem id={product.productId} quantity={product.quantity}/>
       </List>))
       content = <div>{renderedItems}</div>
   } else if (isError) {
@@ -51,7 +46,7 @@ export const Cart = () => {
               Go to checkout
             </Button>
             <Typography variant="h6">
-              Total: €{calculateTotalCartAmount(OrderItems)}
+              Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
             </Typography>
           </Box>
         )}

@@ -28,7 +28,8 @@ export interface User {
     email: string ,
     password: string ,
     phone: string ,
-    address: string 
+    address: string,
+    token: string 
 }
 
 export interface Login {
@@ -51,7 +52,8 @@ export interface CartItem {
     id: number,
     productId: number,
     quantity: number,
-    orderId: number
+    orderId: number,
+    price: string
 }
 
 export interface Order {

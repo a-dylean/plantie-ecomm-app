@@ -25,9 +25,7 @@ export const Topbar = () => {
     isSuccess,
     isError,
     error,
-    refetch } = useGetUserCartQuery({
-      refetchOnMountOrArgChange: true,
-    });
+    refetch } = useGetUserCartQuery();
   const token = localStorage.getItem("userToken");
 const handleLogout = () => {
   localStorage.removeItem("userToken");
