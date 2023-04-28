@@ -75,9 +75,10 @@ export class OrdersController extends Controller {
   @Security("jwt")
   @Put("/pay/{order_id}")
   public async pay(
-    @Path() order_id: number
+    @Path() order_id: number,
+    @Body() requestBody: {amount: Order['amount']}
   ): Promise<Order> {
-    return new OrderService().paymentRecieved(order_id);
+    return new OrderService().paymentRecieved(order_id, requestBody.amount);
   }
 }
 

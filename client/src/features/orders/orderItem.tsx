@@ -1,6 +1,4 @@
-import { ThemeContext } from "@emotion/react";
 import { List, ListItem, Box, Card, Divider } from "@mui/material";
-import {theme} from "../../components/theme";
 
 export const Order = ({ id, createdAt, status, amount }: any) => {
   return (
@@ -9,7 +7,7 @@ export const Order = ({ id, createdAt, status, amount }: any) => {
         <ListItem sx={{fontWeight: "bold"}}>🪴Order #{id}</ListItem>
         <Divider/>
         <ListItem>Date of creation: {createdAt.toString().slice(0, 10)}</ListItem>
-        <ListItem>Total amount: {amount}</ListItem>
+        <ListItem>Total amount: €{Number(amount).toFixed(2)}</ListItem>
       <ListItem>Status: {status}</ListItem>
     </List>
     </Card>

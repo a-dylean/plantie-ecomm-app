@@ -46,7 +46,7 @@ export class OrderService {
   async getCart(id: Order["id"]): Promise<ProductOrder[] | null> {
     return await OrderModelInstance.getCart(id);
   }
-  async paymentRecieved(id: Order["id"]): Promise<Order>{
-    return await OrderModelInstance.paymentReceived(id);
+  async paymentRecieved(id: Order["id"], amount: Order["amount"]): Promise<Order>{
+    return await OrderModelInstance.paymentReceived(id, amount);
   }
 }

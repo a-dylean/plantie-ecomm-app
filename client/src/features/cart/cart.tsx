@@ -32,8 +32,7 @@ export const Cart = () => {
   } 
 
   return (
-    <>
-      <CartBox>
+    <> {token ? (<CartBox>
         <Typography variant="h5">Your Cart</Typography>
         {content}
         {OrderItems.length === 0 ? (
@@ -48,7 +47,8 @@ export const Cart = () => {
             </Typography>
           </Box>
         )}
-      </CartBox>
+      </CartBox>) : (<CartBox>Create an account or login to view the cart🌿</CartBox>)
+      }
     </>
   );
 };

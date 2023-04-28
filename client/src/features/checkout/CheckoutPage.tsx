@@ -6,13 +6,18 @@ import {
   useDeleteProductOrderMutation,
   usePayMutation,
 } from "../orders/ordersApi";
+import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
 export const CheckoutPage = () => {
+  const { data: OrderItems = [] } = useGetUserCartQuery();
   const { data: order } = useGetUserOrderQuery();
   const { data: productOrderInfo } = useGetUserCartQuery();
   const [deleteItem] = useDeleteProductOrderMutation();
   const [pay] = usePayMutation();
+  const id = order?.id
   const handleClick = () => {
-    pay(order!.id);
+    const amount = calculateTotalCartAmount(OrderItems).toString();
+    console.log(amount)
+    pay({id: id, amount: amount});
     productOrderInfo?.map((item) => item.id).forEach((id) => deleteItem(id));
   };
   return (

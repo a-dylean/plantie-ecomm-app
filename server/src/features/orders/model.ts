@@ -110,13 +110,14 @@ export class OrderModel {
       }
     })
   }
-  async paymentReceived(id: Order["id"]): Promise<Order> {
+  async paymentReceived(id: Order["id"], amount: Order['amount']): Promise<Order> {
     return await prisma.order.update({
       where: {
         id: id
       },
       data: {
-        status: "Payment Received" 
+        status: "Payment Received",
+        amount: amount
       }
     })
   }
