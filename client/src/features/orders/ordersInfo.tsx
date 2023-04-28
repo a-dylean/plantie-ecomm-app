@@ -1,4 +1,4 @@
-import { CircularProgress, List } from "@mui/material";
+import { Box, CircularProgress, List, ListItem } from "@mui/material";
 import { Order } from "./orderItem";
 import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
 import { useGetUserOrdersQuery } from "./ordersApi";
@@ -18,7 +18,8 @@ export const OrdersInfo = () => {
   if (isLoading) {
     content = <CircularProgress />;
   } else if (isSuccess) {
-    const renderedItems = orders.map((order: any) => (
+    
+    const renderedItems = orders.map((order) => (
       <List key={order.id}>
         <Order
           id={order.id}

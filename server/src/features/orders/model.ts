@@ -49,6 +49,9 @@ export class OrderModel {
     return await prisma.order.findMany({
       where: {
         userId: id
+      },
+      orderBy: {
+        id: "desc"
       }
     });
   }

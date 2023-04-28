@@ -59,7 +59,7 @@ const ordersApi = emptySplitApi.injectEndpoints({
         url: `orders/pay/${orderId}`,
         method: "PUT",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Orders", id }],
+      invalidatesTags: ["Orders"],
     }),
     getDraftOrder: builder.query<Order, number>({
       query: (userId) => `orders/draft/${userId}`,
@@ -81,7 +81,7 @@ const ordersApi = emptySplitApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: [{ type: "ProductOrders", id: "LIST" }],
+      invalidatesTags: ["ProductOrders"],
     }),
     deleteProductOrder: builder.mutation<CartItem, number | undefined>({
       query: (productOrderId) => ({

@@ -11,7 +11,6 @@ import { useAppDispatch } from "../../app/hooks";
 import { Layout } from "../../app/layout";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Image } from "mui-image";
-import { theme } from "../../components/theme";
 import { ProfileInfo } from "./profileInfo";
 import { useState } from "react";
 import Tabs from "@mui/material/Tabs";
@@ -62,10 +61,7 @@ export const ProfilePage = () => {
     error,
   } = useGetCurrentUserDetailsQuery();
   const navigate = useNavigate();
-  const logoutUser = () => {
-    localStorage.removeItem("userToken"); 
-    navigate("/auth/login");
-  };
+
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -75,43 +71,43 @@ export const ProfilePage = () => {
   return (
     <Layout>
       {user && (
-        <Paper>
+        <Paper sx={{maxHeight: 800}}>
           <Grid container>
             <Grid xs={6}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              bgcolor: "background.paper",
+              display: "flex",
+              height: "100%",
+            }}
+          >
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={value}
+              onChange={handleChange}
+              aria-label="Vertical tabs example"
+              sx={{ borderRight: 1, borderColor: "divider", overflow: "visible" }}
+            >
+              <Tab label="Profile" {...a11yProps(0)} />
+              <Tab label="Orders" {...a11yProps(1)} />
+            </Tabs>
+            <TabPanel value={value} index={0}>
+              <Typography variant="h5">Profile information</Typography>
+              <ProfileInfo />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+            
+              <Typography variant="h5">Orders information</Typography>
               <Box
-                sx={{
-                  flexGrow: 1,
-                  bgcolor: "background.paper",
-                  display: "flex",
-                  height: "100%",
-                }}
-              >
-                <Tabs
-                  orientation="vertical"
-                  variant="scrollable"
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="Vertical tabs example"
-                  sx={{ borderRight: 1, borderColor: "divider"}}
-                >
-                  <Tab label="Profile" {...a11yProps(0)}/>
-                  <Tab label="Orders" {...a11yProps(1)} />
-                </Tabs>
-                <TabPanel value={value} index={0}>
-                  <Typography variant="h5">Profile information</Typography>
-                  <ProfileInfo />
-                  <Button color="secondary" onClick={logoutUser}>
-                    Logout
-                  </Button>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                <Typography variant="h5">Orders information</Typography>
-                <OrdersInfo/>
-                </TabPanel>
+      sx={{maxHeight: 620, overflow: 'auto'}} >
+              <OrdersInfo />
               </Box>
-            </Grid>
-
-            <Grid xs={6}>
+            </TabPanel>
+          </Box>
+          </Grid> 
+          <Grid xs={6}>
               <Typography sx={{ position: "absolute", zIndex: 5, ml: 2, mt:3 }} variant="h5" color="white">
                 Welcome,<br/> planties lover {user.name}!
               </Typography>
@@ -120,9 +116,8 @@ export const ProfilePage = () => {
                 fit="contain"
                 height="100%"
                 duration={50}
-                bgColor={theme.palette.primary.light}
               />
-            </Grid>
+              </Grid>
           </Grid>
         </Paper>
       )}
