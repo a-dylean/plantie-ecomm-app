@@ -61,7 +61,7 @@ export const ProfilePage = () => {
   return (
     <Layout>
       {user && (
-        <Paper sx={{ maxHeight: 800 }}>
+        <Paper sx={{ maxHeight: 800, minWidth: 350 }}>
           <Grid container>
             <Grid xs={6}>
               <Box
@@ -99,7 +99,7 @@ export const ProfilePage = () => {
                 </TabPanel>
               </Box>
             </Grid>
-            <Grid xs={6}>
+            <Grid xs={6} sx={{display: {md: "block", xs: "none"}}}>
               <Typography
                 sx={{ position: "absolute", zIndex: 5, ml: 2, mt: 3 }}
                 variant="h5"
@@ -112,6 +112,7 @@ export const ProfilePage = () => {
                 src="https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80"
                 fit="contain"
                 height="100%"
+                width="100%"
                 duration={50}
               />
             </Grid>

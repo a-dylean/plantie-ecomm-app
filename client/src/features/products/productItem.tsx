@@ -41,6 +41,7 @@ export const ProductItem = (product: Product) => {
           onClick={() => {
             navigate(`/products/${product.id}`);
           }}
+          sx={{cursor: "pointer"}}
         >
           <CardMedia
             component="img"

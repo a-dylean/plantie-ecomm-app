@@ -33,7 +33,7 @@ export const CartItem = ({ id, quantity }: any) => {
   return (
     <>
       {productInfo && (
-        <div>
+        <>
           <ListItem dense>
             <Box
               sx={{
@@ -75,7 +75,7 @@ export const CartItem = ({ id, quantity }: any) => {
             </Box>
           </ListItem>
           <Divider />
-        </div>
+        </>
       )}
     </>
   );

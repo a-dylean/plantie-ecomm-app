@@ -1,4 +1,4 @@
-import { Box, CircularProgress, List, ListItem } from "@mui/material";
+import { CircularProgress, List } from "@mui/material";
 import { Order } from "./orderItem";
 import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
 import { useGetUserOrdersQuery } from "./ordersApi";
@@ -29,9 +29,9 @@ export const OrdersInfo = () => {
         />
       </List>
     ));
-    content = <div>{renderedItems}</div>;
+    content = <>{renderedItems}</>;
   } else if (isError) {
-    content = <div>{error.toString()}</div>;
+    content = <>{error.toString()}</>;
   }
 
   return <>{content}</>;

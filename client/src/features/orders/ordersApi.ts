@@ -12,9 +12,7 @@ const ordersApi = emptySplitApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ["Orders"]
-      //[{ type: "Orders", id: "LIST" }]
-      ,
+      invalidatesTags: ["Orders"],
     }),
     getUserCart: builder.query<CartItem[], void>({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
@@ -56,13 +54,14 @@ const ordersApi = emptySplitApi.injectEndpoints({
     }),
     pay: builder.mutation<Order, Partial<Order>>({
       query(data) {
-        const {id, ...body} = data;
+        const { id, ...body } = data;
         return {
           url: `orders/pay/${id}`,
-        method: "PUT",
-        body
-      }},
-      invalidatesTags: (result, error, id) => [{ type: "Orders", id: "LIST" }],
+          method: "PUT",
+          body,
+        };
+      },
+      invalidatesTags: ["Orders"],
     }),
     getDraftOrder: builder.query<Order, number>({
       query: (userId) => `orders/draft/${userId}`,
@@ -84,14 +83,14 @@ const ordersApi = emptySplitApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ["ProductOrders", "Orders"],
+      invalidatesTags: ["ProductOrders"],
     }),
     deleteProductOrder: builder.mutation<CartItem, number | undefined>({
       query: (productOrderId) => ({
         url: `product_orders/${productOrderId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "ProductOrders", id }],
+      invalidatesTags: ["ProductOrders"],
     }),
     updateQuantity: builder.mutation<CartItem, Partial<CartItem>>({
       query(data) {
@@ -108,7 +107,9 @@ const ordersApi = emptySplitApi.injectEndpoints({
     }),
     getUserOrders: builder.query<Order[], number>({
       query: (userId) => `/orders/${userId}`,
+      providesTags: ["Orders"],
     }),
+
   }),
   overrideExisting: false,
 });
@@ -123,5 +124,6 @@ export const {
   useGetUserCartQuery,
   useGetUserOrderQuery,
   useGetUserOrdersQuery,
-  usePayMutation, useUpdateQuantityMutation
+  usePayMutation,
+  useUpdateQuantityMutation,
 } = ordersApi;

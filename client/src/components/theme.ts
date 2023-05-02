@@ -15,6 +15,15 @@ export const theme = createTheme({
             dark: "#9c73d2"
         }
     },
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 1163,
+            md: 1163,
+            lg: 1200,
+            xl: 1536,
+        }
+    },
     typography: {
         allVariants: {
 

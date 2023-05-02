@@ -26,9 +26,9 @@ export const Cart = () => {
   } else if (isSuccess) {
     const renderedItems = OrderItems.map((product) => (<List key={product.id}><CartItem id={product.productId} quantity={product.quantity}/>
       </List>))
-      content = <div>{renderedItems}</div>
+      content = <>{renderedItems}</>
   } else if (isError) {
-    content = <div>{error.toString()}</div>
+    content = <>{error.toString()}</>
   } 
 
   return (
