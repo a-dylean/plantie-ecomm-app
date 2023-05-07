@@ -14,8 +14,8 @@ export class UserService {
   async getAll(): Promise<User[]> {
     return await UserModelInstance.getAll();
   }
-  async update(data: User): Promise<User> {
-    return await UserModelInstance.update(data);
+  async update(id: number, data: Partial<User>): Promise<User> {
+    return await UserModelInstance.update(id, data);
   }
   async delete(id: User["id"]): Promise<void> {
     return await UserModelInstance.deleteUserById(id);

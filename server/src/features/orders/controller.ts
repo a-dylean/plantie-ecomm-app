@@ -41,7 +41,6 @@ export class OrdersController extends Controller {
   /**
    * Returns draft order provided the unique user ID.
    */
-  @Security("jwt")
   @Get("/draft/{user_id}")
   public async getOrderByUserId(
     @Path() user_id: number
@@ -52,7 +51,6 @@ export class OrdersController extends Controller {
   /**
    * Returns user's cart (list of cart items) provided the order ID.
    */
-  @Security("jwt")
   @Get("/{orderId}/product_orders")
   public async getCart(
     @Path() orderId: number
@@ -63,7 +61,6 @@ export class OrdersController extends Controller {
    * Creates a new draft order in the system.
    * @param requestBody Details of the order
    */
-  @Security("jwt")
   @SuccessResponse("201", "Order created")
   @Post()
   public async createOrder(
@@ -88,7 +85,6 @@ export class ProductOrdersController extends Controller {
   /**
    * Returns a ProductOrder provided the product ID.
    */
-  @Security("jwt")
   @Get("/{productId}")
   public async getProductOrderByProductId(
     @Path() productId: number
@@ -99,7 +95,6 @@ export class ProductOrdersController extends Controller {
    * Creates a new ProductOrder in the system.
    * @param requestBody Details of the order
    */
-  @Security("jwt")
   @Post()
   public async createProductOrder(
     @Body() requestBody: ProductOrderCreationParams
@@ -110,7 +105,6 @@ export class ProductOrdersController extends Controller {
   /**
    * Updates ProductOrder quantity provided the unique ProductOrder ID.
    */
-  @Security("jwt")
   @Put("/{productOrderId}")
   public async updateQuantity(
     @Path() productOrderId: number,
@@ -124,7 +118,6 @@ export class ProductOrdersController extends Controller {
   /**
    * Deletes cart item from the cart provided the unique cart item ID.
    */
-  @Security("jwt")
   @Delete("/{productOrderId}")
   public async deleteProductOrderById(
     @Path() productOrderId: number

@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Header,
   Path,
+  Put,
   Query,
   Route,
   Security,
@@ -13,8 +15,7 @@ import {
 import { User } from "@prisma/client";
 import { UserService } from "./services";
 import { decodeAuthToken } from "../../helpers/jwt";
-import { stringify } from "querystring";
-import { tokenToString } from "typescript";
+import { UserCreationParams } from "./model";
 
 @Route("users")
 @Tags("Users")
@@ -60,10 +61,26 @@ export class ProfileController extends Controller {
    * @param userId Identifier of the user
    * @returns User
    */
-  @Security("jwt")
+  @Security("jwt", ["user"])
   @Get()
-  public async getUserProfile(@Header('Authorization') token: string): Promise<User> {
-    const userId = Object.values(decodeAuthToken(token.slice(7)))[0]
+  public async getUserProfile(
+    @Header('Authorization') accessToken: string
+    ): Promise<User> {
+    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0]
     return new UserService().getUserById(Number(userId)); 
   }
+  @Security("jwt", ["user"])
+  @Put()
+  public async updateUser(
+    @Header('Authorization') accessToken: string,
+    @Body() requestBody: UserCreationParams
+  ): Promise<User> {
+    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0]
+    return new UserService().update(Number(userId), requestBody)
+  }
+
+
+
+
+
 }

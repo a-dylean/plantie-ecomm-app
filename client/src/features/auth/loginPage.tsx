@@ -22,7 +22,8 @@ export const LoginForm = () => {
   const submitForm = async (data: FieldValues) => {
     try {
       const result = await loginUser(data).unwrap();
-      localStorage.setItem("userToken", result.token);
+      console.log(result)
+      localStorage.setItem("accessToken", result.token);
       navigate("/me");
     } catch (error: any) {
       if (isApiResponse(error)) {

@@ -27,9 +27,9 @@ export const Topbar = () => {
     isError,
     error,
     refetch } = useGetUserCartQuery();
-  const token = localStorage.getItem("userToken");
+  const token = localStorage.getItem("accessToken");
 const handleLogout = () => {
-  localStorage.removeItem("userToken");
+  localStorage.removeItem("accessToken");
   navigate("/auth/login");
 }
   return (
@@ -52,7 +52,7 @@ const handleLogout = () => {
           </Typography>
           <IconButton onClick={() => setCartOpen(true)}>
             <LocalMallIcon />
-            {token && <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />}
+           <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />
           </IconButton>
           <IconButton onClick={() => {token ? navigate("/me") : navigate("/auth/login")}}>
             <Face4Icon />

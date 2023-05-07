@@ -18,7 +18,7 @@ model Category {
 model Order {
   id           Int            @id @default(autoincrement())
   userId       Int            @map("user_id")
-  createdAt    DateTime?       @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   amount       Decimal?       @db.Money
   status       String         @default("Draft")
@@ -60,23 +60,30 @@ model Product {
 }
 
 model User {
-  id               Int          @id @default(autoincrement())
-  name             String?      @db.VarChar(256)
-  surname          String?      @db.VarChar(256)
-  email            String       @unique @db.VarChar(256)
-  phone            String?      @db.VarChar(50)
-  address          String?      @db.VarChar(256)
-  password         String       @db.VarChar(256)
-  role             RoleEnumType @default(user)
-  verified         Boolean?     @default(false)
-  verificationCode String?      @unique @db.Text
-  createdAt        DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime?    @updatedAt @map("updated_at") @db.Timestamp(6)
-  orders           Order[]
+  id          Int          @id @default(autoincrement())
+  name        String?      @db.VarChar(256)
+  surname     String?      @db.VarChar(256)
+  email       String      @unique @db.VarChar(256)
+  phone       String?      @db.VarChar(50)
+  address     String?      @db.VarChar(256)
+  password    String      @db.VarChar(256)
+  role        RoleEnumType @default(user)
+  fullProfile Boolean?     @default(false) @map("full_profile")
+  createdAt   DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime?    @updatedAt @map("updated_at") @db.Timestamp(6)
+  orders      Order[]
+  token       Token?
 
-  @@unique([email, verificationCode])
-  @@index([email, verificationCode])
   @@map("user")
+}
+
+model Token {
+  id     Int     @id @default(autoincrement())
+  token  String? @db.VarChar(512)
+  userId Int     @unique @map("user_id")
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@map("token")
 }
 
 enum RoleEnumType {

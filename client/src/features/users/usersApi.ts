@@ -16,7 +16,7 @@ const usersApi = emptySplitApi.injectEndpoints({
     loginUser: builder.mutation<User, Partial<User>>({
       query(body) {
         return {
-          url: "login",
+          url: "session/authenticate",
           method: "POST",
           body,
         };
@@ -24,11 +24,19 @@ const usersApi = emptySplitApi.injectEndpoints({
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
     getCurrentUserDetails: builder.query<User, void>({
-      query: () => "me",
+      query() {
+        return {
+          url: "me",
+        };
+      },
       providesTags: [{ type: "Users", id: "LIST" }],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateNewUserMutation, useLoginUserMutation, useGetCurrentUserDetailsQuery } = usersApi;
+export const {
+  useCreateNewUserMutation,
+  useLoginUserMutation,
+  useGetCurrentUserDetailsQuery,
+} = usersApi;

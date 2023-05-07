@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 export const generateHash = async (password: string) => {
@@ -7,6 +6,6 @@ export const generateHash = async (password: string) => {
     return hashedPassword;
   };
   
-export const validatePassword = (password: User["password"], hashedPassword: User["password"]) => {
+export const validatePassword = (password: string, hashedPassword: string) => {
     return bcrypt.compare(password, hashedPassword);
   };

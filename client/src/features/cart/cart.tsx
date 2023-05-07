@@ -2,7 +2,7 @@ import { Typography, Box, styled, List, Button } from "@mui/material";
 import { backgroundColor } from "../../components/theme";
 import { CartItem } from "./cartItem";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
 import { useGetUserCartQuery } from "../orders/ordersApi";
 const CartBox = styled("div")(({ theme }) => ({
@@ -12,34 +12,43 @@ const CartBox = styled("div")(({ theme }) => ({
 }));
 
 export const Cart = () => {
-  const token = localStorage.getItem("userToken");
-  const navigate = useNavigate(); 
-  const { data: OrderItems = [], 
+  const navigate = useNavigate();
+  const {
+    data: OrderItems = [],
     isLoading,
     isSuccess,
     isError,
-    error } = useGetUserCartQuery();
+    error,
+  } = useGetUserCartQuery();
   let content;
 
   if (isLoading) {
-    content = <CircularProgress />
+    content = <CircularProgress />;
   } else if (isSuccess) {
-    const renderedItems = OrderItems.map((product) => (<List key={product.id}><CartItem id={product.productId} quantity={product.quantity}/>
-      </List>))
-      content = <>{renderedItems}</>
+    const renderedItems = OrderItems.map((product) => (
+      <List key={product.id}>
+        <CartItem id={product.productId} quantity={product.quantity} />
+      </List>
+    ));
+    content = <>{renderedItems}</>;
   } else if (isError) {
-    content = <>{error.toString()}</>
-  } 
+    content = <>{error.toString()}</>;
+  }
 
   return (
-    <> {token ? (<CartBox>
+    <>
+      <CartBox>
         <Typography variant="h5">Your Cart</Typography>
         {content}
         {OrderItems.length === 0 ? (
           <Typography>So far empty...</Typography>
         ) : (
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button color="secondary" variant="outlined" onClick={()=>navigate("/checkout")}>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() => navigate("/checkout")}
+            >
               Go to checkout
             </Button>
             <Typography variant="h6">
@@ -47,8 +56,7 @@ export const Cart = () => {
             </Typography>
           </Box>
         )}
-      </CartBox>) : (<CartBox>Create an account or login to view the cart🌿</CartBox>)
-      }
+      </CartBox>
     </>
   );
 };

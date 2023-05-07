@@ -43,18 +43,13 @@ const createCustomer = async () => {
 createCustomer();
 
 const app = express();
-const resolve = path.resolve;
-app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({ credentials: true }));
-app.use(
-  session({
-    secret: "secretcode",
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+app.use(cors({ 
+  credentials: true,
+  origin: ['http://localhost:3000'],
+  allowedHeaders: ['authorization', 'content-type', 'cookies'],
+}));
 app.use(cookieParser());
 
 RegisterRoutes(app);
@@ -99,10 +94,10 @@ app.use(function errorHandler(
   next();
 });
 
-app.post("/create-checkout-session", (req, res) => {
-  res.json({ url: "Hi"})
-})
+// app.post("/create-checkout-session", (req, res) => {
+//   res.json({ url: "Hi"})
+// })
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is listening on ${PORT}`);
 });

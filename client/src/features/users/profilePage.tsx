@@ -43,7 +43,6 @@ function a11yProps(index: number) {
 }
 
 export const ProfilePage = () => {
-  const dispatch = useAppDispatch();
   const {
     data: user,
     isLoading,
@@ -61,7 +60,7 @@ export const ProfilePage = () => {
   return (
     <Layout>
       {user && (
-        <Paper sx={{ maxHeight: 800, minWidth: 350 }}>
+        <Paper sx={{ maxHeight: 800, minWidth: "375px" }}>
           <Grid container>
             <Grid xs={6}>
               <Box
