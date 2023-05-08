@@ -1,23 +1,15 @@
 import { List, ListItem } from "@mui/material";
-import { useGetCurrentUserDetailsQuery } from "./usersApi";
-export const ProfileInfo = () => {
-  const {
-    data: user,
-    isLoading,
-  } = useGetCurrentUserDetailsQuery();
-
+export const ProfileInfo = ({userName, userSurname, userEmail, userPhone, userAddress}: any) => {
   return (
     <>
-      {user && (
         <List>
           <ListItem>
-            {user.name} {user.surname}
+            {userName} {userSurname}
           </ListItem>
-          <ListItem>Email: {user.email}</ListItem>
-          <ListItem>Phone: {user.phone}</ListItem>
-          <ListItem>Address: {user.address}</ListItem>
+          <ListItem>Email: {userEmail}</ListItem>
+          <ListItem>Phone: {userPhone}</ListItem>
+          <ListItem>Address: {userAddress}</ListItem>
         </List>
-      )}
     </>
   );
 };

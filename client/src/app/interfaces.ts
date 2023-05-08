@@ -29,7 +29,8 @@ export interface User {
     password: string ,
     phone: string ,
     address: string,
-    token: string 
+    token: string,
+    fullProfile: boolean 
 }
 
 export interface Login {
@@ -64,3 +65,9 @@ export interface Order {
     status: string,
     userId: number
 }
+
+export interface UserInfo {
+    id: number,
+    accessToken: string,
+    refreshToken: string
+  }

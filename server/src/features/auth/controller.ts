@@ -14,7 +14,13 @@ import { SECRET_KEY } from "../../../config";
 import { AuthError } from "../../helpers/errors";
 import { createAccessToken, decodeAuthToken } from "../../helpers/jwt";
 import { UserService } from "../users/services";
+import { access } from "fs";
 
+export interface UserInfo {
+  id: number,
+  accessToken: string,
+  refreshToken: string
+}
 //@Middlewares([cookieParser])
 @Route("session")
 @Tags("Auth")
@@ -30,7 +36,7 @@ export class AuthController extends Controller {
     @Body() requestBody: UserLoginParams
     ): Promise<Partial<User>> {
       const data = await new AuthService().getUserId(requestBody);
-      const refreshToken = data.id && await new AuthService().generateRefreshToken(data.id, data.role);
+      const refreshToken = await new AuthService().generateRefreshToken(data.id, data.role);
       req.res?.cookie('refresh_token', refreshToken, { 
         httpOnly: true,
         path: '/session/refresh',
@@ -41,14 +47,19 @@ export class AuthController extends Controller {
   @Post("start")
   public async createUser(
     @Request() req: ExRequest
-  ): Promise<User> {
+  ): Promise<UserInfo> {
     const user = await new AuthService().createUser();
-    const refreshToken = user.id && await new AuthService().generateRefreshToken(user.id, user.role);
+    const accessToken = createAccessToken({id: user.id, scopes: [user.role]})
+    const refreshToken = await new AuthService().generateRefreshToken(user.id, user.role);
     req.res?.cookie('refresh_token', refreshToken, { 
       httpOnly: true,
       path: '/session/refresh'
     })
-    return user;
+    return {
+      id: user.id,
+      accessToken: accessToken,
+      refreshToken: refreshToken
+    };
   }
 
   @Post("refresh")

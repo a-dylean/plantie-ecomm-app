@@ -24,8 +24,8 @@ model Order {
   status       String         @default("Draft")
   user         User?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
-  Product      Product?       @relation(fields: [productId], references: [id])
-  productId    Int?
+  //Product      Product?       @relation(fields: [productId], references: [id])
+  //productId    Int?
 
   @@map("order")
 }
@@ -52,7 +52,7 @@ model Product {
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   picture      String?
-  orders       Order[]
+  //orders       Order[]
   category     Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
 
@@ -63,10 +63,10 @@ model User {
   id          Int          @id @default(autoincrement())
   name        String?      @db.VarChar(256)
   surname     String?      @db.VarChar(256)
-  email       String      @unique @db.VarChar(256)
+  email       String?      @unique @db.VarChar(256)
   phone       String?      @db.VarChar(50)
   address     String?      @db.VarChar(256)
-  password    String      @db.VarChar(256)
+  password    String?      @db.VarChar(256)
   role        RoleEnumType @default(user)
   fullProfile Boolean?     @default(false) @map("full_profile")
   createdAt   DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
@@ -83,7 +83,7 @@ model Token {
   userId Int     @unique @map("user_id")
   user   User    @relation(fields: [userId], references: [id])
 
-  @@map("token")
+  @@map("refresh_token")
 }
 
 enum RoleEnumType {

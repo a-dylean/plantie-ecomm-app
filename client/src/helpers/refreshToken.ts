@@ -1,9 +1,10 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-axios.defaults.withCredentials = true
+
+axios.defaults.withCredentials = true;
+
 export const securelyGetAccessToken = async () => {
   const token = localStorage.getItem("accessToken");
-
   if (!token) {
     return null;
   } else {
@@ -20,6 +21,5 @@ export const securelyGetAccessToken = async () => {
       }
     }
   }
-
   return token;
 };

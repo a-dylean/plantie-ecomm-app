@@ -78,9 +78,4 @@ export class ProfileController extends Controller {
     const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0]
     return new UserService().update(Number(userId), requestBody)
   }
-
-
-
-
-
 }

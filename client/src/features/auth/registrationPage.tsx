@@ -22,19 +22,19 @@ import {
   matchIsValidTel,
 } from "mui-tel-input";
 import { enqueueSnackbar, SnackbarProvider } from "notistack";
-import { useCreateNewUserMutation } from "../users/usersApi";
+import { useUpdateUserDetailsMutation } from "../users/usersApi";
 
 export const RegistrationForm = () => {
   const navigate = useNavigate();
   const { register, control, handleSubmit } = useForm();
   const continents: MuiTelInputContinent[] = ["EU"];
-  const [createUser] = useCreateNewUserMutation();
+  const [updateUser] = useUpdateUserDetailsMutation();
 
   const submitForm: SubmitHandler<FieldValues> = async (data) => {
     try {
       data.email = data.email.toLowerCase();
-      const result = await createUser(data).unwrap();
-      navigate("/auth/login");
+      const result = await updateUser(data).unwrap();
+      navigate("/me");
     } catch (error: any) {
       enqueueSnackbar(error.data.message, { variant: "error" });
     }

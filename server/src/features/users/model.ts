@@ -3,10 +3,6 @@ import { generateHash } from "../../helpers/bcrypt";
 
 const prisma = new PrismaClient();
 
-// export type UserCreationParams = Pick<
-//   User,
-//   "name" | "surname" | "email" | "phone" | "address" | "password"
-// >;
 export type UserCreationParams = {
   name: string;
   surname: string;
@@ -15,20 +11,13 @@ export type UserCreationParams = {
   address: string | null;
   password: string;
 };
-//export type UserLoginParams = Pick<User, "email" | "password">;
 export type UserLoginParams = {
   email: string;
   password: string;
 };
 
 export class UserModel {
-  async create(data: UserCreationParams): Promise<User> {
-    return await prisma.user.create({
-      data: {
-        ...data,
-      },
-    });
-  }
+
   async createUser(): Promise<User> {
     return await prisma.user.create({
       data: {},
@@ -51,6 +40,7 @@ export class UserModel {
         email: email,
         surname: surname,
         name: name,
+        fullProfile: true
       },
       create: {
         password: hashedPassword,
@@ -59,6 +49,7 @@ export class UserModel {
         email: email,
         surname: surname,
         name: name,
+        fullProfile: true
       },
     });
   }

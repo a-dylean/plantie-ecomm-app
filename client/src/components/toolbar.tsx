@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import Face4Icon from "@mui/icons-material/Face4";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useGetUserCartQuery } from "../features/orders/ordersApi";
+import { useGetCurrentUserDetailsQuery } from "../features/users/usersApi";
 
 
 export const Topbar = () => {
@@ -28,6 +29,8 @@ export const Topbar = () => {
     error,
     refetch } = useGetUserCartQuery();
   const token = localStorage.getItem("accessToken");
+  const { data: user } = useGetCurrentUserDetailsQuery();
+  const fullProfile = user?.fullProfile;
 const handleLogout = () => {
   localStorage.removeItem("accessToken");
   navigate("/auth/login");

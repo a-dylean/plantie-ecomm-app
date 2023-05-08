@@ -3,9 +3,10 @@ import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Layout } from "../../app/layout";
 import { useGetProductsQuery } from "./productsApi";
+import { useCreateNewUserMutation } from "../users/usersApi";
 
 export const ProductsContainer = () => {
-  const {data: products = [], isError, isLoading} = useGetProductsQuery();
+  const { data: products = [], isError, isLoading } = useGetProductsQuery();
   return (
     <>
       <Layout>
@@ -17,7 +18,22 @@ export const ProductsContainer = () => {
             display="flex"
             justifyContent="flex-start"
           >
-            {products.map(product => <Grid key={product.id}><ProductItem name={product.name} id={product.id} description={product.description} price={product.price} available={product.available} categoryId={product.categoryId} createdAt={product.createdAt} updatedAt={product.updatedAt} picture={product.picture} quantity={product.quantity}/></Grid>)}
+            {products.map((product) => (
+              <Grid key={product.id}>
+                <ProductItem
+                  name={product.name}
+                  id={product.id}
+                  description={product.description}
+                  price={product.price}
+                  available={product.available}
+                  categoryId={product.categoryId}
+                  createdAt={product.createdAt}
+                  updatedAt={product.updatedAt}
+                  picture={product.picture}
+                  quantity={product.quantity}
+                />
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </Layout>

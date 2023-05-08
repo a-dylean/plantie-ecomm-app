@@ -40,41 +40,7 @@ export class AuthService {
     AuthModelInstance.createToken({userId: id, token: refreshToken})
     return refreshToken;
   }
-  // async login(data: UserLoginParams): Promise<any> {
-  //   const { email, password } = data;
-  //   const user = await UserModuleInstance.findUserByEmail(email);
-  //   if (!user) {
-  //     throw new AuthError("User not found");
-  //   }
-  //   if (user && user.password && (await validatePassword(password, user.password))) {
-  //     const accessToken = createAccessToken({
-  //       id: user.id,
-  //       scopes: [user.role],
-  //     });
-  //     const refreshToken = createRefreshToken({
-  //       id: user.id,
-  //       scopes: [user.role],
-  //     });
-  //     AuthModelInstance.createToken({userId: user.id, token: refreshToken})
-  //     return {
-  //       id: user.id,
-  //       name: user.name,
-  //       email: email,
-  //       token: accessToken,
-  //     };
-  //   } else {
-  //     throw new AuthError("Wrong password");
-  //   }
-  // }
-  // async create(data: UserCreationParams): Promise<User> {
-  //   const { password } = data;
-  //   const hashedPassword = await generateHash(password);
-  //   return await UserModuleInstance.create({
-  //     ...data,
-  //     password: hashedPassword,
-  //   });
-  // }
   async createUser(): Promise<User> {
-    return await UserModuleInstance.createUser()
+    return await UserModuleInstance.createUser() 
   }
 }

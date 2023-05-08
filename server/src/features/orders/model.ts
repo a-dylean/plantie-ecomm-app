@@ -34,7 +34,7 @@ export class OrderModel {
     const draftOrder = await prisma.order.findMany({
       where: {
         userId: userId,
-        status: "draft",
+        status: "Draft",
       },
     });
     if (draftOrder.length === 0) {

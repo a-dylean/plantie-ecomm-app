@@ -1,17 +1,9 @@
 import { CircularProgress, List } from "@mui/material";
 import { Order } from "./orderItem";
-import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
 import { useGetUserOrdersQuery } from "./ordersApi";
 
-export const OrdersInfo = () => {
-  const {
-    data: user,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetCurrentUserDetailsQuery();
-  const { data: orders = [] } = useGetUserOrdersQuery(user!.id);
+export const OrdersInfo = ({userId}: any) => {
+  const { data: orders = [], isLoading, isSuccess, isError, error } = useGetUserOrdersQuery(userId);
 
   let content;
 
