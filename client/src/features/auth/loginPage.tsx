@@ -12,7 +12,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Layout } from "../../app/layout";
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { isApiResponse } from "../../helpers/errors";
-import { useLoginUserMutation } from "../users/usersApi";
+import { useGetCurrentUserDetailsQuery, useLoginUserMutation } from "../users/usersApi";
 
 export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();
@@ -20,7 +20,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const submitForm = async (data: FieldValues) => {
-    try {
+    try {   
       const result = await loginUser(data).unwrap();
       localStorage.setItem("accessToken", result.token);
       navigate("/me");

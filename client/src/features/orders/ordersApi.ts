@@ -29,15 +29,7 @@ const ordersApi = emptySplitApi.injectEndpoints({
           ? { data: cart.data as CartItem[] }
           : { error: cart.error as FetchBaseQueryError };
       },
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(
-                ({ id }) => ({ type: "ProductOrders", id } as const)
-              ),
-              { type: "ProductOrders", id: "LIST" },
-            ]
-          : [{ type: "ProductOrders", id: "LIST" }],
+      providesTags: ["ProductOrders"],
     }),
     getUserOrder: builder.query<Order, void>({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
@@ -50,7 +42,7 @@ const ordersApi = emptySplitApi.injectEndpoints({
           ? { data: order.data as Order }
           : { error: order.error as FetchBaseQueryError };
       },
-      providesTags: (result, error, id) => [{ type: "Orders", id: "LIST" }],
+      providesTags: ["Orders", "ProductOrders"],
     }),
     pay: builder.mutation<Order, Partial<Order>>({
       query(data) {
@@ -65,15 +57,15 @@ const ordersApi = emptySplitApi.injectEndpoints({
     }),
     getDraftOrder: builder.query<Order, number>({
       query: (userId) => `orders/draft/${userId}`,
-      providesTags: (result, error, id) => [{ type: "Orders", id }],
+      providesTags: ["Orders"],
     }),
     getProductOrderByOrderId: builder.query<CartItem, number>({
       query: (orderId) => `orders/${orderId}/product_orders`,
-      providesTags: (result, error, id) => [{ type: "ProductOrders", id }],
+      providesTags: ["ProductOrders"],
     }),
     getProductOrderByProductId: builder.query<CartItem, number>({
       query: (productId) => `product_orders/${productId}`,
-      providesTags: (result, error, id) => [{ type: "ProductOrders", id }],
+      providesTags: ["ProductOrders"],
     }),
     addToCart: builder.mutation<CartItem, Partial<CartItem>>({
       query(body) {
@@ -83,7 +75,7 @@ const ordersApi = emptySplitApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ["ProductOrders"],
+      invalidatesTags: ["ProductOrders", "Orders"],
     }),
     deleteProductOrder: builder.mutation<CartItem, number | undefined>({
       query: (productOrderId) => ({
@@ -101,15 +93,12 @@ const ordersApi = emptySplitApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: (result, error, { id }) => [
-        { type: "ProductOrders", id },
-      ],
+      invalidatesTags: ["ProductOrders"],
     }),
     getUserOrders: builder.query<Order[], number>({
       query: (userId) => `/orders/${userId}`,
-      providesTags: ["Orders"],
+      providesTags: ["Orders"]
     }),
-
   }),
   overrideExisting: false,
 });

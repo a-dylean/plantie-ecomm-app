@@ -14,7 +14,6 @@ import { SECRET_KEY } from "../../../config";
 import { AuthError } from "../../helpers/errors";
 import { createAccessToken, decodeAuthToken } from "../../helpers/jwt";
 import { UserService } from "../users/services";
-import { access } from "fs";
 
 export interface UserInfo {
   id: number,

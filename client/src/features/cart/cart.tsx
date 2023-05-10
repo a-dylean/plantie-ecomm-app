@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
 import { useGetUserCartQuery } from "../orders/ordersApi";
+import jwtDecode from "jwt-decode";
+import { useEffect } from "react";
+import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
 const CartBox = styled("div")(({ theme }) => ({
   backgroundColor: backgroundColor,
   width: "600px",
@@ -13,15 +16,20 @@ const CartBox = styled("div")(({ theme }) => ({
 
 export const Cart = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
   const {
     data: OrderItems = [],
     isLoading,
+    isFetching,
     isSuccess,
     isError,
     error,
+    refetch
   } = useGetUserCartQuery();
+  const {data: user} = useGetCurrentUserDetailsQuery();
+  const fullProfile = user?.fullProfile;
   let content;
-
+  
   if (isLoading) {
     content = <CircularProgress />;
   } else if (isSuccess) {
@@ -33,10 +41,9 @@ export const Cart = () => {
     content = <>{renderedItems}</>;
   } else if (isError) {
     content = <>{error.toString()}</>;
-  }
-
+  } 
   return (
-    <>
+    <>{token &&
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
         {content}
@@ -47,7 +54,7 @@ export const Cart = () => {
             <Button
               color="secondary"
               variant="outlined"
-              onClick={() => navigate("/checkout")}
+              onClick={() => fullProfile ? navigate("/checkout") : navigate("/me")}
             >
               Go to checkout
             </Button>
@@ -56,7 +63,7 @@ export const Cart = () => {
             </Typography>
           </Box>
         )}
-      </CartBox>
+      </CartBox>}
     </>
   );
 };

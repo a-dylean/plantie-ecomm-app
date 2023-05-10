@@ -48,7 +48,8 @@ export class OrderModel {
   async getAll(id: User["id"]): Promise<Order[]> {
     return await prisma.order.findMany({
       where: {
-        userId: id
+        userId: id,
+        status: "Payment Received"
       },
       orderBy: {
         id: "desc"

@@ -5,17 +5,11 @@ const productsApi = emptySplitApi.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
       query: () => "products",
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: "Products", id } as const)),
-              { type: "Products", id: "LIST" },
-            ]
-          : [{ type: "Products", id: "LIST" }],
+      providesTags: ["Products"],
     }),
     getProduct: build.query<Product, number>({
       query: (productId) => `products/${productId}`,
-      providesTags: (result, error, id) => [{ type: "Products", id }],
+      providesTags: ["Products"],
     }),
   }),
   overrideExisting: false,

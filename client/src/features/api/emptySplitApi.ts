@@ -16,6 +16,7 @@ const baseQuery = fetchBaseQuery({
 
 export const emptySplitApi = createApi({
   baseQuery,
+  //refetchOnMountOrArgChange: true,
   endpoints: () => ({}),
   tagTypes: ["Products", "ProductOrders", "Orders", "Users"],
 })

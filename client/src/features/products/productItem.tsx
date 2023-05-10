@@ -12,19 +12,27 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { selectProduct } from "./productSlice";
 import {
+  useCreateNewUserMutation,
   useGetCurrentUserDetailsQuery,
 } from "../users/usersApi";
-import { useAddToCartMutation, useCreateOrderMutation, useGetUserOrderQuery } from "../orders/ordersApi";
+import {
+  useAddToCartMutation,
+  useCreateOrderMutation,
+  useGetUserOrderQuery,
+} from "../orders/ordersApi";
+import jwtDecode from "jwt-decode";
+import { securelyGetAccessToken } from "../../helpers/refreshToken";
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [createOrderInDB] = useCreateOrderMutation();
   const [createProductOrder] = useAddToCartMutation();
-  const { data: user } = useGetCurrentUserDetailsQuery();
+  const { data: user, refetch } = useGetCurrentUserDetailsQuery();
   const { data: order } = useGetUserOrderQuery();
 
   const addToCart = async () => {
+    console.log(order);
     await createOrderInDB({ userId: user!.id });
     await createProductOrder({
       productId: product.id,
@@ -41,7 +49,7 @@ export const ProductItem = (product: Product) => {
           onClick={() => {
             navigate(`/products/${product.id}`);
           }}
-          sx={{cursor: "pointer"}}
+          sx={{ cursor: "pointer" }}
         >
           <CardMedia
             component="img"
@@ -85,4 +93,3 @@ export const ProductItem = (product: Product) => {
     </Card>
   );
 };
-export {};

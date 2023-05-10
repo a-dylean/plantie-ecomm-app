@@ -8,12 +8,14 @@ import { ProfilePage } from "../features/users/profilePage";
 import { ProductPage } from "../features/products/productPage";
 import { StripeForm } from "../features/checkout/stripe";
 import { CheckoutPage } from "../features/checkout/CheckoutPage";
-import { useCreateNewUserMutation } from "../features/users/usersApi";
+import { useCreateNewUserMutation, useGetCurrentUserDetailsQuery } from "../features/users/usersApi";
 import { useEffect } from "react";
+import { useCreateOrderMutation } from "../features/orders/ordersApi";
+import { SuccessfullPayment } from "../features/checkout/successfullPayment";
 
 export const App = () => {
-  const [startSession] = useCreateNewUserMutation();
   const token = localStorage.getItem("accessToken");
+  const [startSession] = useCreateNewUserMutation();
   const createNewUser = async () => {
     const result = await startSession().unwrap();
     localStorage.setItem("accessToken", result.accessToken);
@@ -37,6 +39,7 @@ export const App = () => {
             <Route path="me" element={<ProfilePage />} />
             {/* <Route path="checkout" element={<StripeForm/>}/> */}
             <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="successfull" element={<SuccessfullPayment/>}/>
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

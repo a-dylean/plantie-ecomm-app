@@ -8,7 +8,9 @@ import {
 } from "../orders/ordersApi";
 import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
 import { Cart } from "../cart/cart";
+import { useNavigate } from "react-router-dom";
 export const CheckoutPage = () => {
+  const navigate = useNavigate()
   const { data: OrderItems = [] } = useGetUserCartQuery();
   const { data: order } = useGetUserOrderQuery();
   const { data: productOrderInfo } = useGetUserCartQuery();
@@ -19,6 +21,7 @@ export const CheckoutPage = () => {
     const amount = calculateTotalCartAmount(OrderItems).toString();
     pay({ id: id, amount: amount });
     productOrderInfo?.map((item) => item.id).forEach((id) => deleteItem(id));
+    navigate("/successfull")
   };
 
   return (

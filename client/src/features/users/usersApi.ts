@@ -10,7 +10,7 @@ const usersApi = emptySplitApi.injectEndpoints({
           method: "POST"
         }
       },
-      invalidatesTags: [{ type: "Users", id: "LIST" }],
+      invalidatesTags: ["Users"],
     }),
     loginUser: builder.mutation<User, Partial<User>>({
       query(body) {
@@ -20,7 +20,7 @@ const usersApi = emptySplitApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: [{ type: "Users", id: "LIST" }],
+      invalidatesTags: ["Users"],
     }),
     getCurrentUserDetails: builder.query<User, void>({
       query() {
@@ -28,7 +28,7 @@ const usersApi = emptySplitApi.injectEndpoints({
           url: "me",
         };
       },
-      providesTags: [{ type: "Users", id: "LIST" }],
+      providesTags: ["Users"],
     }),
     updateUserDetails: builder.mutation<User, Partial<User>>({
       query(body) {
@@ -38,7 +38,7 @@ const usersApi = emptySplitApi.injectEndpoints({
           body
         };
       },
-      invalidatesTags: [{ type: "Users", id: "LIST" }],
+      invalidatesTags: ["Users"],
     })
   }),
   overrideExisting: false,
