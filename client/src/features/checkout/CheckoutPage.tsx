@@ -26,8 +26,8 @@ export const CheckoutPage = () => {
 
   return (
     <Layout>
-      <Cart />
-      <Button variant="contained" onClick={handleClick}>
+      <Cart visible = {false} />
+      <Button variant="contained" onClick={handleClick} sx={{m: "0 1.5rem", p: "1rem 3rem"}}>
         PAY
       </Button>
     </Layout>

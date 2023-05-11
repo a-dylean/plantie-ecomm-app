@@ -88,7 +88,7 @@ export const Topbar = () => {
       </AppBar>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
         <Box sx={{ mt: "3rem" }}>
-          <Cart />
+          <Cart visible={true}/>
         </Box>
       </Drawer>
     </>

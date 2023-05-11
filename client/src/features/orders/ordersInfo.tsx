@@ -12,7 +12,7 @@ export const OrdersInfo = ({userId}: any) => {
   } else if (isSuccess) {
     
     const renderedItems = orders.map((order) => (
-      <List key={order.id}>
+      <List key={order.id} sx={{width: 400}}>
         <Order
           id={order.id}
           createdAt={order.createdAt}

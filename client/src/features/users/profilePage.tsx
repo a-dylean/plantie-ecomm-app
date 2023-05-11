@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { LoginForm } from "../auth/loginPage";
-import { RegistrationForm } from "../auth/registrationPage";
 import { FullProfilePage } from "./fullProfilePage";
 import { useGetCurrentUserDetailsQuery } from "./usersApi";
 import { CircularProgress } from "@mui/material";

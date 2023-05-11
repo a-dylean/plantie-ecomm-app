@@ -48,7 +48,9 @@ export const FullProfilePage = ({userId, userName, userSurname, userEmail, userP
 
   return (
     <Layout>
-        <Paper sx={{ maxHeight: 800, minWidth: "375px" }}>
+        <Paper 
+        //sx={{ maxHeight: 800, minWidth: "375px" }}
+        >
           <Grid container>
             <Grid xs={6}>
               <Box
@@ -80,7 +82,7 @@ export const FullProfilePage = ({userId, userName, userSurname, userEmail, userP
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <Typography variant="h5">Orders information</Typography>
-                  <Box sx={{ maxHeight: 620, overflow: "auto" }}>
+                  <Box sx={{  }}>
                     <OrdersInfo userId={userId}/>
                   </Box>
                 </TabPanel>
@@ -97,7 +99,7 @@ export const FullProfilePage = ({userId, userName, userSurname, userEmail, userP
               </Typography>
               <Image
                 src="https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80"
-                fit="contain"
+                //fit="contain"
                 height="100%"
                 width="100%"
                 duration={50}

@@ -5,16 +5,15 @@ import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
 import { useGetUserCartQuery } from "../orders/ordersApi";
-import jwtDecode from "jwt-decode";
-import { useEffect } from "react";
 import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
+
 const CartBox = styled("div")(({ theme }) => ({
   backgroundColor: backgroundColor,
   width: "600px",
   padding: theme.spacing(3),
 }));
 
-export const Cart = () => {
+export const Cart = ({visible = true}) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
   const {
@@ -46,18 +45,18 @@ export const Cart = () => {
     <>{token &&
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
-        {content}
+        {OrderItems.length > 0  && <>{content}</>}
         {OrderItems.length === 0 ? (
           <Typography>So far empty...</Typography>
         ) : (
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
+            {visible && <Button
               color="secondary"
               variant="outlined"
               onClick={() => fullProfile ? navigate("/checkout") : navigate("/me")}
             >
               Go to checkout
-            </Button>
+            </Button>}
             <Typography variant="h6">
               Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
             </Typography>
