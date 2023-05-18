@@ -14,7 +14,7 @@ export class OrderService {
   async getAll(): Promise<Order[]> {
     return await OrderModelInstance.getAll();
   }
-  async register(data: OrderCreationParams): Promise<ProductOrder> {
+  async create(data: OrderCreationParams): Promise<ProductOrder> {
     return await OrderModelInstance.create(data);
   }
 }

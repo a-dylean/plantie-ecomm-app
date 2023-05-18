@@ -15,15 +15,13 @@ export class ProductService {
     }
     return product;
   }
-  // rename to create, it's more CRUD like
-  async register(data: ProductCreationParams): Promise<Product> {
+  async create(data: ProductCreationParams): Promise<Product> {
     return await ProductModelInstance.create(data);
   }
   async update(id: number, data: ProductCreationParams): Promise<Product> {
     return await ProductModelInstance.update(id, data);
   }
-  // rename to filterByCategory
-  async filter(categoryId: number): Promise<Product[]> {
+  async filterByCategory(categoryId: number): Promise<Product[]> {
     const products = await ProductModelInstance.findProductsByCategory(
       categoryId
     );

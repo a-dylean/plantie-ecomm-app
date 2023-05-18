@@ -16,6 +16,7 @@ import bodyParser from "body-parser";
 import { Prisma } from "@prisma/client";
 import { AuthError } from "./helpers/errors";
 import { PORT } from "../config";
+import { validationErrorHandler, uniquenessValidationErrorHandler} from "./helpers/errors";
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,8 +31,8 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 RegisterRoutes(app);
 
@@ -46,38 +47,23 @@ app.use(function errorHandler(
 ): ExResponse | void {
   // I think it can be decomposed into sub functions to make it easier to read (with names according to the error type)
   if (err instanceof ValidateError) {
-    console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
-    return res.status(422).json({
-      message: "Validation Failed",
-      details: err?.fields,
-    });
+    validationErrorHandler(res, req, err);
   }
 
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    if (err.code === "P2002") {
-      const errorMeta = err.meta as Record<string, Array<string>>;
-      return res.status(422).json({
-        message: "Uniqueness validation failed",
-        details: errorMeta.target.reduce(
-          (obj, field) => ({
-            ...obj,
-            [`requestBody.${field}`]: {
-              message: `Value already used`,
-              value: req.body[field],
-            },
-          }),
-          {}
-        ),
-      });
-    }
+    uniquenessValidationErrorHandler(res, req, err);
   }
   if (err instanceof AuthError) {
+    console.error(err);
+    console.error(err.stack);
     return res.status(403).json({
       message: "Authorization Failed",
       details: err.message,
     });
   }
   if (err instanceof NotFoundError) {
+    console.error(err);
+    console.error(err.stack);
     return res.status(404).json({
       message: "Not found",
       details: err.message,

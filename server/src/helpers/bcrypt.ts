@@ -8,7 +8,6 @@ export const generateHash = async (password: string) => {
     return hashedPassword;
   };
   
-// probably should be named comparePasswordToHash or something like that, because it's not comparing hashes, or just validatePassword, because it's what it does
-export const compareHash = (password: User["password"], hashedPassword: User["password"]) => {
+export const validatePassword = (password: User["password"], hashedPassword: User["password"]) => {
     return bcrypt.compare(password, hashedPassword);
   };

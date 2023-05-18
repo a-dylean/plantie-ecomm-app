@@ -1,5 +1,5 @@
 import { UserCreationParams, UserLoginParams, UserModel } from "../users/model";
-import { compareHash, generateHash } from "../../helpers/bcrypt";
+import { validatePassword, generateHash } from "../../helpers/bcrypt";
 import { createAuthToken } from "../../helpers/jwt";
 import { User } from "@prisma/client";
 import { AuthError } from "../../helpers/errors";
@@ -13,8 +13,7 @@ export class AuthService {
     if (!user) {
       throw new AuthError("User not found");
     }
-    if (user && (await compareHash(password, user.password))) {
-      // should probably have a method to create a token from a user, like "createTokenFromUser"
+    if (user && (await validatePassword(password, user.password))) {
       const token = createAuthToken({
         id: user.id,
         name: user.name,
@@ -31,7 +30,7 @@ export class AuthService {
       throw new AuthError("Wrong password");
     }
   }
-  async register(data: UserCreationParams): Promise<User> {
+  async create(data: UserCreationParams): Promise<User> {
     const { password } = data;
     const hashedPassword = await generateHash(password);
     return await UserModuleInstance.create({
