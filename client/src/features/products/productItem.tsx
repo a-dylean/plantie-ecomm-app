@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { selectProduct } from "./productSlice";
 import {
-  useCreateNewUserMutation,
   useGetCurrentUserDetailsQuery,
 } from "../users/usersApi";
 import {
@@ -20,8 +19,6 @@ import {
   useCreateOrderMutation,
   useGetUserOrderQuery,
 } from "../orders/ordersApi";
-import jwtDecode from "jwt-decode";
-import { securelyGetAccessToken } from "../../helpers/refreshToken";
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();

@@ -48,9 +48,7 @@ export const FullProfilePage = ({userId, userName, userSurname, userEmail, userP
 
   return (
     <Layout>
-        <Paper 
-        //sx={{ maxHeight: 800, minWidth: "375px" }}
-        >
+        <Paper>
           <Grid container>
             <Grid xs={6}>
               <Box

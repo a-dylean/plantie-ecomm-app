@@ -11,7 +11,6 @@ export const ProfilePage = () => {
     isError,
     error,
     isLoading,
-    isFetching,
     refetch,
   } = useGetCurrentUserDetailsQuery();
 

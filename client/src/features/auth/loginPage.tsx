@@ -10,9 +10,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { Layout } from "../../app/layout";
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { isApiResponse } from "../../helpers/errors";
-import { useGetCurrentUserDetailsQuery, useLoginUserMutation } from "../users/usersApi";
+import { useLoginUserMutation } from "../users/usersApi";
 
 export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();
@@ -20,16 +20,17 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const submitForm = async (data: FieldValues) => {
-    try {   
+    try {
       const result = await loginUser(data).unwrap();
       localStorage.setItem("accessToken", result.token);
       navigate("/me");
     } catch (error: any) {
       if (isApiResponse(error)) {
-        enqueueSnackbar(error.data.details, { variant: 'error' })
+        enqueueSnackbar(error.data.details, { variant: "error" });
       } else {
-        const errMsg = 'error' in error ? error.error : JSON.stringify(error.data)
-        enqueueSnackbar(errMsg, { variant: 'error' })
+        const errMsg =
+          "error" in error ? error.error : JSON.stringify(error.data);
+        enqueueSnackbar(errMsg, { variant: "error" });
       }
     }
   };
@@ -40,10 +41,12 @@ export const LoginForm = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-       <SnackbarProvider anchorOrigin={{
-    vertical: 'top',
-    horizontal: 'left',
-  }}/>
+        <SnackbarProvider
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        />
         <form name="login-form" onSubmit={handleSubmit(submitForm)}>
           <TextField
             color="secondary"
@@ -56,7 +59,7 @@ export const LoginForm = () => {
             autoComplete="email"
             autoFocus
             {...register("email")}
-          /> 
+          />
           <TextField
             color="secondary"
             variant="outlined"
@@ -76,11 +79,15 @@ export const LoginForm = () => {
           <Button type="submit" fullWidth variant="contained" color="secondary">
             Sign In
           </Button>
-          <Box display="flex" justifyContent="space-evenly" sx={{mt: 1}}>
+          <Box display="flex" justifyContent="space-evenly" sx={{ mt: 1 }}>
             <Link href="#" variant="body2" color="secondary">
               Forgot password?
             </Link>
-            <Link onClick={()=> navigate("/auth/register")} variant="body2" color="secondary">
+            <Link
+              onClick={() => navigate("/auth/register")}
+              variant="body2"
+              color="secondary"
+            >
               Don't have an account? Sign Up
             </Link>
           </Box>

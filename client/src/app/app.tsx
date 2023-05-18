@@ -6,12 +6,11 @@ import { RegistrationForm } from "../features/auth/registrationPage";
 import { LoginForm } from "../features/auth/loginPage";
 import { ProfilePage } from "../features/users/profilePage";
 import { ProductPage } from "../features/products/productPage";
-import { StripeForm } from "../features/checkout/stripe";
-import { CheckoutPage } from "../features/checkout/CheckoutPage";
-import { useCreateNewUserMutation, useGetCurrentUserDetailsQuery } from "../features/users/usersApi";
+// import { StripeForm } from "../features/checkout/stripe";
+import { useCreateNewUserMutation } from "../features/users/usersApi";
 import { useEffect } from "react";
-import { useCreateOrderMutation } from "../features/orders/ordersApi";
 import { SuccessfullPayment } from "../features/checkout/successfullPayment";
+import { CancelledPayment } from "../features/checkout/cancelledPayment";
 
 export const App = () => {
   const token = localStorage.getItem("accessToken");
@@ -22,10 +21,10 @@ export const App = () => {
   };
   useEffect(() => {
     if (!token) {
-     createNewUser();
-  }
-  }, [])
-  
+      createNewUser();
+    }
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -38,8 +37,8 @@ export const App = () => {
             <Route path="auth/login" element={<LoginForm />} />
             <Route path="me" element={<ProfilePage />} />
             {/* <Route path="checkout" element={<StripeForm/>}/> */}
-            <Route path="checkout" element={<CheckoutPage />} />
-            <Route path="successfull" element={<SuccessfullPayment/>}/>
+            <Route path="successfull" element={<SuccessfullPayment />} />
+            <Route path="cancelled" element={<CancelledPayment />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

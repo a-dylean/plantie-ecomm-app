@@ -1,12 +1,15 @@
-import { Typography } from "@mui/material"
-import { Layout } from "../../app/layout"
+import { Box, Typography } from "@mui/material";
+import { Layout } from "../../app/layout";
 
 export const SuccessfullPayment = () => {
-    return (
-        <Layout>
-        <Typography variant="h3" component="div" sx={{alignContent: "center"}}>
-            YOUR PAYMENT HAS BEEN SUCCESSFULLY PROCESSED!
-            </Typography>
-        </Layout>
-    )
-}
+  return (
+    <Layout>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Typography variant="h6">
+          Your payment has been successfully processed! Thank you for your
+          order!🙌
+        </Typography>
+      </Box>
+    </Layout>
+  );
+};
