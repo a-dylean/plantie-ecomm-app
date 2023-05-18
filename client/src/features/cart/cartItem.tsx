@@ -15,18 +15,12 @@ export const CartItem = ({ id, quantity }: any) => {
   const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(id);
   const [update] = useUpdateQuantityMutation();
   const [deleteItem] = useDeleteProductOrderMutation();
-  let [count, setCount] = useState(quantity);
-  const totalPerItem = (count * Number(productInfo?.price)).toFixed(2);
+  let [quantity, setQuantity] = useState(quantity);
+  const totalPerItem = (quantity * Number(productInfo?.price)).toFixed(2);
 
-  const addToCart = () => {
-    setCount(++count);
-    return update({ id: productOrderInfo!.id, quantity: count });
-  };
-  const removeFromCart = () => {
-    while (count > 0) {
-      setCount(--count);
-      return update({ id: productOrderInfo!.id, quantity: count });
-    }
+  const updateQuantity = (newQuantity: Number) => {
+    setQuantity(newQuantity);
+    return update({ id: productOrderInfo!.id, quantity: newQuantity });
   };
   const removeEntirely = () => {
     deleteItem(productOrderInfo!.id)
