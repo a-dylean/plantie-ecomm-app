@@ -13,7 +13,7 @@ import swaggerJson from "../build/swagger.json";
 import bodyParser from "body-parser";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { AuthError } from "./helpers/errors";
-import { PORT, STRIPE_SK } from "../config";
+import { ENDPOINT_SECRET, PORT, STRIPE_SK } from "../config";
 import {
   validationErrorHandler,
   uniquenessValidationErrorHandler,
@@ -26,8 +26,7 @@ const stripe = new Stripe(STRIPE_SK, {
 });
 const prisma = new PrismaClient();
 const app = express();
-const endpointSecret =
-  "whsec_c3e7b292f887e95f26a23cde0f0ed223ac6c9b49de45783913861719441c18ca";
+const endpointSecret = ENDPOINT_SECRET;
 app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
