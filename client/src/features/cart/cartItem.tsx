@@ -61,7 +61,7 @@ export const CartItem = ({ id, quantity }: any) => {
                   <RemoveCircleOutlineIcon />
                 </IconButton>
                 {count}
-                <IconButton color="secondary" onClick={addToCart} disableRipple>
+                <IconButton color="secondary" onClick={() => updateQuantity(quantity++)} disableRipple>
                   <AddCircleOutlineIcon />
                 </IconButton>
               </Box>
