@@ -15,6 +15,7 @@ export const expressAuthentication = async (
     if (!bearerToken || !token) {
       reject(new AuthError("No token provided"));
     } else {
+      // probably should be placed in a separate file, like jwt.ts, and decompose the scope validation routine into a separate function
       jwt.verify(
         token.toString(),
         SECRET_KEY,
