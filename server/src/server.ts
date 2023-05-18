@@ -37,12 +37,14 @@ RegisterRoutes(app);
 
 app.use(["/api-docs"], swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
+// Should probably be moved to a separate file
 app.use(function errorHandler(
   err: unknown,
   req: ExRequest,
   res: ExResponse,
   next: NextFunction
 ): ExResponse | void {
+  // I think it can be decomposed into sub functions to make it easier to read (with names according to the error type)
   if (err instanceof ValidateError) {
     console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
     return res.status(422).json({
@@ -50,6 +52,7 @@ app.use(function errorHandler(
       details: err?.fields,
     });
   }
+
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2002") {
       const errorMeta = err.meta as Record<string, Array<string>>;

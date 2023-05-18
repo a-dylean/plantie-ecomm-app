@@ -14,6 +14,7 @@ export class AuthService {
       throw new AuthError("User not found");
     }
     if (user && (await compareHash(password, user.password))) {
+      // should probably have a method to create a token from a user, like "createTokenFromUser"
       const token = createAuthToken({
         id: user.id,
         name: user.name,
