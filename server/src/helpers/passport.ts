@@ -6,6 +6,7 @@ const AuthServiceInstance = new AuthService();
 
 const LocalStrategy = passportLocal.Strategy;
 
+// is is still usefull ? 
 passport.use(
   new LocalStrategy(
     async (email: User["email"], password: User["password"], done) => {

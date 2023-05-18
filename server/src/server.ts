@@ -38,15 +38,18 @@ RegisterRoutes(app);
 
 app.use(["/api-docs"], swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
+// Should probably be moved to a separate file
 app.use(function errorHandler(
   err: unknown,
   req: ExRequest,
   res: ExResponse,
   next: NextFunction
 ): ExResponse | void {
+  // I think it can be decomposed into sub functions to make it easier to read (with names according to the error type)
   if (err instanceof ValidateError) {
     validationErrorHandler(res, req, err);
   }
+
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     uniquenessValidationErrorHandler(res, req, err);
   }

@@ -25,18 +25,19 @@ model Order {
   ProductOrder ProductOrder[]
   Product      Product?       @relation(fields: [productId], references: [id])
   productId    Int?
-
   @@map("order")
 }
 
 model ProductOrder {
   id        Int      @id(map: "checkout_pkey") @default(autoincrement())
+  // missing createdAt / updatedAt fields
+  // productId should be a foreign key
   productId Int?     @map("product_id")
   quantity  Int?
+  // orderId should be a foreign key
   orderId   Int?     @map("order_id")
   product   Product? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "checkout_product_id_fkey")
   order     Order?   @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
   @@map("product_order")
 }
 
@@ -70,7 +71,6 @@ model User {
   createdAt        DateTime?     @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt        DateTime?     @updatedAt @map("updated_at") @db.Timestamp(6)
   orders           Order[]
-
   @@unique([email, verificationCode])
   @@index([email, verificationCode])
   @@map("user")

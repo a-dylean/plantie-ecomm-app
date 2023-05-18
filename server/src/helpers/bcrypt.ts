@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 export const generateHash = async (password: string) => {
+    // this is a good place to use a constant for the salt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
