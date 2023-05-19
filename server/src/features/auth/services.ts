@@ -9,12 +9,6 @@ const UserModuleInstance = new UserModel();
 const AuthModelInstance = new AuthModel();
 
 export class AuthService {
-  // async generateAccessToken(data: Partial<User>): Promise<Partial<Token>> {
-  //   const accessToken = createAccessToken({id: data.id, scopes: [data.role]})
-  //   return {
-  //     token: accessToken,
-  //   } 
-  // }
   async getUserId(data: UserLoginParams): Promise<any> {
     const { email, password } = data;
     const user = await UserModuleInstance.findUserByEmail(email);
