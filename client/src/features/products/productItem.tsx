@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import { Product } from '../../app/interfaces';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../hooks/reactReduxHooks';
 import { selectProduct } from './productSlice';
 import { routes } from '../../helpers/routes';
-import { useCreateNewOrder } from '../../helpers/cartFunctions';
+import { useCreateNewOrder } from '../../hooks/useCreateNewOrder';
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();

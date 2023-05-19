@@ -5,9 +5,9 @@ import {
   CardMedia,
   CardContent,
 } from '@mui/material';
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../hooks/reactReduxHooks';
 import { Layout } from '../../app/layout';
-import { useCreateNewOrder } from '../../helpers/cartFunctions';
+import { useCreateNewOrder } from '../../hooks/useCreateNewOrder';
 import { Product } from '../../app/interfaces';
 
 export const ProductPage = () => {
