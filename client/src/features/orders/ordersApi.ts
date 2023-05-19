@@ -24,7 +24,7 @@ const ordersApi = baseApi.injectEndpoints({
         if (orderResponse.error)
           return { error: orderResponse.error as FetchBaseQueryError };
         const order = orderResponse.data as Order;
-        const cart = await fetchWithBQ(`orders/${order.id}/product_orders`);
+        const cart = await fetchWithBQ(`orders/${order.id}/product-orders`);
         return cart.data
           ? { data: cart.data as CartItem[] }
           : { error: cart.error as FetchBaseQueryError };
@@ -59,17 +59,17 @@ const ordersApi = baseApi.injectEndpoints({
       providesTags: ['Orders'],
     }),
     getProductOrderByOrderId: builder.query<CartItem, number>({
-      query: (orderId) => `orders/${orderId}/product_orders`,
+      query: (orderId) => `orders/${orderId}/product-orders`,
       providesTags: ['ProductOrders'],
     }),
     getProductOrderByProductId: builder.query<CartItem, number>({
-      query: (productId) => `product_orders/${productId}`,
+      query: (productId) => `/products/${productId}/product-orders`,
       providesTags: ['ProductOrders'],
     }),
     addToCart: builder.mutation<CartItem, Partial<CartItem>>({
       query(body) {
         return {
-          url: 'product_orders',
+          url: 'product-orders',
           method: 'POST',
           body,
         };
@@ -78,7 +78,7 @@ const ordersApi = baseApi.injectEndpoints({
     }),
     deleteProductOrder: builder.mutation<CartItem, number | undefined>({
       query: (productOrderId) => ({
-        url: `product_orders/${productOrderId}`,
+        url: `product-orders/${productOrderId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['ProductOrders'],
@@ -87,7 +87,7 @@ const ordersApi = baseApi.injectEndpoints({
       query(data) {
         const { id, ...body } = data;
         return {
-          url: `product_orders/${id}`,
+          url: `product-orders/${id}`,
           method: 'PUT',
           body,
         };

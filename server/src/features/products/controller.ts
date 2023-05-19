@@ -12,9 +12,10 @@ import {
   Security,
   Query,
 } from "tsoa";
-import { Product } from "@prisma/client";
+import { Product, ProductOrder } from "@prisma/client";
 import { ProductService } from "./services";
 import { ProductCreationParams } from "./model";
+import { OrderService } from "../orders/services";
 
 @Route("products")
 @Tags("Products")
@@ -41,6 +42,16 @@ export class ProductsController extends Controller {
   @Get("{productId}")
   public async getProduct(@Path() productId: number): Promise<Product> {
     return new ProductService().get(productId);
+  }
+
+  /**
+   * Returns a ProductOrder provided the product ID.
+   */
+  @Get("/{productId}/product-orders")
+  public async getProductOrderByProductId(
+    @Path() productId: number
+  ): Promise<ProductOrder | null> {
+    return new OrderService().getProductOrderByProductId(productId);
   }
   /**
    * Creates a new product in the system.
