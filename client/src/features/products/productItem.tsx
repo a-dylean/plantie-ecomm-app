@@ -11,32 +11,13 @@ import { Product } from '../../app/interfaces';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { selectProduct } from './productSlice';
-import { useGetCurrentUserDetailsQuery } from '../users/usersApi';
-import {
-  useAddToCartMutation,
-  useCreateOrderMutation,
-  useGetUserOrderQuery,
-} from '../orders/ordersApi';
 import { routes } from '../../helpers/routes';
+import { useCreateNewOrder } from '../../helpers/cartFunctions';
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [createOrderInDB] = useCreateOrderMutation();
-  const [createProductOrder] = useAddToCartMutation();
-  const { data: user, refetch } = useGetCurrentUserDetailsQuery();
-  const { data: order } = useGetUserOrderQuery();
-
-  const addToCart = async () => {
-    console.log(order);
-    await createOrderInDB({ userId: user!.id });
-    await createProductOrder({
-      productId: product.id,
-      orderId: order!.id,
-      price: product.price,
-      quantity: 1,
-    });
-  };
+  const addToCart = useCreateNewOrder(product);
 
   return (
     <Card sx={{ width: 345, height: 670 }}>
@@ -80,7 +61,7 @@ export const ProductItem = (product: Product) => {
             size="small"
             color="secondary"
             disableElevation
-            onClick={addToCart}
+            onClick={() => addToCart()}
           >
             Add to cart
           </Button>
