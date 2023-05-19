@@ -1,7 +1,7 @@
 import { User, UserInfo } from "../../app/interfaces";
-import { emptySplitApi } from "../api/emptySplitApi";
+import { baseApi } from "../api/baseApi";
 
-const usersApi = emptySplitApi.injectEndpoints({
+const usersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createNewUser: builder.mutation<UserInfo, void> ({
       query() {

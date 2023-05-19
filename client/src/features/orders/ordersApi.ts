@@ -1,8 +1,8 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query/react";
 import { Order, CartItem, User } from "../../app/interfaces";
-import { emptySplitApi } from "../api/emptySplitApi";
+import { baseApi } from "../api/baseApi";
 
-const ordersApi = emptySplitApi.injectEndpoints({
+const ordersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation<Order, Partial<Order>>({
       query(body) {

@@ -1,7 +1,7 @@
 import { Product } from "../../app/interfaces";
-import { emptySplitApi } from "../api/emptySplitApi";
+import { baseApi } from "../api/baseApi";
 
-const productsApi = emptySplitApi.injectEndpoints({
+const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
       query: () => "products",

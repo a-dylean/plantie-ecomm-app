@@ -23,7 +23,7 @@ import {
   useCreateNewUserMutation,
   useGetCurrentUserDetailsQuery,
 } from "../features/users/usersApi";
-import { emptySplitApi } from "../features/api/emptySplitApi";
+import { baseApi } from "../features/api/baseApi";
 import { useAppDispatch } from "../app/hooks";
 
 export const Topbar = () => {
@@ -48,7 +48,7 @@ export const Topbar = () => {
   };
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    dispatch(emptySplitApi.util.resetApiState());
+    dispatch(baseApi.util.resetApiState());
     createNewUser();
     navigate("/auth/login");
   };
