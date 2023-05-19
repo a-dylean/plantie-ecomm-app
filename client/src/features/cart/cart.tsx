@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { calculateTotalCartAmount } from '../../helpers/cartFunctions';
 import {
+  useCreateCheckoutSessionMutation,
   useDeleteProductOrderMutation,
   useGetUserCartQuery,
 } from '../orders/ordersApi';
 import { useGetCurrentUserDetailsQuery } from '../users/usersApi';
-import axios from 'axios';
 import { routes } from '../../helpers/routes';
 
 const CartBox = styled('div')(({ theme }) => ({
@@ -43,13 +43,12 @@ export const Cart = () => {
     content = <>{error.toString()}</>;
   }
   const [deleteItem] = useDeleteProductOrderMutation();
-  const handleCheckout = async () => {
-    const response = await axios.post(
-      'http://localhost:4001/create-checkout-session',
-      { OrderItems },
-    );
+  const [createCheckoutSession] = useCreateCheckoutSessionMutation();
+  const handleCheckout = () => {
+    createCheckoutSession(OrderItems)
+    .unwrap()
+    .then((data) => window.location.href = data.url)
     OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
-    window.location.href = response.data.url;
   };
   return (
     <>

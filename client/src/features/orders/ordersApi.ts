@@ -1,22 +1,22 @@
-import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query/react";
-import { Order, CartItem, User } from "../../app/interfaces";
-import { baseApi } from "../api/baseApi";
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
+import { Order, CartItem, User} from '../../app/interfaces';
+import { baseApi } from '../api/baseApi';
 
 const ordersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation<Order, Partial<Order>>({
       query(body) {
         return {
-          url: "orders",
-          method: "POST",
+          url: 'orders',
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["Orders"],
+      invalidatesTags: ['Orders'],
     }),
     getUserCart: builder.query<CartItem[], void>({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
-        const userResponse = await fetchWithBQ("me");
+        const userResponse = await fetchWithBQ('me');
         if (userResponse.error)
           return { error: userResponse.error as FetchBaseQueryError };
         const user = userResponse.data as User;
@@ -29,11 +29,11 @@ const ordersApi = baseApi.injectEndpoints({
           ? { data: cart.data as CartItem[] }
           : { error: cart.error as FetchBaseQueryError };
       },
-      providesTags: ["ProductOrders"],
+      providesTags: ['ProductOrders'],
     }),
     getUserOrder: builder.query<Order, void>({
       async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
-        const userResponse = await fetchWithBQ("me");
+        const userResponse = await fetchWithBQ('me');
         if (userResponse.error)
           return { error: userResponse.error as FetchBaseQueryError };
         const user = userResponse.data as User;
@@ -42,62 +42,61 @@ const ordersApi = baseApi.injectEndpoints({
           ? { data: order.data as Order }
           : { error: order.error as FetchBaseQueryError };
       },
-      providesTags: ["Orders", "ProductOrders"],
+      providesTags: ['Orders', 'ProductOrders'],
     }),
-    pay: builder.mutation<Order, Partial<Order>>({
-      query(data) {
-        const { id, ...body } = data;
+    createCheckoutSession: builder.mutation<Response, CartItem[]>({
+      query(body) {
         return {
-          url: `orders/pay/${id}`,
-          method: "PUT",
+          url: '/create-checkout-session',
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["Orders"],
+      invalidatesTags: ['ProductOrders', 'Orders'],
     }),
     getDraftOrder: builder.query<Order, number>({
       query: (userId) => `orders/draft/${userId}`,
-      providesTags: ["Orders"],
+      providesTags: ['Orders'],
     }),
     getProductOrderByOrderId: builder.query<CartItem, number>({
       query: (orderId) => `orders/${orderId}/product_orders`,
-      providesTags: ["ProductOrders"],
+      providesTags: ['ProductOrders'],
     }),
     getProductOrderByProductId: builder.query<CartItem, number>({
       query: (productId) => `product_orders/${productId}`,
-      providesTags: ["ProductOrders"],
+      providesTags: ['ProductOrders'],
     }),
     addToCart: builder.mutation<CartItem, Partial<CartItem>>({
       query(body) {
         return {
-          url: "product_orders",
-          method: "POST",
+          url: 'product_orders',
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["ProductOrders", "Orders"],
+      invalidatesTags: ['ProductOrders', 'Orders'],
     }),
     deleteProductOrder: builder.mutation<CartItem, number | undefined>({
       query: (productOrderId) => ({
         url: `product_orders/${productOrderId}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["ProductOrders"],
+      invalidatesTags: ['ProductOrders'],
     }),
     updateQuantity: builder.mutation<CartItem, Partial<CartItem>>({
       query(data) {
         const { id, ...body } = data;
         return {
           url: `product_orders/${id}`,
-          method: "PUT",
+          method: 'PUT',
           body,
         };
       },
-      invalidatesTags: ["ProductOrders"],
+      invalidatesTags: ['ProductOrders'],
     }),
     getUserOrders: builder.query<Order[], number>({
       query: (userId) => `/orders/${userId}`,
-      providesTags: ["Orders"]
+      providesTags: ['Orders'],
     }),
   }),
   overrideExisting: false,
@@ -113,6 +112,6 @@ export const {
   useGetUserCartQuery,
   useGetUserOrderQuery,
   useGetUserOrdersQuery,
-  usePayMutation,
   useUpdateQuantityMutation,
+  useCreateCheckoutSessionMutation,
 } = ordersApi;

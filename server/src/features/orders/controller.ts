@@ -6,15 +6,27 @@ import {
   Path,
   Post,
   Put,
+  Request,
+  Response,
   Route,
   Security,
   SuccessResponse,
   Tags,
 } from "tsoa";
+import express, {
+  Response as ExResponse,
+  Request as ExRequest,
+  NextFunction,
+} from "express";
 import { Order, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
-
+import Stripe from "stripe";
+import { STRIPE_SK } from "../../../config";
+const stripe = new Stripe(STRIPE_SK, {
+  apiVersion: "2022-11-15",
+  typescript: true,
+});
 @Route("orders")
 @Tags("Orders")
 export class OrdersController extends Controller {
@@ -37,7 +49,6 @@ export class OrdersController extends Controller {
   public async getOrder(@Path() orderId: number): Promise<Order | null> {
     return new OrderService().get(orderId);
   }
-
   /**
    * Returns draft order provided the unique user ID.
    */
@@ -47,7 +58,6 @@ export class OrdersController extends Controller {
   ): Promise<Order | null> {
     return new OrderService().getOrderByUserId(user_id);
   }
-
   /**
    * Returns user's cart (list of cart items) provided the order ID.
    */
@@ -68,14 +78,6 @@ export class OrdersController extends Controller {
   ): Promise<Order | undefined> {
     this.setStatus(201);
     return new OrderService().createOrder(requestBody);
-  }
-  @Security("jwt")
-  @Put("/pay/{order_id}")
-  public async pay(
-    @Path() order_id: number,
-    @Body() requestBody: {amount: Order['amount']}
-  ): Promise<Order> {
-    return new OrderService().paymentRecieved(order_id, requestBody.amount);
   }
 }
 
@@ -123,5 +125,41 @@ export class ProductOrdersController extends Controller {
     @Path() productOrderId: number
   ): Promise<void> {
     return new OrderService().deleteProductOrderById(productOrderId);
+  }
+}
+
+@Route("create-checkout-session")
+@Tags("Orders")
+export class PaymentController extends Controller {
+  @Security("jwt")
+  @Post()
+  public async createCheckoutSession(
+    @Request() req: ExRequest,
+    @Body() requestBody: ProductOrder[]
+  ): Promise<void> {
+    const line_items = requestBody.map((item: any) => {
+      console.log(requestBody);
+      return {
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: item.productId,
+          },
+          unit_amount: item.price * 100,
+        },
+        quantity: item.quantity,
+      };
+    });
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        line_items,
+        success_url: `http://localhost:3000/successfull`,
+        cancel_url: `http://localhost:3000/cancelled`,
+      });
+      req.res?.json({ url: session.url });
+    } catch (e: any) {
+      req.res?.status(500).json({ error: e.message });
+    }
   }
 }
