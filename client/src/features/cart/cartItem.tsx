@@ -15,11 +15,12 @@ export const CartItem = ({ id, quantity }: any) => {
   const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(id);
   const [update] = useUpdateQuantityMutation();
   const [deleteItem] = useDeleteProductOrderMutation();
-  let [quantity, setQuantity] = useState(quantity);
+  // eslint-disable-next-line prefer-const
+  let [count, setCount] = useState(quantity);
   const totalPerItem = (quantity * Number(productInfo?.price)).toFixed(2);
 
-  const updateQuantity = (newQuantity: Number) => {
-    setQuantity(newQuantity);
+  const updateQuantity = (newQuantity: number) => {
+    setCount(newQuantity);
     return update({ id: productOrderInfo!.id, quantity: newQuantity });
   };
   const removeEntirely = () => {
@@ -54,14 +55,14 @@ export const CartItem = ({ id, quantity }: any) => {
               >
                 <IconButton
                   color="secondary"
-                  onClick={() => updateQuantity(quantity--)}
-                  disabled={quantity > 0}
+                  onClick={() => updateQuantity(--count)}
+                  disabled={count <= 0}
                   disableRipple
                 >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
                 {count}
-                <IconButton color="secondary" onClick={() => updateQuantity(quantity++)} disableRipple>
+                <IconButton color="secondary" onClick={() => updateQuantity(++count)} disableRipple>
                   <AddCircleOutlineIcon />
                 </IconButton>
               </Box>
