@@ -6,19 +6,18 @@ import {
   Button,
   Typography,
   Box,
-} from "@mui/material";
-import { Product } from "../../app/interfaces";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../app/hooks";
-import { selectProduct } from "./productSlice";
-import {
-  useGetCurrentUserDetailsQuery,
-} from "../users/usersApi";
+} from '@mui/material';
+import { Product } from '../../app/interfaces';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { selectProduct } from './productSlice';
+import { useGetCurrentUserDetailsQuery } from '../users/usersApi';
 import {
   useAddToCartMutation,
   useCreateOrderMutation,
   useGetUserOrderQuery,
-} from "../orders/ordersApi";
+} from '../orders/ordersApi';
+import { routes } from '../../helpers/routes';
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
@@ -44,9 +43,9 @@ export const ProductItem = (product: Product) => {
       <Box onClick={(): Product => dispatch(selectProduct(product))}>
         <Box
           onClick={() => {
-            navigate(`/products/${product.id}`);
+            navigate(`${routes.PRODUCTS}/${product.id}`);
           }}
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: 'pointer' }}
         >
           <CardMedia
             component="img"
@@ -67,8 +66,8 @@ export const ProductItem = (product: Product) => {
               variant="body2"
               color="text.secondary"
               component="div"
-              height={"8rem"}
-              sx={{ wordBreak: "break-word" }}
+              height={'8rem'}
+              sx={{ wordBreak: 'break-word' }}
             >
               {product.description}
             </Typography>
@@ -76,7 +75,7 @@ export const ProductItem = (product: Product) => {
         </Box>
         <CardActions>
           <Button
-            sx={{ width: "100%" }}
+            sx={{ width: '100%' }}
             variant="outlined"
             size="small"
             color="secondary"

@@ -1,25 +1,25 @@
-import { Typography, Box, styled, List, Button } from "@mui/material";
-import { backgroundColor } from "../../components/theme";
-import { CartItem } from "./cartItem";
-import { useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
-import { calculateTotalCartAmount } from "../../helpers/cartFunctions";
+import { Typography, Box, styled, List, Button } from '@mui/material';
+import { backgroundColor } from '../../components/theme';
+import { CartItem } from './cartItem';
+import { useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import { calculateTotalCartAmount } from '../../helpers/cartFunctions';
 import {
   useDeleteProductOrderMutation,
   useGetUserCartQuery,
-} from "../orders/ordersApi";
-import { useGetCurrentUserDetailsQuery } from "../users/usersApi";
-import axios from "axios";
+} from '../orders/ordersApi';
+import { useGetCurrentUserDetailsQuery } from '../users/usersApi';
+import axios from 'axios';
+import { routes } from '../../helpers/routes';
 
-const CartBox = styled("div")(({ theme }) => ({
+const CartBox = styled('div')(({ theme }) => ({
   backgroundColor: backgroundColor,
-  width: "600px",
+  width: '600px',
   padding: theme.spacing(3),
 }));
 
-export const Cart = ({ visible = true }) => {
+export const Cart = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("accessToken");
   const {
     data: OrderItems = [],
     isLoading,
@@ -45,40 +45,36 @@ export const Cart = ({ visible = true }) => {
   const [deleteItem] = useDeleteProductOrderMutation();
   const handleCheckout = async () => {
     const response = await axios.post(
-      "http://localhost:4001/create-checkout-session",
-      { OrderItems }
+      'http://localhost:4001/create-checkout-session',
+      { OrderItems },
     );
     OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
     window.location.href = response.data.url;
   };
   return (
     <>
-      {token && (
-        <CartBox>
-          <Typography variant="h5">Your Cart</Typography>
-          {OrderItems.length > 0 && <>{content}</>}
-          {OrderItems.length === 0 ? (
-            <Typography>So far empty...</Typography>
-          ) : (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              {visible && (
-                <Button
-                  color="secondary"
-                  variant="outlined"
-                  onClick={() =>
-                    fullProfile ? handleCheckout() : navigate("/me")
-                  }
-                >
-                  Go to checkout
-                </Button>
-              )}
-              <Typography variant="h6">
-                Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
-              </Typography>
-            </Box>
-          )}
-        </CartBox>
-      )}
+      <CartBox>
+        <Typography variant="h5">Your Cart</Typography>
+        {OrderItems.length > 0 && <>{content}</>}
+        {OrderItems.length === 0 ? (
+          <Typography>So far empty...</Typography>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={() =>
+                fullProfile ? handleCheckout() : navigate(routes.ME)
+              }
+            >
+              Go to checkout
+            </Button>
+            <Typography variant="h6">
+              Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
+            </Typography>
+          </Box>
+        )}
+      </CartBox>
     </>
   );
 };

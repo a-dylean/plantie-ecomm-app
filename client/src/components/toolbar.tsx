@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Toolbar,
   Typography,
   IconButton,
   Drawer,
@@ -8,7 +7,6 @@ import {
   Badge,
 } from "@mui/material";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import LoginIcon from "@mui/icons-material/Login";
 import { Cart } from "../features/cart/cart";
 import { useState } from "react";
 import { getTotalItems } from "../helpers/cartFunctions";
@@ -16,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import Face4Icon from "@mui/icons-material/Face4";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {
-  useCreateOrderMutation,
   useGetUserCartQuery,
 } from "../features/orders/ordersApi";
 import {
@@ -25,19 +22,15 @@ import {
 } from "../features/users/usersApi";
 import { baseApi } from "../features/api/baseApi";
 import { useAppDispatch } from "../app/hooks";
+import { routes } from "../helpers/routes";
 
 export const Topbar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const token = localStorage.getItem("accessToken");
   const [cartOpen, setCartOpen] = useState(false);
   const {
     data: OrderItems = [],
-    isLoading,
-    isFetching,
-    isSuccess,
-    isError,
-    error,
-    refetch,
   } = useGetUserCartQuery();
   const { data: user } = useGetCurrentUserDetailsQuery();
   const fullProfile = user?.fullProfile;
@@ -50,7 +43,7 @@ export const Topbar = () => {
     localStorage.removeItem("accessToken");
     dispatch(baseApi.util.resetApiState());
     createNewUser();
-    navigate("/auth/login");
+    navigate(routes.LOGIN);
   };
   return (
     <>
@@ -69,7 +62,7 @@ export const Topbar = () => {
                 component="h1"
                 variant="h1"
                 sx={{ flexGrow: 1, textAlign: "center" }}
-                onClick={() => navigate("/products/all")}
+                onClick={() => navigate(routes.ALL_PRODUCTS)}
               >
                 Plantie
               </Typography>
@@ -78,17 +71,16 @@ export const Topbar = () => {
             <LocalMallIcon />
             <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />
           </IconButton>
-          <IconButton onClick={() => navigate("/me")}>
+          <IconButton onClick={() => navigate(routes.ME)}>
             <Face4Icon />
           </IconButton>
           <IconButton>
             {fullProfile && <LogoutIcon onClick={handleLogout} />}
-            {/* <LoginIcon onClick={() => navigate("/auth/login")}/> */}
           </IconButton>
       </AppBar>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
         <Box sx={{ mt: "3rem" }}>
-          <Cart visible={true}/>
+          {token && <Cart/>}
         </Box>
       </Drawer>
     </>

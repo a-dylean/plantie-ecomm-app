@@ -23,6 +23,7 @@ import {
 } from "mui-tel-input";
 import { enqueueSnackbar, SnackbarProvider } from "notistack";
 import { useUpdateUserDetailsMutation } from "../users/usersApi";
+import { routes } from "../../helpers/routes";
 
 export const RegistrationForm = () => {
   const navigate = useNavigate();
@@ -33,8 +34,8 @@ export const RegistrationForm = () => {
   const submitForm: SubmitHandler<FieldValues> = async (data) => {
     try {
       data.email = data.email.toLowerCase();
-      const result = await updateUser(data).unwrap();
-      navigate("/me");
+      await updateUser(data).unwrap();
+      navigate(routes.ME);
     } catch (error: any) {
       enqueueSnackbar(error.data.message, { variant: "error" });
     }

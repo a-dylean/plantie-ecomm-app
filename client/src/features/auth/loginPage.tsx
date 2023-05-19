@@ -13,6 +13,7 @@ import { Layout } from "../../app/layout";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { isApiResponse } from "../../helpers/errors";
 import { useLoginUserMutation } from "../users/usersApi";
+import { routes } from "../../helpers/routes";
 
 export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();
@@ -23,7 +24,7 @@ export const LoginForm = () => {
     try {
       const result = await loginUser(data).unwrap();
       localStorage.setItem("accessToken", result.token);
-      navigate("/me");
+      navigate(routes.ME);
     } catch (error: any) {
       if (isApiResponse(error)) {
         enqueueSnackbar(error.data.details, { variant: "error" });
@@ -84,7 +85,7 @@ export const LoginForm = () => {
               Forgot password?
             </Link>
             <Link
-              onClick={() => navigate("/auth/register")}
+              onClick={() => navigate(routes.REGISTER)}
               variant="body2"
               color="secondary"
             >
