@@ -112,7 +112,6 @@ app.use(function errorHandler(
   if (err instanceof ValidateError) {
     validationErrorHandler(res, req, err);
   }
-
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     uniquenessValidationErrorHandler(res, req, err);
   }
@@ -140,38 +139,6 @@ app.use(function errorHandler(
     });
   }
   next();
-});
-
-app.post("/create-checkout-session", async (req, res) => {
-  // const productIds = req.body.OrderItems.map((item: any) => {
-  //   return item.productId;
-  // })
-  // const data = await new ProductService().get(item.productId);
-  // console.log(data.name);
-  const line_items = req.body.OrderItems.map((item: any) => {
-    return {
-      price_data: {
-        currency: "eur",
-        product_data: {
-          name: item.productId,
-        },
-        unit_amount: item.price * 100,
-      },
-      quantity: item.quantity,
-    };
-  });
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items,
-      success_url: `http://localhost:3000/successfull`,
-      cancel_url: `http://localhost:3000/cancelled`,
-    });
-    res.json({ url: session.url });
-  } catch (e: any) {
-    res.status(500).json({ error: e.message });
-  }
 });
 
 app.listen(PORT, "0.0.0.0", () => {

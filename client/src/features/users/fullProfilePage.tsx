@@ -80,7 +80,7 @@ export const FullProfilePage = ({userId, userName, userSurname, userEmail, userP
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <Typography variant="h5">Orders information</Typography>
-                  <Box sx={{  }}>
+                  <Box>
                     <OrdersInfo userId={userId}/>
                   </Box>
                 </TabPanel>

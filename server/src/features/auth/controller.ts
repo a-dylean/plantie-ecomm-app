@@ -25,6 +25,18 @@ export interface UserInfo {
   refreshToken: string;
 }
 
+const setCookie = async(id: number, role: string, req: ExRequest) => {
+  const refreshToken = await new AuthService().generateRefreshToken(
+    id,
+    role
+  );
+  req.res?.cookie("refresh_token", refreshToken, {
+    httpOnly: true,
+    path: "/session/refresh",
+  });
+  return refreshToken;
+};
+
 @Route("session")
 @Tags("Auth")
 export class AuthController extends Controller {
@@ -39,14 +51,7 @@ export class AuthController extends Controller {
     @Body() requestBody: UserLoginParams
   ): Promise<Partial<User>> {
     const data = await new AuthService().getUserId(requestBody);
-    const refreshToken = await new AuthService().generateRefreshToken(
-      data.id,
-      data.role
-    );
-    req.res?.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      path: "/session/refresh",
-    });
+    setCookie(data.id, data.role, req)
     return data;
   }
 
@@ -54,18 +59,11 @@ export class AuthController extends Controller {
   public async createUser(@Request() req: ExRequest): Promise<UserInfo> {
     const user = await new AuthService().createUser();
     const accessToken = createAccessToken({ id: user.id, scopes: [user.role] });
-    const refreshToken = await new AuthService().generateRefreshToken(
-      user.id,
-      user.role
-    );
-    req.res?.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      path: "/session/refresh",
-    });
+    setCookie(user.id, user.role, req)
     return {
       id: user.id,
       accessToken: accessToken,
-      refreshToken: refreshToken,
+      refreshToken: await setCookie(user.id, user.role, req),
     };
   }
 

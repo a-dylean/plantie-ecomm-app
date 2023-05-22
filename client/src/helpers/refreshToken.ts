@@ -9,7 +9,7 @@ export const securelyGetAccessToken = async () => {
     return null;
   } else {
     const decoded: any = jwt_decode(token);
-    if (Date.now() + 1 >= decoded.exp * 1000) {
+    if (Date.now() > decoded.exp * 1000) {
       try {
         const response = await axios.post(
           "http://localhost:4001/session/refresh",

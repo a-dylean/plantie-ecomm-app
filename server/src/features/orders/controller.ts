@@ -7,21 +7,20 @@ import {
   Post,
   Put,
   Request,
-  Response,
   Route,
   Security,
   SuccessResponse,
   Tags,
 } from "tsoa";
-import express, {
+import {
   Response as ExResponse,
   Request as ExRequest,
 } from "express";
-import { Order, ProductOrder } from "@prisma/client";
+import { Order, PrismaClient, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 import Stripe from "stripe";
-import { STRIPE_SK } from "../../../config";
+import { ENDPOINT_SECRET, STRIPE_SK } from "../../../config";
 const stripe = new Stripe(STRIPE_SK, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -153,3 +152,67 @@ export class PaymentController extends Controller {
     }
   }
 }
+// const prisma = new PrismaClient();
+// const endpointSecret = ENDPOINT_SECRET;
+// @Route("/webhook")
+// @Tags("Orders")
+// export class WebhookController extends Controller {
+//   @Post()
+// public async createWebhook(
+//   @Request() req: ExRequest,
+// ): Promise<void>{
+//   let event = req.body;
+//     // Only verify the event if you have an endpoint secret defined.
+//     // Otherwise use the basic event deserialized with JSON.parse
+//     if (endpointSecret) {
+//       // Get the signature sent by Stripe
+//       const signature = req.headers["stripe-signature"];
+//       try {
+//         event = stripe.webhooks.constructEvent(
+//           req.body,
+//           signature!,
+//           endpointSecret
+//         );
+//       } catch (err: any) {
+//         console.log(`⚠️  Webhook signature verification failed.`, err.message);
+//       }
+//     }
+//     // Handle the event
+//     switch (event.type) {
+//       case "checkout.session.completed":
+//         const checkoutSessionCompleted = event.data.object;
+//         //Then define and call a function to handle the event checkout.session.completed
+//         const user = await prisma.user.findUnique({
+//           where: {
+//             email: event.data.object.customer_details.email,
+//           },
+//         });
+
+//         const prismaOrder = await prisma.order.findFirst({
+//           where: {
+//             userId: user!.id,
+//           },
+//           orderBy: {
+//             id: "desc",
+//           },
+//         });
+
+//         await prisma.order.update({
+//           where: {
+//             id: prismaOrder!.id,
+//           },
+//           data: {
+//             status: "Payment Received",
+//             amount: event.data.object.amount_total / 100,
+//           },
+//         });
+//         console.log(checkoutSessionCompleted);
+//         break;
+//       default:
+//         console.log(`Unhandled event type ${event.type}`);
+//     }
+//     req.res?.send();
+// }
+// }
+
+

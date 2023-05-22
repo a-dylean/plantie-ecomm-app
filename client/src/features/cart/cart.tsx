@@ -46,32 +46,34 @@ export const Cart = () => {
   const [createCheckoutSession] = useCreateCheckoutSessionMutation();
   const handleCheckout = () => {
     createCheckoutSession(OrderItems)
-    .unwrap()
-    .then((data) => window.location.href = data.url)
+      .unwrap()
+      .then((data) => (window.location.href = data.url));
     OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
   };
   return (
     <>
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
-        {OrderItems.length > 0 && <>{content}</>}
         {OrderItems.length === 0 ? (
           <Typography>So far empty...</Typography>
         ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
-              color="secondary"
-              variant="outlined"
-              onClick={() =>
-                fullProfile ? handleCheckout() : navigate(routes.ME)
-              }
-            >
-              Go to checkout
-            </Button>
-            <Typography variant="h6">
-              Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
-            </Typography>
-          </Box>
+          <>
+            {content}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button
+                color="secondary"
+                variant="outlined"
+                onClick={() =>
+                  fullProfile ? handleCheckout() : navigate(routes.ME)
+                }
+              >
+                Go to checkout
+              </Button>
+              <Typography variant="h6">
+                Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
+              </Typography>
+            </Box>
+          </>
         )}
       </CartBox>
     </>
