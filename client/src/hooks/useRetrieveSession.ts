@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useCreateNewUserMutation } from "../features/users/usersApi";
+import { useEffect, useState } from 'react';
+import { useCreateNewUserMutation } from '../features/users/usersApi';
 
 export const useRetrieveSession = () => {
     const [userId, setUserId] = useState(0);

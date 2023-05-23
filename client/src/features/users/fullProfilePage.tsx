@@ -2,7 +2,7 @@ import { Typography, Box, Paper } from '@mui/material';
 import { Layout } from '../../app/layout';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Image } from 'mui-image';
-import { ProfileInfo } from './profileInfo';
+import { UserInfo } from './userInfo';
 import { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -85,7 +85,7 @@ export const FullProfilePage = ({
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Typography variant="h5">Profile information</Typography>
-                <ProfileInfo
+                <UserInfo
                   userName={userName}
                   userSurname={userSurname}
                   userEmail={userEmail}

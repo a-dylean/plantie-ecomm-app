@@ -42,7 +42,7 @@ const ordersApi = baseApi.injectEndpoints({
           ? { data: order.data as Order }
           : { error: order.error as FetchBaseQueryError };
       },
-      providesTags: ['Orders', 'ProductOrders'],
+      providesTags: ['Orders'],
     }),
     createCheckoutSession: builder.mutation<Response, CartItem[]>({
       query(body) {
@@ -74,7 +74,7 @@ const ordersApi = baseApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ['ProductOrders', 'Orders'],
+      invalidatesTags: ['ProductOrders'],
     }),
     deleteProductOrder: builder.mutation<CartItem, number | undefined>({
       query: (productOrderId) => ({

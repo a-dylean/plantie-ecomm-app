@@ -4,7 +4,7 @@ import { FullProfilePage } from './fullProfilePage';
 import { useGetCurrentUserDetailsQuery } from './usersApi';
 import { CircularProgress } from '@mui/material';
 
-export const ProfilePage = () => {
+export const UserPage = () => {
   const {
     data: user,
     isSuccess,
@@ -13,33 +13,30 @@ export const ProfilePage = () => {
     isLoading,
     refetch,
   } = useGetCurrentUserDetailsQuery();
-
   useEffect(() => {
     refetch();
   }, [user]);
-  
-  let content;
+
+  let content = <LoginForm />;
   if (isLoading) {
     content = <CircularProgress />;
+  } 
+  if (isSuccess && user.fullProfile === true) {
+    content = (
+      <FullProfilePage
+        userId={user?.id}
+        userName={user?.name}
+        userSurname={user?.surname}
+        userAddress={user?.address}
+        userEmail={user?.email}
+        userPhone={user?.phone}
+      />
+    );
   }
-  if (isSuccess) {
-    if (!user || user.fullProfile === false) {
-      content = <LoginForm />;
-    } else {
-      content = (
-        <FullProfilePage
-          userId={user?.id}
-          userName={user?.name}
-          userSurname={user?.surname}
-          userAddress={user?.address}
-          userEmail={user?.email}
-          userPhone={user?.phone}
-        />
-      );
-    }
-  }
+
   if (isError) {
     content = <>{error.toString()}</>;
-  }
+  } 
+
   return <>{content}</>;
 };

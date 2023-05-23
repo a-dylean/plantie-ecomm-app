@@ -4,7 +4,7 @@ import { theme } from '../components/theme';
 import { ProductsContainer } from '../features/products/productsContainerPage';
 import { RegistrationForm } from '../features/auth/registrationPage';
 import { LoginForm } from '../features/auth/loginPage';
-import { ProfilePage } from '../features/users/profilePage';
+import { UserPage } from '../features/users/userPage';
 import { ProductPage } from '../features/products/productPage';
 import { SuccessfullPayment } from '../features/checkout/successfullPayment';
 import { CancelledPayment } from '../features/checkout/cancelledPayment';
@@ -22,7 +22,7 @@ export const App = () => {
             <Route path="products/:productId" element={<ProductPage />} />
             <Route path="auth/register" element={<RegistrationForm />} />
             <Route path="auth/login" element={<LoginForm />} />
-            <Route path="me" element={<ProfilePage />} />
+            <Route path="me" element={<UserPage />} />
             <Route path="successfull" element={<SuccessfullPayment />} />
             <Route path="cancelled" element={<CancelledPayment />} />
           </Routes>

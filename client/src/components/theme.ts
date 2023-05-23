@@ -70,6 +70,14 @@ export const theme = createTheme({
         },
       },
     },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          minWidth: 0,
+          paddingRight: '0.5rem',
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
