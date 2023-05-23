@@ -6,29 +6,29 @@ import {
   FormControlLabel,
   Checkbox,
   Link,
-} from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+} from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import {
   Controller,
   useForm,
   SubmitHandler,
   FieldValues,
-} from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { Layout } from "../../app/layout";
+} from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { Layout } from '../../app/layout';
 import {
   MuiTelInput,
   MuiTelInputContinent,
   matchIsValidTel,
-} from "mui-tel-input";
-import { enqueueSnackbar, SnackbarProvider } from "notistack";
-import { useUpdateUserDetailsMutation } from "../users/usersApi";
-import { routes } from "../../helpers/routes";
+} from 'mui-tel-input';
+import { enqueueSnackbar, SnackbarProvider } from 'notistack';
+import { useUpdateUserDetailsMutation } from '../users/usersApi';
+import { routes } from '../../helpers/routes';
 
 export const RegistrationForm = () => {
   const navigate = useNavigate();
   const { register, control, handleSubmit } = useForm();
-  const continents: MuiTelInputContinent[] = ["EU"];
+  const continents: MuiTelInputContinent[] = ['EU'];
   const [updateUser] = useUpdateUserDetailsMutation();
 
   const submitForm: SubmitHandler<FieldValues> = async (data) => {
@@ -37,18 +37,22 @@ export const RegistrationForm = () => {
       await updateUser(data).unwrap();
       navigate(routes.ME);
     } catch (error: any) {
-      enqueueSnackbar(error.data.message, { variant: "error" });
+      if (error.data.details['requestBody.email']) {
+        enqueueSnackbar('This email is already in use', { variant: 'error' });
+      } else {
+        enqueueSnackbar(error.data.message, { variant: 'error' });
+      }
     }
   };
   return (
     <Layout>
       <SnackbarProvider
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
+          vertical: 'top',
+          horizontal: 'left',
         }}
       />
-      <Box sx={{ m: "0 auto", width: "50%" }}>
+      <Box sx={{ m: '0 auto', width: '50%' }}>
         <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
           Sign up
         </Typography>
@@ -64,7 +68,7 @@ export const RegistrationForm = () => {
                 label="First Name"
                 autoFocus
                 type="text"
-                {...register("name")}
+                {...register('name')}
               />
             </Grid>
             <Grid xs={12} sm={6}>
@@ -75,7 +79,7 @@ export const RegistrationForm = () => {
                 fullWidth
                 id="surname"
                 label="Last Name"
-                {...register("surname")}
+                {...register('surname')}
               />
             </Grid>
             <Grid xs={12}>
@@ -87,7 +91,7 @@ export const RegistrationForm = () => {
                 id="email"
                 label="Email Address"
                 type="email"
-                {...register("email")}
+                {...register('email')}
               />
             </Grid>
             <Grid xs={12}>
@@ -99,7 +103,7 @@ export const RegistrationForm = () => {
                 label="Password"
                 type="password"
                 id="password"
-                {...register("password")}
+                {...register('password')}
               />
             </Grid>
             <Grid xs={12}>
@@ -113,10 +117,10 @@ export const RegistrationForm = () => {
                     fullWidth
                     color="secondary"
                     forceCallingCode
-                    defaultCountry={"FR"}
+                    defaultCountry={'FR'}
                     continents={continents}
                     helperText={
-                      fieldState.invalid ? "Phone number is invalid" : ""
+                      fieldState.invalid ? 'Phone number is invalid' : ''
                     }
                     error={fieldState.invalid}
                   />
@@ -130,7 +134,7 @@ export const RegistrationForm = () => {
                 fullWidth
                 label="Home address"
                 id="address"
-                {...register("address")}
+                {...register('address')}
               />
             </Grid>
             <Grid xs={12}>

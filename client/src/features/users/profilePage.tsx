@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { LoginForm } from "../auth/loginPage";
-import { FullProfilePage } from "./fullProfilePage";
-import { useGetCurrentUserDetailsQuery } from "./usersApi";
-import { CircularProgress } from "@mui/material";
+import { useEffect } from 'react';
+import { LoginForm } from '../auth/loginPage';
+import { FullProfilePage } from './fullProfilePage';
+import { useGetCurrentUserDetailsQuery } from './usersApi';
+import { CircularProgress } from '@mui/material';
 
 export const ProfilePage = () => {
   const {
@@ -14,32 +14,31 @@ export const ProfilePage = () => {
     refetch,
   } = useGetCurrentUserDetailsQuery();
 
-  useEffect(()=>{
-    refetch()
-  }, [user])
+  useEffect(() => {
+    refetch();
+  }, [user]);
+  
   let content;
   if (isLoading) {
     content = <CircularProgress />;
   }
   if (isSuccess) {
-    if (!user || (user.fullProfile === false)) {
+    if (!user || user.fullProfile === false) {
       content = <LoginForm />;
     } else {
       content = (
-      <FullProfilePage
-        userId={user?.id}
-        userName={user?.name}
-        userSurname={user?.surname}
-        userAddress={user?.address}
-        userEmail={user?.email}
-        userPhone={user?.phone}
-      />
-    );
+        <FullProfilePage
+          userId={user?.id}
+          userName={user?.name}
+          userSurname={user?.surname}
+          userAddress={user?.address}
+          userEmail={user?.email}
+          userPhone={user?.phone}
+        />
+      );
     }
-    
   }
   if (isError) {
-    //refetch()
     content = <>{error.toString()}</>;
   }
   return <>{content}</>;

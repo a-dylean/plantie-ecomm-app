@@ -1,12 +1,12 @@
-import { Typography, Box, Paper } from "@mui/material";
-import { Layout } from "../../app/layout";
-import Grid from "@mui/material/Unstable_Grid2";
-import { Image } from "mui-image";
-import { ProfileInfo } from "./profileInfo";
-import { useState } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { OrdersInfo } from "../orders/ordersInfo";
+import { Typography, Box, Paper } from '@mui/material';
+import { Layout } from '../../app/layout';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Image } from 'mui-image';
+import { ProfileInfo } from './profileInfo';
+import { useState } from 'react';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { OrdersInfo } from '../orders/ordersInfo';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -36,75 +36,84 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
   };
 }
 
-export const FullProfilePage = ({userId, userName, userSurname, userEmail, userPhone, userAddress}: any) => {
+export const FullProfilePage = ({
+  userId,
+  userName,
+  userSurname,
+  userEmail,
+  userPhone,
+  userAddress,
+}: any) => {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const image =
+    'https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80';
 
   return (
     <Layout>
-        <Paper>
-          <Grid container>
-            <Grid xs={6}>
-              <Box
+      <Paper>
+        <Grid container>
+          <Grid xs={6}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                bgcolor: 'background.paper',
+                display: 'flex',
+                height: '100%',
+              }}
+            >
+              <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={value}
+                onChange={handleChange}
+                aria-label="Vertical tabs example"
                 sx={{
-                  flexGrow: 1,
-                  bgcolor: "background.paper",
-                  display: "flex",
-                  height: "100%",
+                  borderRight: 1,
+                  borderColor: 'divider',
+                  overflow: 'visible',
                 }}
               >
-                <Tabs
-                  orientation="vertical"
-                  variant="scrollable"
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="Vertical tabs example"
-                  sx={{
-                    borderRight: 1,
-                    borderColor: "divider",
-                    overflow: "visible",
-                  }}
-                >
-                  <Tab label="Profile" {...a11yProps(0)} />
-                  <Tab label="Orders" {...a11yProps(1)} />
-                </Tabs>
-                <TabPanel value={value} index={0}>
-                  <Typography variant="h5">Profile information</Typography>
-                  <ProfileInfo userName={userName} userSurname={userSurname} userEmail={userEmail} userPhone={userPhone} userAddress={userAddress}/>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                  <Typography variant="h5">Orders information</Typography>
-                  <Box>
-                    <OrdersInfo userId={userId}/>
-                  </Box>
-                </TabPanel>
-              </Box>
-            </Grid>
-            <Grid xs={6} sx={{display: {md: "block", xs: "none"}}}>
-              <Typography
-                sx={{ position: "absolute", zIndex: 5, ml: 2, mt: 3 }}
-                variant="h5"
-                color="white"
-              >
-                Welcome,
-                <br /> planties lover {userName}!
-              </Typography>
-              <Image
-                src="https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80"
-                //fit="contain"
-                height="100%"
-                width="100%"
-                duration={50}
-              />
-            </Grid>
+                <Tab label="Profile" {...a11yProps(0)} />
+                <Tab label="Orders" {...a11yProps(1)} />
+              </Tabs>
+              <TabPanel value={value} index={0}>
+                <Typography variant="h5">Profile information</Typography>
+                <ProfileInfo
+                  userName={userName}
+                  userSurname={userSurname}
+                  userEmail={userEmail}
+                  userPhone={userPhone}
+                  userAddress={userAddress}
+                />
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <Typography variant="h5">Orders information</Typography>
+                <Box>
+                  <OrdersInfo userId={userId} />
+                </Box>
+              </TabPanel>
+            </Box>
           </Grid>
-        </Paper>
+          <Grid xs={6} sx={{ display: { md: 'block', xs: 'none' } }}>
+            <Typography
+              sx={{ position: 'absolute', zIndex: 5, ml: 2, mt: 3 }}
+              variant="h5"
+              color="white"
+            >
+              Welcome,
+              <br /> planties lover {userName}!
+            </Typography>
+            <Image src={image} height="100%" width="100%" duration={50} />
+          </Grid>
+        </Grid>
+      </Paper>
     </Layout>
   );
 };

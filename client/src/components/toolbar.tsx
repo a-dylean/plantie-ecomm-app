@@ -39,10 +39,8 @@ export const Topbar = () => {
       <AppBar
         elevation={0}
         sx={{
-          borderBottom: '1px solid #DEDEDE',
           zIndex: (theme) => theme.zIndex.drawer + 1,
           alignItems: 'center',
-          padding: '0 1rem',
           flexDirection: 'row',
         }}
       >

@@ -1,15 +1,25 @@
-import { List, ListItem } from "@mui/material";
-export const ProfileInfo = ({userName, userSurname, userEmail, userPhone, userAddress}: any) => {
+import { List, ListItem, Divider } from '@mui/material';
+import { ColoredCard } from '../../components/coloredCard';
+export const ProfileInfo = ({
+  userName,
+  userSurname,
+  userEmail,
+  userPhone,
+  userAddress,
+}: any) => {
   return (
-    <>
-        <List>
-          <ListItem>
+    <List>
+      <ColoredCard>
+        <List dense>
+          <ListItem sx={{ fontWeight: 'bold' }}>
             {userName} {userSurname}
           </ListItem>
-          <ListItem>Email: {userEmail}</ListItem>
-          <ListItem>Phone: {userPhone}</ListItem>
-          <ListItem>Address: {userAddress}</ListItem>
+          <Divider />
+          <ListItem>📧: {userEmail}</ListItem>
+          <ListItem>📞: {userPhone}</ListItem>
+          <ListItem>🏠: {userAddress}</ListItem>
         </List>
-    </>
+      </ColoredCard>
+    </List>
   );
 };

@@ -3,24 +3,26 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  Button,
   Typography,
   Box,
+  styled,
 } from '@mui/material';
 import { Product } from '../../app/interfaces';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/reactReduxHooks';
 import { selectProduct } from './productSlice';
 import { routes } from '../../helpers/routes';
-import { useCreateNewOrder } from '../../hooks/useCreateNewOrder';
+import { AddToCartButton } from '../../components/addToCardButton';
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const addToCart = useCreateNewOrder(product);
-
+  const ProductItemCard = styled(Card)(({ theme }) => ({
+    width: 345,
+    height: 650,
+  }));
   return (
-    <Card sx={{ width: 345, height: 670 }}>
+    <ProductItemCard>
       <Box onClick={(): Product => dispatch(selectProduct(product))}>
         <Box
           onClick={() => {
@@ -31,7 +33,7 @@ export const ProductItem = (product: Product) => {
           <CardMedia
             component="img"
             alt="product img"
-            height="400"
+            height="400px"
             image={product.picture}
           />
           <CardContent>
@@ -47,26 +49,17 @@ export const ProductItem = (product: Product) => {
               variant="body2"
               color="text.secondary"
               component="div"
-              height={'8rem'}
-              sx={{ wordBreak: 'break-word' }}
+              height={'7rem'}
+              sx={{ wordBreak: 'break-word', textAlign: 'justify' }}
             >
               {product.description}
             </Typography>
           </CardContent>
         </Box>
         <CardActions>
-          <Button
-            sx={{ width: '100%' }}
-            variant="outlined"
-            size="small"
-            color="secondary"
-            disableElevation
-            onClick={() => addToCart()}
-          >
-            Add to cart
-          </Button>
+          <AddToCartButton product={product} />
         </CardActions>
       </Box>
-    </Card>
+    </ProductItemCard>
   );
 };

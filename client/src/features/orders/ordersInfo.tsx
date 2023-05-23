@@ -1,18 +1,23 @@
-import { CircularProgress, List } from "@mui/material";
-import { Order } from "./orderItem";
-import { useGetUserOrdersQuery } from "./ordersApi";
+import { CircularProgress, List } from '@mui/material';
+import { Order } from './orderItem';
+import { useGetUserOrdersQuery } from './ordersApi';
 
-export const OrdersInfo = ({userId}: any) => {
-  const { data: orders = [], isLoading, isSuccess, isError, error } = useGetUserOrdersQuery(userId);
+export const OrdersInfo = ({ userId }: any) => {
+  const {
+    data: orders = [],
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetUserOrdersQuery(userId);
 
   let content;
 
   if (isLoading) {
     content = <CircularProgress />;
   } else if (isSuccess) {
-    
     const renderedItems = orders.map((order) => (
-      <List key={order.id} sx={{width: 400}}>
+      <List key={order.id}>
         <Order
           id={order.id}
           createdAt={order.createdAt}

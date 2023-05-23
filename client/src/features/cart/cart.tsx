@@ -1,4 +1,5 @@
 import { Typography, Box, styled, List, Button } from '@mui/material';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import { backgroundColor } from '../../components/theme';
 import { CartItem } from './cartItem';
 import { useNavigate } from 'react-router-dom';
@@ -62,10 +63,11 @@ export const Cart = () => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button
                 color="secondary"
-                variant="outlined"
+                variant="text"
                 onClick={() =>
                   fullProfile ? handleCheckout() : navigate(routes.ME)
                 }
+                startIcon={<ShoppingCartCheckoutIcon />}
               >
                 Go to checkout
               </Button>
