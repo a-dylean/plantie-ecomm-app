@@ -70,3 +70,8 @@ export interface UserInfo {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface CheckoutInfo {
+  order: CartItem[];
+  userEmail: string
+}

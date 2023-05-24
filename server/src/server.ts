@@ -11,81 +11,15 @@ import cookieParser from "cookie-parser";
 import swaggerUI from "swagger-ui-express";
 import swaggerJson from "../build/swagger.json";
 import bodyParser from "body-parser";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { AuthError } from "./helpers/errors";
-import { ENDPOINT_SECRET, PORT, STRIPE_SK } from "../config";
+import { PORT } from "../config";
 import {
   validationErrorHandler,
   uniquenessValidationErrorHandler,
 } from "./helpers/errors";
-import Stripe from "stripe";
 
-const stripe = new Stripe(STRIPE_SK, {
-  apiVersion: "2022-11-15",
-  typescript: true,
-});
-const prisma = new PrismaClient();
 const app = express();
-const endpointSecret = ENDPOINT_SECRET;
-app.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  async (request, response) => {
-    let event = request.body;
-    // Only verify the event if you have an endpoint secret defined.
-    // Otherwise use the basic event deserialized with JSON.parse
-    if (endpointSecret) {
-      // Get the signature sent by Stripe
-      const signature = request.headers["stripe-signature"];
-      try {
-        event = stripe.webhooks.constructEvent(
-          request.body,
-          signature!,
-          endpointSecret
-        );
-      } catch (err: any) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
-        return response.sendStatus(400);
-      }
-    }
-    // Handle the event
-    switch (event.type) {
-      case "checkout.session.completed":
-        const checkoutSessionCompleted = event.data.object;
-        //Then define and call a function to handle the event checkout.session.completed
-        const user = await prisma.user.findUnique({
-          where: {
-            email: event.data.object.customer_details.email,
-          },
-        });
-
-        const prismaOrder = await prisma.order.findFirst({
-          where: {
-            userId: user!.id,
-          },
-          orderBy: {
-            id: "desc",
-          },
-        });
-
-        await prisma.order.update({
-          where: {
-            id: prismaOrder!.id,
-          },
-          data: {
-            status: "Payment Received",
-            amount: event.data.object.amount_total / 100,
-          },
-        });
-        console.log(checkoutSessionCompleted);
-        break;
-      // ... handle other event types
-      default:
-        console.log(`Unhandled event type ${event.type}`);
-    }
-    response.send();
-  }
-);
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(

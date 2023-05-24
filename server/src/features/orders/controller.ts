@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Middlewares,
   Path,
   Post,
   Put,
@@ -12,7 +13,7 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
-import {
+import express, {
   Response as ExResponse,
   Request as ExRequest,
 } from "express";
@@ -25,6 +26,12 @@ const stripe = new Stripe(STRIPE_SK, {
   apiVersion: "2022-11-15",
   typescript: true,
 });
+
+export interface CheckoutInfo {
+  order: ProductOrder[];
+  userEmail: string
+}
+
 @Route("orders")
 @Tags("Orders")
 export class OrdersController extends Controller {
@@ -124,9 +131,9 @@ export class PaymentController extends Controller {
   @Post()
   public async createCheckoutSession(
     @Request() req: ExRequest,
-    @Body() requestBody: ProductOrder[]
+    @Body() requestBody: CheckoutInfo
   ): Promise<void> {
-    const line_items = requestBody.map((item: any) => {
+    const line_items = requestBody.order.map((item: any) => {
       console.log(requestBody);
       return {
         price_data: {
@@ -142,6 +149,7 @@ export class PaymentController extends Controller {
     try {
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
+        customer_email: requestBody.userEmail,
         line_items,
         success_url: `http://localhost:3000/successfull`,
         cancel_url: `http://localhost:3000/cancelled`,
@@ -152,67 +160,68 @@ export class PaymentController extends Controller {
     }
   }
 }
-// const prisma = new PrismaClient();
-// const endpointSecret = ENDPOINT_SECRET;
-// @Route("/webhook")
-// @Tags("Orders")
-// export class WebhookController extends Controller {
-//   @Post()
-// public async createWebhook(
-//   @Request() req: ExRequest,
-// ): Promise<void>{
-//   let event = req.body;
-//     // Only verify the event if you have an endpoint secret defined.
-//     // Otherwise use the basic event deserialized with JSON.parse
-//     if (endpointSecret) {
-//       // Get the signature sent by Stripe
-//       const signature = req.headers["stripe-signature"];
-//       try {
-//         event = stripe.webhooks.constructEvent(
-//           req.body,
-//           signature!,
-//           endpointSecret
-//         );
-//       } catch (err: any) {
-//         console.log(`⚠️  Webhook signature verification failed.`, err.message);
-//       }
-//     }
-//     // Handle the event
-//     switch (event.type) {
-//       case "checkout.session.completed":
-//         const checkoutSessionCompleted = event.data.object;
-//         //Then define and call a function to handle the event checkout.session.completed
-//         const user = await prisma.user.findUnique({
-//           where: {
-//             email: event.data.object.customer_details.email,
-//           },
-//         });
+const prisma = new PrismaClient();
+const endpointSecret = ENDPOINT_SECRET;
 
-//         const prismaOrder = await prisma.order.findFirst({
-//           where: {
-//             userId: user!.id,
-//           },
-//           orderBy: {
-//             id: "desc",
-//           },
-//         });
+@Route("/webhook")
+@Tags("Orders")
+export class WebhookController extends Controller {
+  @Post()
+public async createWebhook(
+  @Request() req: ExRequest,
+): Promise<void>{
+  let event = req.body;
+    // Only verify the event if you have an endpoint secret defined.
+    // Otherwise use the basic event deserialized with JSON.parse
+    if (endpointSecret) {
+      // Get the signature sent by Stripe
+      const signature = req.headers["stripe-signature"];
+      try {
+        event = stripe.webhooks.constructEvent(
+          req.body.text(),
+          signature!,
+          endpointSecret
+        );
+      } catch (err: any) {
+        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+      }
+    }
+    // Handle the event
+    switch (event.type) {
+      case "checkout.session.completed":
+        const checkoutSessionCompleted = event.data.object;
+        //Then define and call a function to handle the event checkout.session.completed
+        const user = await prisma.user.findUnique({
+          where: {
+            email: event.data.object.customer_details.email,
+          },
+        });
 
-//         await prisma.order.update({
-//           where: {
-//             id: prismaOrder!.id,
-//           },
-//           data: {
-//             status: "Payment Received",
-//             amount: event.data.object.amount_total / 100,
-//           },
-//         });
-//         console.log(checkoutSessionCompleted);
-//         break;
-//       default:
-//         console.log(`Unhandled event type ${event.type}`);
-//     }
-//     req.res?.send();
-// }
-// }
+        const prismaOrder = await prisma.order.findFirst({
+          where: {
+            userId: user!.id,
+          },
+          orderBy: {
+            id: "desc",
+          },
+        });
+
+        await prisma.order.update({
+          where: {
+            id: prismaOrder!.id,
+          },
+          data: {
+            status: "Payment Received",
+            amount: event.data.object.amount_total / 100,
+          },
+        });
+        console.log(checkoutSessionCompleted);
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+    req.res?.send();
+}
+}
 
 

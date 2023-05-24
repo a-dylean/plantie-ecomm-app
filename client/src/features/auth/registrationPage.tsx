@@ -91,7 +91,9 @@ export const RegistrationForm = () => {
                 id="email"
                 label="Email Address"
                 type="email"
-                {...register('email')}
+                {...register('email', {
+                  pattern: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+                })}
               />
             </Grid>
             <Grid xs={12}>

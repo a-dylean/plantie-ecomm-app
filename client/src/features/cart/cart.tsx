@@ -46,7 +46,7 @@ export const Cart = () => {
   const [deleteItem] = useDeleteProductOrderMutation();
   const [createCheckoutSession] = useCreateCheckoutSessionMutation();
   const handleCheckout = () => {
-    createCheckoutSession(OrderItems)
+    createCheckoutSession({ order: OrderItems, userEmail: user!.email })
       .unwrap()
       .then((data) => (window.location.href = data.url));
     OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));

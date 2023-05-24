@@ -1,5 +1,5 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
-import { Order, CartItem, User} from '../../app/interfaces';
+import { Order, CartItem, User, CheckoutInfo} from '../../app/interfaces';
 import { baseApi } from '../api/baseApi';
 
 const ordersApi = baseApi.injectEndpoints({
@@ -44,7 +44,7 @@ const ordersApi = baseApi.injectEndpoints({
       },
       providesTags: ['Orders'],
     }),
-    createCheckoutSession: builder.mutation<Response, CartItem[]>({
+    createCheckoutSession: builder.mutation<Response, CheckoutInfo>({
       query(body) {
         return {
           url: '/create-checkout-session',
