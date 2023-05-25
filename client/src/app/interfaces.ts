@@ -13,13 +13,6 @@ export interface Product {
   quantity: number;
 }
 
-export interface CartItemModel {
-  id: Product['id'];
-  name: Product['name'];
-  price: Product['price'];
-  quantity: Product['quantity'];
-}
-
 export interface User {
   id: number;
   name: string;
@@ -73,5 +66,5 @@ export interface UserInfo {
 
 export interface CheckoutInfo {
   order: CartItem[];
-  userEmail: string
+  userEmail: string;
 }

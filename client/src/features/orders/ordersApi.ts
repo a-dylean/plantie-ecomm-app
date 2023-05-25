@@ -113,5 +113,5 @@ export const {
   useGetUserOrderQuery,
   useGetUserOrdersQuery,
   useUpdateQuantityMutation,
-  useCreateCheckoutSessionMutation,
+  useCreateCheckoutSessionMutation
 } = ordersApi;

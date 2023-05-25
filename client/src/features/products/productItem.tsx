@@ -57,7 +57,7 @@ export const ProductItem = (product: Product) => {
           </CardContent>
         </Box>
         <CardActions>
-          <AddToCartButton product={product} />
+          <AddToCartButton product={product}/>
         </CardActions>
       </Box>
     </ProductItemCard>

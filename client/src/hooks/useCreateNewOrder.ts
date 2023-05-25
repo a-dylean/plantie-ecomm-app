@@ -15,7 +15,7 @@ export const useCreateNewOrder = (product: Product) => {
       await createOrder({ userId: user!.id });
       await createProductOrder({
         productId: product.id,
-        orderId: order!.id,
+        orderId: order?.id,
         price: product.price,
         quantity: 1,
       })

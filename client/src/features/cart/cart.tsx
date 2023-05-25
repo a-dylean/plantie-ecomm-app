@@ -34,9 +34,9 @@ export const Cart = () => {
   if (isLoading) {
     content = <CircularProgress />;
   } else if (isSuccess) {
-    const renderedItems = OrderItems.map((product) => (
-      <List key={product.id}>
-        <CartItem id={product.productId} quantity={product.quantity} />
+    const renderedItems = OrderItems.map((cartItem) => (
+      <List key={cartItem.id}>
+        <CartItem id={cartItem.productId} quantity={cartItem.quantity} />
       </List>
     ));
     content = <>{renderedItems}</>;
