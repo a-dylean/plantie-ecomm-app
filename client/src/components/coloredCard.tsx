@@ -3,5 +3,5 @@ import { lightViolet } from "./theme";
 
 export const ColoredCard = styled(Card)(({ theme }) => ({
     backgroundColor: lightViolet,
-    width: '175%',
+    width: '100%',
   }));

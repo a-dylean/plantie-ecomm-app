@@ -17,7 +17,7 @@ import { AddToCartButton } from '../../components/addToCardButton';
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const ProductItemCard = styled(Card)(({ theme }) => ({
+  const ProductItemCard = styled(Card)(() => ({
     width: 345,
     height: 650,
   }));

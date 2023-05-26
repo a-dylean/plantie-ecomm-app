@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Middlewares,
   Path,
   Post,
   Put,
@@ -134,7 +133,6 @@ export class PaymentController extends Controller {
     @Body() requestBody: CheckoutInfo
   ): Promise<void> {
     const line_items = requestBody.order.map((item: any) => {
-      console.log(requestBody);
       return {
         price_data: {
           currency: "eur",

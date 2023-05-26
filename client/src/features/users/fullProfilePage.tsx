@@ -65,7 +65,7 @@ export const FullProfilePage = ({
                 flexGrow: 1,
                 bgcolor: 'background.paper',
                 display: 'flex',
-                height: '100%',
+                height: '100%' 
               }}
             >
               <Tabs
@@ -73,32 +73,32 @@ export const FullProfilePage = ({
                 variant="scrollable"
                 value={value}
                 onChange={handleChange}
-                aria-label="Vertical tabs example"
+                aria-label="Profile menu"
                 sx={{
                   borderRight: 1,
                   borderColor: 'divider',
-                  overflow: 'visible',
+                  overflow: 'visible'
                 }}
               >
                 <Tab label="Profile" {...a11yProps(0)} />
                 <Tab label="Orders" {...a11yProps(1)} />
               </Tabs>
-              <TabPanel value={value} index={0}>
-                <Typography variant="h5">Profile information</Typography>
-                <UserInfo
-                  userName={userName}
-                  userSurname={userSurname}
-                  userEmail={userEmail}
-                  userPhone={userPhone}
-                  userAddress={userAddress}
-                />
-              </TabPanel>
-              <TabPanel value={value} index={1}>
-                <Typography variant="h5">Orders information</Typography>
-                <Box>
+              <Box sx={{ width: '100%' }}>
+                <TabPanel value={value} index={0}>
+                  <Typography variant="h5">Profile information</Typography>
+                  <UserInfo
+                    userName={userName}
+                    userSurname={userSurname}
+                    userEmail={userEmail}
+                    userPhone={userPhone}
+                    userAddress={userAddress}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  <Typography variant="h5">Orders information</Typography>
                   <OrdersInfo userId={userId} />
-                </Box>
-              </TabPanel>
+                </TabPanel>
+              </Box>
             </Box>
           </Grid>
           <Grid xs={6} sx={{ display: { md: 'block', xs: 'none' } }}>

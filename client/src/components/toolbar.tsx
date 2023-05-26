@@ -22,7 +22,6 @@ import { routes } from '../helpers/routes';
 export const Topbar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const token = localStorage.getItem('accessToken');
   const [cartOpen, setCartOpen] = useState(false);
   const { data: OrderItems = [] } = useGetUserCartQuery();
   const { data: user } = useGetCurrentUserDetailsQuery();
@@ -66,7 +65,9 @@ export const Topbar = () => {
         )}
       </AppBar>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
-        <Box sx={{ mt: '3rem' }}>{token && <Cart />}</Box>
+        <Box sx={{ mt: '3rem' }}>
+          <Cart />
+        </Box>
       </Drawer>
     </>
   );

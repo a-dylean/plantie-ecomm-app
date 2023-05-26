@@ -69,7 +69,7 @@ export const Cart = () => {
                 }
                 startIcon={<ShoppingCartCheckoutIcon />}
               >
-                Go to checkout
+                Checkout
               </Button>
               <Typography variant="h6">
                 Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}

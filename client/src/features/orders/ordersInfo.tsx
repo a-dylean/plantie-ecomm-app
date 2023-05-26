@@ -1,7 +1,9 @@
-import { CircularProgress, List } from '@mui/material';
+import { CircularProgress, Link, List, Typography } from '@mui/material';
 import { Order } from './orderItem';
 import { useGetUserOrdersQuery } from './ordersApi';
-
+import { useNavigate } from 'react-router-dom';
+import { routes } from '../../helpers/routes';
+import { violet } from '../../components/theme';
 export const OrdersInfo = ({ userId }: any) => {
   const {
     data: orders = [],
@@ -10,7 +12,7 @@ export const OrdersInfo = ({ userId }: any) => {
     isError,
     error,
   } = useGetUserOrdersQuery(userId);
-
+  const navigate = useNavigate();
   let content;
 
   if (isLoading) {
@@ -26,7 +28,20 @@ export const OrdersInfo = ({ userId }: any) => {
         />
       </List>
     ));
-    content = <>{renderedItems}</>;
+    content = (
+      <>
+        {renderedItems.length > 0 ? (
+          renderedItems
+        ) : (
+          <Typography
+            sx={{ mt: 1, cursor: 'pointer', ':hover': { color: violet } }}
+            onClick={() => navigate(routes.ALL_PRODUCTS)}
+          >
+            No previous orders. Let's make one!
+          </Typography>
+        )}
+      </>
+    );
   } else if (isError) {
     content = <>{error.toString()}</>;
   }

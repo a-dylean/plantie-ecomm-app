@@ -28,7 +28,6 @@ export const AddToCartButton = ({ product }: any) => {
       onClick={() => {
         addToCart();
         updateQuantity(++quantity!);
-        
       }}
     >
       Add to Cart

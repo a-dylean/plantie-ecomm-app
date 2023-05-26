@@ -6,14 +6,14 @@ import {
   FormControlLabel,
   Checkbox,
   Link,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { FieldValues, useForm } from "react-hook-form";
-import { Layout } from "../../app/layout";
-import { SnackbarProvider, enqueueSnackbar } from "notistack";
-import { isApiResponse } from "../../helpers/errors";
-import { useLoginUserMutation } from "../users/usersApi";
-import { routes } from "../../helpers/routes";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { FieldValues, useForm } from 'react-hook-form';
+import { Layout } from '../../app/layout';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { isApiResponse } from '../../helpers/errors';
+import { useLoginUserMutation } from '../users/usersApi';
+import { routes } from '../../helpers/routes';
 
 export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();
@@ -23,29 +23,29 @@ export const LoginForm = () => {
   const submitForm = async (data: FieldValues) => {
     try {
       const result = await loginUser(data).unwrap();
-      localStorage.setItem("accessToken", result.token);
+      localStorage.setItem('accessToken', result.token);
       navigate(routes.ME);
     } catch (error: any) {
       if (isApiResponse(error)) {
-        enqueueSnackbar(error.data.details, { variant: "error" });
+        enqueueSnackbar(error.data.details, { variant: 'error' });
       } else {
         const errMsg =
-          "error" in error ? error.error : JSON.stringify(error.data);
-        enqueueSnackbar(errMsg, { variant: "error" });
+          'error' in error ? error.error : JSON.stringify(error.data);
+        enqueueSnackbar(errMsg, { variant: 'error' });
       }
     }
   };
 
   return (
     <Layout>
-      <Box sx={{ m: "0 auto", width: "50%" }}>
+      <Box sx={{ m: '0 auto', width: '50%' }}>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
         <SnackbarProvider
           anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
+            vertical: 'top',
+            horizontal: 'left',
           }}
         />
         <form name="login-form" onSubmit={handleSubmit(submitForm)}>
@@ -59,7 +59,7 @@ export const LoginForm = () => {
             label="Email Address"
             autoComplete="email"
             autoFocus
-            {...register("email")}
+            {...register('email')}
           />
           <TextField
             color="secondary"
@@ -71,7 +71,7 @@ export const LoginForm = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            {...register("password")}
+            {...register('password')}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="secondary" />}
@@ -88,6 +88,7 @@ export const LoginForm = () => {
               onClick={() => navigate(routes.REGISTER)}
               variant="body2"
               color="secondary"
+              sx={{ cursor: 'pointer' }}
             >
               Don't have an account? Sign Up
             </Link>
