@@ -78,11 +78,20 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: violet,
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
-          color: violet,
-          fontWeight: 'bold',
+          '&.Mui-selected': {
+            color: violet,
+          },
+          fontWeight: 700,
         },
       },
     },
