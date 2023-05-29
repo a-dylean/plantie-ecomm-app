@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import { useCreateNewOrder } from '../hooks/useCreateNewOrder';
+import { useCreateNewProductOrder } from '../hooks/useCreateNewOrder';
 import {
   useGetProductOrderByProductIdQuery,
   useUpdateQuantityMutation,
@@ -11,7 +11,7 @@ export const AddToCartButton = ({ product }: any) => {
   const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(
     product.id,
   );
-  const addToCart = useCreateNewOrder(product);
+  const addToCart = useCreateNewProductOrder(product);
   //eslint-disable-next-line prefer-const
   let quantity = productOrderInfo?.quantity;
   const updateQuantity = (newQuantity: number) => {

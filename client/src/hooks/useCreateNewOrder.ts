@@ -6,13 +6,10 @@ import {
 } from '../features/orders/ordersApi';
 import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
 
-export const useCreateNewOrder = (product: Product) => {
-    const [createOrder] = useCreateOrderMutation();
+export const useCreateNewProductOrder = (product: Product) => {
     const [createProductOrder] = useAddToCartMutation();
-    const { data: user } = useGetCurrentUserDetailsQuery();
     const { data: order } = useGetUserOrderQuery();
     return async () => {
-      await createOrder({ userId: user!.id });
       await createProductOrder({
         productId: product.id,
         orderId: order?.id,
