@@ -12,23 +12,21 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
-import express, {
-  Response as ExResponse,
-  Request as ExRequest,
-} from "express";
+import express, { Response as ExResponse, Request as ExRequest } from "express";
 import { Order, PrismaClient, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 import Stripe from "stripe";
 import { ENDPOINT_SECRET, STRIPE_SK } from "../../../config";
-const stripe = new Stripe(STRIPE_SK, {
+import { ProductService } from "../products/services";
+export const stripe = new Stripe(STRIPE_SK, {
   apiVersion: "2022-11-15",
   typescript: true,
 });
 
 export interface CheckoutInfo {
   order: ProductOrder[];
-  userEmail: string
+  userEmail: string;
 }
 
 @Route("orders")
@@ -57,9 +55,7 @@ export class OrdersController extends Controller {
    * Returns draft order provided the unique user ID.
    */
   @Get("/draft/{userId}")
-  public async getOrderByUserId(
-    @Path() userId: number
-  ): Promise<Order | null> {
+  public async getOrderByUserId(@Path() userId: number): Promise<Order | null> {
     return new OrderService().getOrderByUserId(userId);
   }
   /**
@@ -132,23 +128,26 @@ export class PaymentController extends Controller {
     @Request() req: ExRequest,
     @Body() requestBody: CheckoutInfo
   ): Promise<void> {
-    const line_items = requestBody.order.map((item: any) => {
-      return {
-        price_data: {
-          currency: "eur",
-          product_data: {
-            name: item.productId,
-          },
-          unit_amount: item.price * 100,
-        },
-        quantity: item.quantity,
-      };
-    });
+    const productOrders = requestBody.order;
+    const items = productOrders.map(async (item: ProductOrder) => {
+      const product = await new ProductService().get(Number(item.productId))
+        return ({
+            price_data: {
+              currency: "eur",
+              product_data: {
+                name: product.name,
+              },
+              unit_amount: Number(product.price) * 100,
+            },
+            quantity: item.quantity,
+          });
+      })
+      const line_items = await Promise.all(items)
     try {
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         customer_email: requestBody.userEmail,
-        line_items,
+        line_items: line_items,
         success_url: `http://localhost:3000/successfull`,
         cancel_url: `http://localhost:3000/cancelled`,
       });
@@ -165,10 +164,8 @@ const endpointSecret = ENDPOINT_SECRET;
 @Tags("Orders")
 export class WebhookController extends Controller {
   @Post()
-public async createWebhook(
-  @Request() req: ExRequest,
-): Promise<void>{
-  let event = req.body;
+  public async createWebhook(@Request() req: ExRequest): Promise<void> {
+    let event = req.body;
     // Only verify the event if you have an endpoint secret defined.
     // Otherwise use the basic event deserialized with JSON.parse
     if (endpointSecret) {
@@ -219,7 +216,5 @@ public async createWebhook(
         console.log(`Unhandled event type ${event.type}`);
     }
     req.res?.send();
+  }
 }
-}
-
-
