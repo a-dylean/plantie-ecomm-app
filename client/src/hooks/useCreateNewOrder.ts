@@ -1,10 +1,8 @@
 import { Product } from '../app/interfaces';
 import {
-  useCreateOrderMutation,
   useAddToCartMutation,
   useGetUserOrderQuery,
 } from '../features/orders/ordersApi';
-import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
 
 export const useCreateNewProductOrder = (product: Product) => {
     const [createProductOrder] = useAddToCartMutation();

@@ -45,11 +45,13 @@ app.use(function errorHandler(
   // I think it can be decomposed into sub functions to make it easier to read (with names according to the error type)
   if (err instanceof ValidateError) {
     validationErrorHandler(res, req, err);
+    next();
   }
-  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+  else if (err instanceof Prisma.PrismaClientKnownRequestError) {
     uniquenessValidationErrorHandler(res, req, err);
+    next();
   }
-  if (err instanceof AuthError) {
+  else if (err instanceof AuthError) {
     console.error(err);
     console.error(err.stack);
     return res.status(403).json({
@@ -57,7 +59,7 @@ app.use(function errorHandler(
       details: err.message,
     });
   }
-  if (err instanceof NotFoundError) {
+  else if (err instanceof NotFoundError) {
     console.error(err);
     console.error(err.stack);
     return res.status(404).json({
@@ -65,7 +67,7 @@ app.use(function errorHandler(
       details: err.message,
     });
   }
-  if (err instanceof Error) {
+  else if (err instanceof Error) {
     console.error(err);
     console.error(err.stack);
     return res.status(500).json({

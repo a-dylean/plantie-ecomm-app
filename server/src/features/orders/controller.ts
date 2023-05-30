@@ -13,12 +13,14 @@ import {
   Tags,
 } from "tsoa";
 import express, { Response as ExResponse, Request as ExRequest } from "express";
-import { Order, PrismaClient, ProductOrder } from "@prisma/client";
+import { Order, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 import Stripe from "stripe";
 import { ENDPOINT_SECRET, STRIPE_SK } from "../../../config";
 import { ProductService } from "../products/services";
+import { UserService } from "../users/services";
+import { hasMatchFunction } from "@reduxjs/toolkit/dist/tsHelpers";
 export const stripe = new Stripe(STRIPE_SK, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -28,6 +30,8 @@ export interface CheckoutInfo {
   order: ProductOrder[];
   userEmail: string;
 }
+
+const endpointSecret = ENDPOINT_SECRET;
 
 @Route("orders")
 @Tags("Orders")
@@ -119,57 +123,102 @@ export class ProductOrdersController extends Controller {
   }
 }
 
-@Route("create-checkout-session")
-@Tags("Orders")
+@Route("stripe")
+@Tags("Stripe")
 export class PaymentController extends Controller {
   @Security("jwt")
-  @Post()
+  @Post("/create-checkout-session")
   public async createCheckoutSession(
     @Request() req: ExRequest,
     @Body() requestBody: CheckoutInfo
   ): Promise<void> {
     const productOrders = requestBody.order;
     const items = productOrders.map(async (item: ProductOrder) => {
-      const product = await new ProductService().get(Number(item.productId))
-        return ({
-            price_data: {
-              currency: "eur",
-              product_data: {
-                name: product.name,
-              },
-              unit_amount: Number(product.price) * 100,
-            },
-            quantity: item.quantity,
-          });
-      })
-      const line_items = await Promise.all(items)
+      const product = await new ProductService().get(Number(item.productId));
+      return {
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: product.name,
+            images: [product.picture!],
+          },
+          unit_amount: Number(product.price) * 100,
+        },
+        quantity: item.quantity,
+        adjustable_quantity: {
+          enabled: true,
+          maximum: 50,
+        },
+      };
+    });
+    const line_items = await Promise.all(items);
+    const user = await new UserService().getUserByEmail(requestBody.userEmail);
     try {
       const session = await stripe.checkout.sessions.create({
+        customer: user.stripeId?.toString(),
         mode: "payment",
-        customer_email: requestBody.userEmail,
         line_items: line_items,
         success_url: `http://localhost:3000/successfull`,
         cancel_url: `http://localhost:3000/cancelled`,
+        shipping_address_collection: {
+          allowed_countries: ["FR"],
+        },
+        shipping_options: [
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: {
+                amount: 0,
+                currency: "eur",
+              },
+              display_name: "Free shipping",
+              delivery_estimate: {
+                minimum: {
+                  unit: "business_day",
+                  value: 5,
+                },
+                maximum: {
+                  unit: "business_day",
+                  value: 7,
+                },
+              },
+            },
+          },
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: {
+                amount: 1000,
+                currency: "eur",
+              },
+              display_name: "Next day shipping",
+              delivery_estimate: {
+                minimum: {
+                  unit: "business_day",
+                  value: 1,
+                },
+                maximum: {
+                  unit: "business_day",
+                  value: 1,
+                },
+              },
+            },
+          },
+        ],
+        metadata: {
+          userId: user.id,
+        },
       });
       req.res?.json({ url: session.url });
     } catch (e: any) {
       req.res?.status(500).json({ error: e.message });
     }
   }
-}
-const prisma = new PrismaClient();
-const endpointSecret = ENDPOINT_SECRET;
-
-@Route("/webhook")
-@Tags("Orders")
-export class WebhookController extends Controller {
-  @Post()
+  @Post("/webhook")
   public async createWebhook(@Request() req: ExRequest): Promise<void> {
     let event = req.body;
-    // Only verify the event if you have an endpoint secret defined.
-    // Otherwise use the basic event deserialized with JSON.parse
+    const metadata = event.data.object;
     if (endpointSecret) {
-      // Get the signature sent by Stripe
       const signature = req.headers["stripe-signature"];
       try {
         event = stripe.webhooks.constructEvent(
@@ -181,36 +230,15 @@ export class WebhookController extends Controller {
         console.log(`⚠️  Webhook signature verification failed.`, err.message);
       }
     }
-    // Handle the event
     switch (event.type) {
       case "checkout.session.completed":
-        const checkoutSessionCompleted = event.data.object;
-        //Then define and call a function to handle the event checkout.session.completed
-        const user = await prisma.user.findUnique({
-          where: {
-            email: event.data.object.customer_details.email,
-          },
-        });
-
-        const prismaOrder = await prisma.order.findFirst({
-          where: {
-            userId: user!.id,
-          },
-          orderBy: {
-            id: "desc",
-          },
-        });
-
-        await prisma.order.update({
-          where: {
-            id: prismaOrder!.id,
-          },
-          data: {
-            status: "Payment Received",
-            amount: event.data.object.amount_total / 100,
-          },
-        });
-        console.log(checkoutSessionCompleted);
+        const prismaOrder = await new OrderService().getOrderByUserId(
+          parseInt(metadata.metadata.userId)
+        );
+        await new OrderService().paymentRecieved(
+          prismaOrder!.id,
+          metadata.amount_total / 100
+        );
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);

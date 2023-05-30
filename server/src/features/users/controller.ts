@@ -64,18 +64,18 @@ export class ProfileController extends Controller {
   @Security("jwt", ["user"])
   @Get()
   public async getUserProfile(
-    @Header('Authorization') accessToken: string
-    ): Promise<User> {
-    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0]
-    return new UserService().getUserById(Number(userId)); 
+    @Header("Authorization") accessToken: string
+  ): Promise<User> {
+    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0];
+    return new UserService().getUserById(Number(userId));
   }
   @Security("jwt", ["user"])
   @Put()
   public async updateUser(
-    @Header('Authorization') accessToken: string,
+    @Header("Authorization") accessToken: string,
     @Body() requestBody: UserCreationParams
   ): Promise<User> {
-    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0]
-    return new UserService().update(Number(userId), requestBody)
+    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0];
+    return new UserService().update(Number(userId), requestBody);
   }
 }

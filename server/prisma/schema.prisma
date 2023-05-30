@@ -29,8 +29,8 @@ model Order {
 
 model ProductOrder {
   id        Int      @id(map: "checkout_pkey") @default(autoincrement())
-  // missing createdAt / updatedAt fields
-  // productId should be a foreign key
+  createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   productId Int?     @map("product_id")
   quantity  Int      @default(0)
   orderId   Int?     @map("order_id")
@@ -50,7 +50,6 @@ model Product {
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   picture      String?
-  //orders       Order[]
   category     Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
 
@@ -71,6 +70,7 @@ model User {
   updatedAt   DateTime?    @updatedAt @map("updated_at") @db.Timestamp(6)
   orders      Order[]
   token       Token?
+  stripeId    String?      @db.VarChar(256)
   @@map("user")
 }
 

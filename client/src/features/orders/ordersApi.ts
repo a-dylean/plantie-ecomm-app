@@ -1,5 +1,5 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
-import { Order, CartItem, User, CheckoutInfo} from '../../app/interfaces';
+import { Order, CartItem, User, CheckoutInfo } from '../../app/interfaces';
 import { baseApi } from '../api/baseApi';
 
 const ordersApi = baseApi.injectEndpoints({
@@ -47,7 +47,7 @@ const ordersApi = baseApi.injectEndpoints({
     createCheckoutSession: builder.mutation<Response, CheckoutInfo>({
       query(body) {
         return {
-          url: '/create-checkout-session',
+          url: 'stripe/create-checkout-session',
           method: 'POST',
           body,
         };
@@ -57,10 +57,6 @@ const ordersApi = baseApi.injectEndpoints({
     getDraftOrder: builder.query<Order, number>({
       query: (userId) => `orders/draft/${userId}`,
       providesTags: ['Orders'],
-    }),
-    getProductOrderByOrderId: builder.query<CartItem, number>({
-      query: (orderId) => `orders/${orderId}/product-orders`,
-      providesTags: ['ProductOrders'],
     }),
     getProductOrderByProductId: builder.query<CartItem, number>({
       query: (productId) => `/products/${productId}/product-orders`,
@@ -107,11 +103,10 @@ export const {
   useCreateOrderMutation,
   useDeleteProductOrderMutation,
   useGetDraftOrderQuery,
-  useGetProductOrderByOrderIdQuery,
   useGetProductOrderByProductIdQuery,
   useGetUserCartQuery,
   useGetUserOrderQuery,
   useGetUserOrdersQuery,
   useUpdateQuantityMutation,
-  useCreateCheckoutSessionMutation
+  useCreateCheckoutSessionMutation,
 } = ordersApi;

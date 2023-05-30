@@ -1,4 +1,5 @@
 import { PrismaClient, Product } from "@prisma/client";
+import { stripe } from "../orders/controller";
 const prisma = new PrismaClient();
 
 export type ProductCreationParams = Pick<
@@ -11,13 +12,30 @@ export class ProductModel {
     return await prisma.product.findMany();
   }
   async create(data: ProductCreationParams): Promise<Product> {
-      return await prisma.product.create({
-        data: {
-          ...data,
-        },
-      });
+    const product = await stripe.products.create({
+      name: data.name,
+      default_price_data: {
+        unit_amount: Number(data.price) * 100,
+        currency: "eur",
+      },
+    });
+    const price = await stripe.prices.create({
+      product: product.id,
+      unit_amount: Number(data.price) * 100,
+      currency: "eur",
+    });
+    return await prisma.product.create({
+      data: {
+        ...data,
+      },
+    });
   }
   async update(id: number, data: ProductCreationParams): Promise<Product> {
+    await stripe.products.update(id.toString(), {
+      name: data.name,
+      active: data.available,
+      description: data.description,
+    });
     return await prisma.product.update({
       where: {
         id: id,
@@ -35,15 +53,14 @@ export class ProductModel {
     });
   }
   async deleteProductById(id: Product["id"]): Promise<void> {
+    await stripe.products.del(id.toString());
     await prisma.product.delete({
       where: {
         id: id,
       },
     });
   }
-  async findProductsByCategory(
-    category: number
-  ): Promise<Product[]> {
+  async findProductsByCategory(category: number): Promise<Product[]> {
     return await prisma.product.findMany({
       where: {
         categoryId: category,

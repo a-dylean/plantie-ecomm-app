@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { generateHash } from "../../helpers/bcrypt";
+import { stripe } from "../orders/controller";
 
 const prisma = new PrismaClient();
 
@@ -17,7 +18,6 @@ export type UserLoginParams = {
 };
 
 export class UserModel {
-
   async createUser(): Promise<User> {
     return await prisma.user.create({
       data: {},
@@ -29,6 +29,9 @@ export class UserModel {
   async update(id: number, data: Partial<User>): Promise<User> {
     const { password, address, phone, email, surname, name } = data;
     const hashedPassword = await generateHash(password!);
+    const customer = await stripe.customers.create({
+      email: email!,
+    });
     return await prisma.user.upsert({
       where: {
         id: id,
@@ -40,7 +43,8 @@ export class UserModel {
         email: email,
         surname: surname,
         name: name,
-        fullProfile: true
+        fullProfile: true,
+        stripeId: customer.id,
       },
       create: {
         password: hashedPassword,
@@ -49,7 +53,8 @@ export class UserModel {
         email: email,
         surname: surname,
         name: name,
-        fullProfile: true
+        fullProfile: true,
+        stripeId: customer.id,
       },
     });
   }
