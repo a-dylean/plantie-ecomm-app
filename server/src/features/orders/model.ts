@@ -79,7 +79,6 @@ export class OrderModel {
       },
     });
   }
-
   async deleteProductOrderById(id: ProductOrder["id"]): Promise<void> {
     await prisma.productOrder.delete({
       where: {

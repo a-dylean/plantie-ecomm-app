@@ -20,7 +20,7 @@ export const UserPage = () => {
   let content = <LoginForm />;
   if (isLoading) {
     content = <CircularProgress />;
-  } 
+  }
   if (isSuccess && user.fullProfile === true) {
     content = (
       <FullProfilePage
@@ -36,7 +36,7 @@ export const UserPage = () => {
 
   if (isError) {
     content = <>{error.toString()}</>;
-  } 
+  }
 
   return <>{content}</>;
 };

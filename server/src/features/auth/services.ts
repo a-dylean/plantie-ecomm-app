@@ -1,7 +1,7 @@
-import { UserCreationParams, UserLoginParams, UserModel } from "../users/model";
-import { validatePassword, generateHash } from "../../helpers/bcrypt";
+import { UserLoginParams, UserModel } from "../users/model";
+import { validatePassword } from "../../helpers/bcrypt";
 import { createAccessToken, createRefreshToken } from "../../helpers/jwt";
-import { Token, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { AuthError } from "../../helpers/errors";
 import { AuthModel } from "./model";
 
@@ -15,13 +15,20 @@ export class AuthService {
     if (!user) {
       throw new AuthError("User not found");
     }
-    if (user && user.password && (await validatePassword(password, user.password))) {
-      const accessToken = createAccessToken({id: user.id, scopes: [user.role]})
+    if (
+      user &&
+      user.password &&
+      (await validatePassword(password, user.password))
+    ) {
+      const accessToken = createAccessToken({
+        id: user.id,
+        scopes: [user.role],
+      });
       return {
         id: user.id,
         role: user.role,
-        token: accessToken
-      }
+        token: accessToken,
+      };
     } else {
       throw new AuthError("Wrong password");
     }
@@ -29,12 +36,12 @@ export class AuthService {
   async generateRefreshToken(id: number, role: string): Promise<string> {
     const refreshToken = createRefreshToken({
       id: id,
-      scopes: role
+      scopes: role,
     });
-    AuthModelInstance.createToken({userId: id, token: refreshToken})
+    AuthModelInstance.createToken({ userId: id, token: refreshToken });
     return refreshToken;
   }
   async createUser(): Promise<User> {
-    return await UserModuleInstance.createUser() 
+    return await UserModuleInstance.createUser();
   }
 }

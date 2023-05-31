@@ -1,45 +1,45 @@
-import { User, UserInfo } from "../../app/interfaces";
-import { baseApi } from "../api/baseApi";
+import { User, UserInfo } from '../../app/interfaces';
+import { baseApi } from '../api/baseApi';
 
 const usersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createNewUser: builder.mutation<UserInfo, void> ({
+    createNewUser: builder.mutation<UserInfo, void>({
       query() {
         return {
-          url: "session/start",
-          method: "POST"
-        }
+          url: 'session/start',
+          method: 'POST',
+        };
       },
-      invalidatesTags: ["Users"],
+      invalidatesTags: ['Users'],
     }),
     loginUser: builder.mutation<User, Partial<User>>({
       query(body) {
         return {
-          url: "session/authenticate",
-          method: "POST",
+          url: 'session/authenticate',
+          method: 'POST',
           body,
         };
       },
-      invalidatesTags: ["Users"],
+      invalidatesTags: ['Users'],
     }),
     getCurrentUserDetails: builder.query<User, void>({
       query() {
         return {
-          url: "me",
+          url: 'me',
         };
       },
-      providesTags: ["Users"],
+      providesTags: ['Users'],
     }),
     updateUserDetails: builder.mutation<User, Partial<User>>({
       query(body) {
         return {
-          url: "me",
-          method: "PUT",
-          body
+          url: 'me',
+          method: 'PUT',
+          body,
         };
       },
-      invalidatesTags: ["Users"],
-    })
+      invalidatesTags: ['Users'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -48,5 +48,5 @@ export const {
   useCreateNewUserMutation,
   useLoginUserMutation,
   useGetCurrentUserDetailsQuery,
-  useUpdateUserDetailsMutation
+  useUpdateUserDetailsMutation,
 } = usersApi;

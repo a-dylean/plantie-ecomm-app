@@ -1,8 +1,7 @@
 import { Prisma } from "@prisma/client";
-import express, {
+import {
   Response as ExResponse,
   Request as ExRequest,
-  NextFunction,
 } from "express";
 import { ValidateError } from "tsoa";
 
@@ -20,15 +19,23 @@ export class NotFoundError extends Error {
   }
 }
 
-export const validationErrorHandler = (res: ExResponse, req: ExRequest, err: ValidateError) => {
+export const validationErrorHandler = (
+  res: ExResponse,
+  req: ExRequest,
+  err: ValidateError
+) => {
   console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
-    return res.status(422).json({
-      message: "Validation Failed",
-      details: err?.fields,
-    });
-}
+  return res.status(422).json({
+    message: "Validation Failed",
+    details: err?.fields,
+  });
+};
 
-export const uniquenessValidationErrorHandler = (res: ExResponse, req: ExRequest, err: Prisma.PrismaClientKnownRequestError) => {
+export const uniquenessValidationErrorHandler = (
+  res: ExResponse,
+  req: ExRequest,
+  err: Prisma.PrismaClientKnownRequestError
+) => {
   if (err.code === "P2002") {
     const errorMeta = err.meta as Record<string, Array<string>>;
     return res.status(422).json({
@@ -45,4 +52,4 @@ export const uniquenessValidationErrorHandler = (res: ExResponse, req: ExRequest
       ),
     });
   }
-}
+};

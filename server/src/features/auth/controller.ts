@@ -1,18 +1,8 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Request,
-  Route,
-  Tags,
-} from "tsoa";
+import { Body, Controller, Post, Request, Route, Tags } from "tsoa";
 import { User } from "@prisma/client";
 import { AuthService } from "./services";
-import {  UserLoginParams } from "../users/model";
-import {
-  Response as ExResponse,
-  Request as ExRequest,
-} from "express";
+import { UserLoginParams } from "../users/model";
+import { Request as ExRequest } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../../config";
 import { AuthError } from "../../helpers/errors";
@@ -25,11 +15,8 @@ export interface UserInfo {
   refreshToken: string;
 }
 
-const setCookie = async(id: number, role: string, req: ExRequest) => {
-  const refreshToken = await new AuthService().generateRefreshToken(
-    id,
-    role
-  );
+const setCookie = async (id: number, role: string, req: ExRequest) => {
+  const refreshToken = await new AuthService().generateRefreshToken(id, role);
   req.res?.cookie("refresh_token", refreshToken, {
     httpOnly: true,
     path: "/session/refresh",
@@ -51,22 +38,26 @@ export class AuthController extends Controller {
     @Body() requestBody: UserLoginParams
   ): Promise<Partial<User>> {
     const data = await new AuthService().getUserId(requestBody);
-    setCookie(data.id, data.role, req)
+    setCookie(data.id, data.role, req);
     return data;
   }
-
+  /**
+   * Creates a new user in the system and returns access token and refresh token.
+   */
   @Post("start")
   public async createUser(@Request() req: ExRequest): Promise<UserInfo> {
     const user = await new AuthService().createUser();
     const accessToken = createAccessToken({ id: user.id, scopes: [user.role] });
-    setCookie(user.id, user.role, req)
+    setCookie(user.id, user.role, req);
     return {
       id: user.id,
       accessToken: accessToken,
       refreshToken: await setCookie(user.id, user.role, req),
     };
   }
-
+  /**
+   * Updates access token using refresh token.
+   */
   @Post("refresh")
   public async refresh(@Request() req: ExRequest): Promise<any> {
     const refreshToken = req.cookies.refresh_token;

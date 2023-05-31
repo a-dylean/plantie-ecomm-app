@@ -12,15 +12,14 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
-import express, { Response as ExResponse, Request as ExRequest } from "express";
+import { Request as ExRequest } from "express";
 import { Order, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 import Stripe from "stripe";
-import { ENDPOINT_SECRET, STRIPE_SK } from "../../../config";
+import { STRIPE_SK } from "../../../config";
 import { ProductService } from "../products/services";
 import { UserService } from "../users/services";
-import { hasMatchFunction } from "@reduxjs/toolkit/dist/tsHelpers";
 export const stripe = new Stripe(STRIPE_SK, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -30,8 +29,6 @@ export interface CheckoutInfo {
   order: ProductOrder[];
   userEmail: string;
 }
-
-const endpointSecret = ENDPOINT_SECRET;
 
 @Route("orders")
 @Tags("Orders")
@@ -127,6 +124,9 @@ export class ProductOrdersController extends Controller {
 @Tags("Stripe")
 export class PaymentController extends Controller {
   @Security("jwt")
+  /**
+   * Creates Stripe checkout session.
+   */
   @Post("/create-checkout-session")
   public async createCheckoutSession(
     @Request() req: ExRequest,
@@ -214,22 +214,13 @@ export class PaymentController extends Controller {
       req.res?.status(500).json({ error: e.message });
     }
   }
+  /**
+   * Creates Stripe webhook to update database is the checkout session was successfull.
+   */
   @Post("/webhook")
   public async createWebhook(@Request() req: ExRequest): Promise<void> {
     let event = req.body;
     const metadata = event.data.object;
-    if (endpointSecret) {
-      const signature = req.headers["stripe-signature"];
-      try {
-        event = stripe.webhooks.constructEvent(
-          req.body.text(),
-          signature!,
-          endpointSecret
-        );
-      } catch (err: any) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
-      }
-    }
     switch (event.type) {
       case "checkout.session.completed":
         const prismaOrder = await new OrderService().getOrderByUserId(

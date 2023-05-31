@@ -65,7 +65,7 @@ export const FullProfilePage = ({
                 flexGrow: 1,
                 bgcolor: 'background.paper',
                 display: 'flex',
-                height: '100%' 
+                height: '100%',
               }}
             >
               <Tabs
@@ -77,7 +77,7 @@ export const FullProfilePage = ({
                 sx={{
                   borderRight: 1,
                   borderColor: 'divider',
-                  overflow: 'visible'
+                  overflow: 'visible',
                 }}
               >
                 <Tab label="Profile" {...a11yProps(0)} />

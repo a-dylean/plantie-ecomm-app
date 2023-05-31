@@ -6,7 +6,6 @@ import {
   Header,
   Path,
   Put,
-  Query,
   Route,
   Security,
   SuccessResponse,
@@ -52,7 +51,6 @@ export class UsersController extends Controller {
     return;
   }
 }
-
 @Route("me")
 @Tags("Users")
 export class ProfileController extends Controller {
@@ -70,6 +68,9 @@ export class ProfileController extends Controller {
     return new UserService().getUserById(Number(userId));
   }
   @Security("jwt", ["user"])
+  /**
+   * Updates user profile information.
+   */
   @Put()
   public async updateUser(
     @Header("Authorization") accessToken: string,

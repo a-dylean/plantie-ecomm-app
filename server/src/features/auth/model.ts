@@ -1,4 +1,4 @@
-import { PrismaClient, Token, User } from "@prisma/client";
+import { PrismaClient, Token } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export type TokenCreationParams = Pick<Token, "userId" | "token">;
