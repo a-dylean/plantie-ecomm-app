@@ -30,6 +30,9 @@ export const Cart = () => {
   } = useGetUserCartQuery();
   const { data: user } = useGetCurrentUserDetailsQuery();
   const fullProfile = user?.fullProfile;
+  const [deleteItem] = useDeleteProductOrderMutation();
+  const [createCheckoutSession] = useCreateCheckoutSessionMutation();
+
   let content;
   if (isLoading) {
     content = <CircularProgress />;
@@ -43,8 +46,7 @@ export const Cart = () => {
   } else if (isError) {
     content = <>{error.toString()}</>;
   }
-  const [deleteItem] = useDeleteProductOrderMutation();
-  const [createCheckoutSession] = useCreateCheckoutSessionMutation();
+
   const handleCheckout = () => {
     createCheckoutSession({ order: OrderItems, userEmail: user!.email })
       .unwrap()

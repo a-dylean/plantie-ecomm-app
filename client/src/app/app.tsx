@@ -11,13 +11,14 @@ import { CancelledPayment } from '../features/checkout/cancelledPayment';
 import { useRetrieveSession } from '../hooks/useRetrieveSession';
 
 export const App = () => {
-  useRetrieveSession();
+  useRetrieveSession(); 
   return (
     <>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
+            <Route path="/" element={<ProductsContainer />} />
             <Route path="products/all" element={<ProductsContainer />} />
             <Route path="products/:productId" element={<ProductPage />} />
             <Route path="auth/register" element={<RegistrationForm />} />
