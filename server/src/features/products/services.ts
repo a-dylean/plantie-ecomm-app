@@ -33,4 +33,7 @@ export class ProductService {
   async delete(id: Product["id"]): Promise<void> {
     return await ProductModelInstance.deleteProductById(id);
   }
+  async sortProducts(category: number | null | undefined, sortMethod: any, priceRange: any): Promise<Product[]> {
+    return await ProductModelInstance.sortProducts(category, sortMethod, priceRange);
+  }
 }

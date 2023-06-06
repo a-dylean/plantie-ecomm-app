@@ -67,4 +67,55 @@ export class ProductModel {
       },
     });
   }
+  async sortProducts(
+    category: number | null | undefined,
+    sortMethod: any,
+    priceRange: any
+  ): Promise<Product[]> {
+    const priceRangeArr = priceRange.split(",");
+    if (!category && !sortMethod) {
+      return await prisma.product.findMany({
+        where: {
+          price: {
+            gte: priceRangeArr[0],
+            lte: priceRangeArr[1],
+          },
+        },
+      });
+    } else if (!category && sortMethod) {
+      return await prisma.product.findMany({
+        where: {
+          price: {
+            gte: priceRangeArr[0],
+            lte: priceRangeArr[1],
+          },
+        },
+        orderBy: {
+          price: sortMethod,
+        },
+      });
+    } else if (category && !sortMethod) {
+      return await prisma.product.findMany({
+        where: {
+          categoryId: category,
+          price: {
+            gte: priceRangeArr[0],
+            lte: priceRangeArr[1],
+          },
+        },
+      });
+    }
+    return await prisma.product.findMany({
+      where: {
+        categoryId: category,
+        price: {
+          gte: priceRangeArr[0],
+          lte: priceRangeArr[1],
+        },
+      },
+      orderBy: {
+        price: sortMethod,
+      },
+    });
+  }
 }

@@ -1,17 +1,30 @@
 import { ProductItem } from './productItem';
-import { Box, LinearProgress } from '@mui/material';
+import { LinearProgress } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Layout } from '../../app/layout';
 import { useGetProductsQuery } from './productsApi';
-
+import { Filter } from '../../components/filter';
+import { useState } from 'react';
 export const ProductsContainer = () => {
+  const [categoryId, setCategoryId] = useState(null);
+  const [sortMethod, setSortMethod] = useState('');
+  const [priceRange, setPriceRange] = useState([0,200]);
+  const chooseCategory = (categoryId: any) => {
+    setCategoryId(categoryId);
+  };
+  const chooseSortMethod = (sortMethod: any) => {
+    setSortMethod(sortMethod);
+  };
+  const choosePriceRange = (priceRange: any) => {
+    setPriceRange(priceRange);
+  };
   const {
     data: products = [],
     isError,
     isLoading,
     error,
     isSuccess,
-  } = useGetProductsQuery();
+  } = useGetProductsQuery({ categoryId, sortMethod, priceRange });
 
   let content;
 
@@ -40,17 +53,22 @@ export const ProductsContainer = () => {
   }
   return (
     <Layout>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid
-          container
-          rowSpacing={3}
-          columnSpacing={{ xs: 2, sm: 3, md: 4 }}
-          display="flex"
-          justifyContent="flex-start"
-        >
-          {content}
-        </Grid>
-      </Box>
+      <Filter
+        chooseCategory={chooseCategory}
+        categoryId={categoryId}
+        chooseSortMethod={chooseSortMethod}
+        sortMethod={sortMethod}
+        choosePriceRange={choosePriceRange}
+      />
+      <Grid
+        container
+        rowSpacing={3}
+        columnSpacing={{ xs: 2, sm: 3, md: 4 }}
+        display="flex"
+        justifyContent="center"
+      >
+        {content}
+      </Grid>
     </Layout>
   );
 };

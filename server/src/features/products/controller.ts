@@ -21,18 +21,21 @@ import { OrderService } from "../orders/services";
 @Tags("Products")
 export class ProductsController extends Controller {
   /**
-   * Retrieves a list of all products in the system. If product categoru ID is provided, filters the list of products by category.
+   * Retrieves a list of all products in the system. If product category ID is provided, filters the list of products by category.
    * @param categoryId Identifier of category (number)
    * @returns List of products
    */
   @Get()
   public async getProducts(
-    @Query() categoryId?: number | null
+    @Query() categoryId?: number | null,
+    @Query() sortMethod?: any,
+    @Query() priceRange?: any
   ): Promise<Product[]> {
-    if (!categoryId) {
-      return new ProductService().getAll();
-    }
-    return new ProductService().filterByCategory(categoryId);
+    return new ProductService().sortProducts(
+      categoryId,
+      sortMethod,
+      priceRange
+    );
   }
   /**
    * Retrieves the detailes of a particular product provided the unique product ID.

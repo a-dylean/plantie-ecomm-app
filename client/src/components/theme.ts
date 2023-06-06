@@ -10,7 +10,7 @@ export const header = '#f0f1ed';
 export const theme = createTheme({
   palette: {
     primary: {
-      main: header,
+      main: darkViolet,
       light: violet,
     },
     secondary: {
@@ -98,6 +98,7 @@ export const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
+          backgroundColor: header,
           borderBottom: `1px solid ${lightGrey}`,
           padding: '0 1rem',
         },
@@ -107,6 +108,28 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 700,
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            color: violet,
+          },
+          '&:hover': {
+            backgroundColor: lightViolet,
+          },
+          // '&.Mui-selected:hover': {
+          //   color: violet
+          // },
+        },
+      },
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          color: violet,
         },
       },
     },
