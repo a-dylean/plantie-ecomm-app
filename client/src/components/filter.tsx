@@ -78,10 +78,11 @@ export const Filter = ({
           onChange={handleCategoryChange}
           sx={{ width: 200 }}
         >
+          <MenuItem value={'null'}>All</MenuItem>
           <MenuItem value={1}>Interior plants</MenuItem>
           <MenuItem value={2}>Cactuses</MenuItem>
           <MenuItem value={3}>Mixes</MenuItem>
-          <MenuItem value={'null'}>All</MenuItem>
+          <MenuItem value={4}>Tools</MenuItem>
         </Select>
       </FormControl>
       <FormControl sx={{ width: 200 }}>

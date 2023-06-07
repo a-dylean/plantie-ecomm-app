@@ -6,10 +6,8 @@ import {
   useGetUserOrderQuery,
   useUpdateQuantityMutation,
 } from '../features/orders/ordersApi';
-import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
 
 export const AddToCartButton = ({ product }: any) => {
-  const { data: user } = useGetCurrentUserDetailsQuery();
   const [update] = useUpdateQuantityMutation();
   const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(
     product.id,
@@ -21,6 +19,13 @@ export const AddToCartButton = ({ product }: any) => {
   const updateQuantity = (newQuantity: number) => {
     return update({ id: productOrderInfo!.id, quantity: newQuantity });
   };
+
+  const handleClick = () => {
+    addToCart();
+    if (productOrderInfo) {
+      updateQuantity(++quantity!);
+    }
+  }
   return (
     <Button
       variant="text"
@@ -29,10 +34,7 @@ export const AddToCartButton = ({ product }: any) => {
       disableElevation
       sx={{ width: '100%' }}
       endIcon={<ShoppingBasketIcon />}
-      onClick={() => {
-        addToCart();
-        updateQuantity(++quantity!);
-      }}
+      onClick={handleClick}
     >
       Add to Cart
     </Button>
