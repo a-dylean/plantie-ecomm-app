@@ -133,5 +133,16 @@ export const theme = createTheme({
         },
       },
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          '& .MuiSlider-thumb': {
+            '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+              boxShadow: 'inherit',
+            },
+          },
+        },
+      },
+    },
   },
 });
