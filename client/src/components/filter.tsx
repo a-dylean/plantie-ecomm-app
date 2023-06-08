@@ -4,13 +4,10 @@ import {
   InputLabel,
   MenuItem,
   Slider,
-  Typography,
 } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useState } from 'react';
-import { Product } from '../app/interfaces';
-import { backgroundColor, lightViolet } from './theme';
-import { randomBytes } from 'crypto';
+import { useRef, useState } from 'react';
+import { debounce } from "lodash"
 
 export const Filter = ({
   chooseCategory,
@@ -32,12 +29,16 @@ export const Filter = ({
     return `€${value[0]} - €${value[1]}`;
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    choosePriceRange(value);
+  }, 300)).current;
+
   const handlePriceRangeChange = (
     event: Event,
     newValue: number | number[],
   ) => {
-    setValue(newValue as number[]);
-    choosePriceRange(value);
+    setValue(newValue as number[])
+    debouncedSearch(value );
   };
 
   return (
