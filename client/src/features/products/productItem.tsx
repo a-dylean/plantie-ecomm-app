@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../hooks/reactReduxHooks';
 import { selectProduct } from './productSlice';
 import { routes } from '../../helpers/routes';
 import { AddToCartButton } from '../../components/addToCardButton';
+import { Price } from '../../components/price';
 
 export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export const ProductItem = (product: Product) => {
                 {product.name}
               </Typography>
               <Typography variant="h6" component="div">
-                €{product.price}
+                <Price price={product.price}/>
               </Typography>
             </Box>
             <Typography

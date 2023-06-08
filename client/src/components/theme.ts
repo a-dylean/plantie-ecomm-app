@@ -116,15 +116,16 @@ export const theme = createTheme({
         root: {
           '&.Mui-selected': {
             color: violet,
+            backgroundColor: lightViolet,
           },
           '&:hover': {
             backgroundColor: lightViolet,
           },
-          // '&.Mui-selected:hover': {
-          //   color: violet
-          // },
         },
       },
+      defaultProps: {
+        disableRipple : true
+      }
     },
     MuiFormControl: {
       styleOverrides: {

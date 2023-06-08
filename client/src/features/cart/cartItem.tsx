@@ -8,11 +8,12 @@ import {
   useUpdateQuantityMutation,
 } from '../orders/ordersApi';
 import { useGetProductQuery } from '../products/productsApi';
+import { Price } from '../../components/price';
 
 export const CartItem = ({ id, quantity }: any) => {
   const { data: productInfo } = useGetProductQuery(id);
   const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(id);
-  const totalPerItem = (quantity * Number(productInfo?.price)).toFixed(2);
+  const totalPerItem = quantity * Number(productInfo?.price);
   const [update] = useUpdateQuantityMutation();
   const updateQuantity = (newQuantity: number) => {
     return update({ id: productOrderInfo!.id, quantity: newQuantity });
@@ -35,8 +36,8 @@ export const CartItem = ({ id, quantity }: any) => {
               }}
             >
               <Typography component="div" sx={{ width: '200px' }}>
-                {productInfo.name} <br /> €
-                {Number(productInfo.price).toFixed(2)}
+                {productInfo.name} <br />
+                <Price price={productInfo.price} />
               </Typography>
               <Box
                 sx={{
@@ -67,7 +68,7 @@ export const CartItem = ({ id, quantity }: any) => {
                 </IconButton>
               </Box>
               <Typography component="div" sx={{ width: '30px' }}>
-                €{totalPerItem}
+                <Price price={totalPerItem} />
               </Typography>
               <IconButton onClick={removeEntirely} disableRipple>
                 <HighlightOffIcon color="secondary" />

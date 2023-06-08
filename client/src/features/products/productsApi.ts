@@ -1,4 +1,3 @@
-import { FetchArgs } from '@reduxjs/toolkit/dist/query';
 import { Product } from '../../app/interfaces';
 import { baseApi } from '../api/baseApi';
 

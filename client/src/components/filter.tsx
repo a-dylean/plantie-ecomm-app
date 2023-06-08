@@ -1,13 +1,8 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Slider,
-} from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Slider } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useRef, useState } from 'react';
-import { debounce } from "lodash"
+import { debounce } from 'lodash';
+import { backgroundColor } from './theme';
 
 export const Filter = ({
   chooseCategory,
@@ -29,16 +24,18 @@ export const Filter = ({
     return `€${value[0]} - €${value[1]}`;
   };
 
-  const debouncedSearch = useRef(debounce((value) => {
-    choosePriceRange(value);
-  }, 300)).current;
+  const debouncedSearch = useRef(
+    debounce((value) => {
+      choosePriceRange(value);
+    }, 300),
+  ).current;
 
   const handlePriceRangeChange = (
     event: Event,
     newValue: number | number[],
   ) => {
-    setValue(newValue as number[])
-    debouncedSearch(value );
+    setValue(newValue as number[]);
+    debouncedSearch(value);
   };
 
   return (
@@ -48,11 +45,11 @@ export const Filter = ({
         alignItems: 'center',
         justifyContent: 'space-evenly',
         mb: 3,
-        // position: "sticky",
-        // top: "3.5rem",
-        // backgroundColor: backgroundColor,
-        // p: "1rem",
-        // zIndex: 5
+        position: 'sticky',
+        top: '3.5rem',
+        backgroundColor: backgroundColor,
+        p: '1rem',
+        zIndex: 5,
       }}
     >
       <FormControl sx={{ width: 200 }}>
@@ -93,23 +90,21 @@ export const Filter = ({
           id="select-price-range-label"
           label="Price Range"
           sx={{ width: 200 }}
+          value={value}
+          renderValue={() => valuetext(value)}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            {valuetext(value)}
-          </Box>
-          <Box sx={{ width: '10rem', m: 'auto' }}>
-            <Slider
-              size="small"
-              aria-label="Price range"
-              defaultValue={0}
-              value={value}
-              onChange={handlePriceRangeChange}
-              aria-valuetext={valuetext(value)}
-              step={10}
-              min={0}
-              max={200}
-            />
-          </Box>
+            <Box sx={{ width: '10rem', m: 'auto', display: "flex", justifyContent: "center" }}>
+              <Slider
+                size="small"
+                aria-label="Price range"
+                defaultValue={0}
+                value={value}
+                onChange={handlePriceRangeChange}
+                step={10}
+                min={0}
+                max={200}
+              />
+            </Box>
         </Select>
       </FormControl>
     </Box>
