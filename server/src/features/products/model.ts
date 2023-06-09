@@ -1,16 +1,13 @@
-import { PrismaClient, Product } from "@prisma/client";
+import { Category, PrismaClient, Product } from "@prisma/client";
 import { stripe } from "../orders/controller";
 const prisma = new PrismaClient();
 
 export type ProductCreationParams = Pick<
   Product,
-  "name" | "description" | "price" | "available" | "categoryId"
+  "name" | "description" | "price" | "available" | "categoryName"
 >;
 
 export class ProductModel {
-  async getAll(): Promise<Product[]> {
-    return await prisma.product.findMany();
-  }
   async create(data: ProductCreationParams): Promise<Product> {
     const product = await stripe.products.create({
       name: data.name,
@@ -60,61 +57,38 @@ export class ProductModel {
       },
     });
   }
-  async findProductsByCategory(category: number): Promise<Product[]> {
-    return await prisma.product.findMany({
-      where: {
-        categoryId: category,
-      },
-    });
-  }
   async sortProducts(
-    category: number | null | undefined,
-    sortMethod: any,
-    priceRange: any
+    categoryName: Category["categoryName"] | undefined,
+    sortMethod: any | undefined,
+    priceRange: string,
+    searchItem: string | undefined
   ): Promise<Product[]> {
+    console.log(`Category name: ${categoryName}`);
+    console.log(`Sort: ${sortMethod}`);
+    console.log(`Price: ${priceRange}`);
+    console.log(`Search: ${searchItem}`);
     const priceRangeArr = priceRange.split(",");
-    if (!category && !sortMethod) {
-      return await prisma.product.findMany({
-        where: {
-          price: {
-            gte: priceRangeArr[0],
-            lte: priceRangeArr[1],
-          },
-        },
-      });
-    } else if (!category && sortMethod) {
-      return await prisma.product.findMany({
-        where: {
-          price: {
-            gte: priceRangeArr[0],
-            lte: priceRangeArr[1],
-          },
-        },
-        orderBy: {
-          price: sortMethod,
-        },
-      });
-    } else if (category && !sortMethod) {
-      return await prisma.product.findMany({
-        where: {
-          categoryId: category,
-          price: {
-            gte: priceRangeArr[0],
-            lte: priceRangeArr[1],
-          },
-        },
-      });
-    }
     return await prisma.product.findMany({
       where: {
-        categoryId: category,
-        price: {
-          gte: priceRangeArr[0],
-          lte: priceRangeArr[1],
-        },
+        AND: [
+          {
+            price: {
+              gte: priceRangeArr[0],
+              lte: priceRangeArr[1],
+            },
+          },
+          {
+            categoryName: categoryName,
+          },
+          {
+            name: {
+              search: searchItem,
+            },
+          },
+        ],
       },
       orderBy: {
-        price: sortMethod,
+        ...(sortMethod ? { price: sortMethod } : {}),
       },
     });
   }
