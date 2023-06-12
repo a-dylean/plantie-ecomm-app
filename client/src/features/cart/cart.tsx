@@ -58,7 +58,11 @@ export const Cart = () => {
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
         {OrderItems.length === 0 ? (
-          <Typography>So far empty...</Typography>
+          <Typography>
+            So far empty...
+            <br /> We have plenty of beautiful plants to choose from. Happy
+            shopping!🛍️
+          </Typography>
         ) : (
           <>
             {content}

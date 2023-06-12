@@ -52,7 +52,6 @@ export const CartItem = ({ id, quantity }: any) => {
                     updateQuantity(--quantity);
                   }}
                   disabled={quantity <= 0}
-                  disableRipple
                 >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
@@ -62,7 +61,6 @@ export const CartItem = ({ id, quantity }: any) => {
                   onClick={() => {
                     updateQuantity(++quantity);
                   }}
-                  disableRipple
                 >
                   <AddCircleOutlineIcon />
                 </IconButton>
@@ -70,7 +68,7 @@ export const CartItem = ({ id, quantity }: any) => {
               <Typography component="div" sx={{ width: '30px' }}>
                 <Price price={totalPerItem} />
               </Typography>
-              <IconButton onClick={removeEntirely} disableRipple>
+              <IconButton onClick={removeEntirely}>
                 <HighlightOffIcon color="secondary" />
               </IconButton>
             </Box>

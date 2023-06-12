@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { NotFoundError } from "../../helpers/errors";
 import { ProductModel } from "./model";
 import { ProductCreationParams } from "./model";
@@ -22,15 +22,15 @@ export class ProductService {
     return await ProductModelInstance.deleteProductById(id);
   }
   async sortProducts(
-    categoryName: string | undefined,
-    sortMethod: any,
     priceRange: string,
-    searchItem: string | undefined
+    categoryName?: string,
+    sortMethod?: Prisma.SortOrder,
+    searchItem?: string
   ): Promise<Product[]> {
     return await ProductModelInstance.sortProducts(
+      priceRange,
       categoryName,
       sortMethod,
-      priceRange,
       searchItem
     );
   }

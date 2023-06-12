@@ -5,18 +5,25 @@ import { Layout } from '../../app/layout';
 import { useGetProductsQuery } from './productsApi';
 import { Filter } from '../../components/filter';
 import { useState } from 'react';
+import { NothingFound } from '../../components/nothingFound';
 export const ProductsContainer = () => {
-  const [categoryId, setCategoryId] = useState(null);
-  const [sortMethod, setSortMethod] = useState('');
-  const [priceRange, setPriceRange] = useState([0,200]);
-  const chooseCategory = (categoryId: any) => {
-    setCategoryId(categoryId);
+  const [categoryName, setCategoryName] = useState<string | undefined>(
+    undefined,
+  );
+  const [sortMethod, setSortMethod] = useState<string | undefined>(undefined);
+  const [priceRange, setPriceRange] = useState<number[]>([0, 200]);
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
+  const chooseCategory = (categoryName: string) => {
+    setCategoryName(categoryName);
   };
-  const chooseSortMethod = (sortMethod: any) => {
+  const chooseSortMethod = (sortMethod: string) => {
     setSortMethod(sortMethod);
   };
-  const choosePriceRange = (priceRange: any) => {
+  const choosePriceRange = (priceRange: number[]) => {
     setPriceRange(priceRange);
+  };
+  const search = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
   };
   const {
     data: products = [],
@@ -24,7 +31,7 @@ export const ProductsContainer = () => {
     isLoading,
     error,
     isSuccess,
-  } = useGetProductsQuery({ categoryId, sortMethod, priceRange });
+  } = useGetProductsQuery({ priceRange, categoryName, sortMethod, searchTerm });
 
   let content;
 
@@ -47,7 +54,12 @@ export const ProductsContainer = () => {
         />
       </Grid>
     ));
-    content = <>{renderedItems}</>;
+    if (renderedItems.length > 0) {
+      content = <>{renderedItems}</>;
+    } else {
+      content = <NothingFound/>
+    }
+    
   } else if (isError) {
     content = <>{error.toString()}</>;
   }
@@ -55,10 +67,12 @@ export const ProductsContainer = () => {
     <Layout>
       <Filter
         chooseCategory={chooseCategory}
-        categoryId={categoryId}
         chooseSortMethod={chooseSortMethod}
         sortMethod={sortMethod}
         choosePriceRange={choosePriceRange}
+        searchTerm={searchTerm}
+        search={search}
+        categoryName={categoryName}
       />
       <Grid
         container

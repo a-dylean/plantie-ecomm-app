@@ -12,7 +12,7 @@ import {
   Security,
   Query,
 } from "tsoa";
-import { Product, ProductOrder } from "@prisma/client";
+import { Prisma, Product, ProductOrder } from "@prisma/client";
 import { ProductService } from "./services";
 import { ProductCreationParams } from "./model";
 import { OrderService } from "../orders/services";
@@ -29,13 +29,13 @@ export class ProductsController extends Controller {
   public async getProducts(
     @Query() priceRange: string,
     @Query() categoryName?: string,
-    @Query() sortMethod?: any,
+    @Query() sortMethod?: Prisma.SortOrder,
     @Query() searchTerm?: string
   ): Promise<Product[]> {
     return new ProductService().sortProducts(
+      priceRange,
       categoryName,
       sortMethod,
-      priceRange,
       searchTerm
     );
   }
@@ -48,7 +48,6 @@ export class ProductsController extends Controller {
   public async getProduct(@Path() productId: number): Promise<Product> {
     return new ProductService().get(productId);
   }
-
   /**
    * Returns a ProductOrder provided the product ID.
    */

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -9,7 +10,7 @@ datasource db {
 
 model Category {
   id           Int       @id @default(autoincrement())
-  categoryName String?   @unique @map("category_name") @db.VarChar(100)
+  categoryName String   @unique @map("category_name") @db.VarChar(100)
   product      Product[]
 
   @@map("category")
@@ -46,11 +47,11 @@ model Product {
   description  String         @db.Text
   price        Decimal        @db.Money
   available    Boolean        @default(true)
-  categoryId   Int?           @map("category_id")
+  categoryName   String       @map("category_name")
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   picture      String?
-  category     Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category     Category?      @relation(fields: [categoryName], references: [categoryName], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
 
   @@map("product")

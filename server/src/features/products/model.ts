@@ -1,4 +1,4 @@
-import { Category, PrismaClient, Product } from "@prisma/client";
+import { Category, Prisma, PrismaClient, Product } from "@prisma/client";
 import { stripe } from "../orders/controller";
 const prisma = new PrismaClient();
 
@@ -58,15 +58,11 @@ export class ProductModel {
     });
   }
   async sortProducts(
-    categoryName: Category["categoryName"] | undefined,
-    sortMethod: any | undefined,
     priceRange: string,
-    searchItem: string | undefined
+    categoryName?: Category["categoryName"],
+    sortMethod?: Prisma.SortOrder,
+    searchItem?: string
   ): Promise<Product[]> {
-    console.log(`Category name: ${categoryName}`);
-    console.log(`Sort: ${sortMethod}`);
-    console.log(`Price: ${priceRange}`);
-    console.log(`Search: ${searchItem}`);
     const priceRangeArr = priceRange.split(",");
     return await prisma.product.findMany({
       where: {
