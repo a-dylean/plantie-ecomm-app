@@ -1,7 +1,7 @@
 import { Typography, Box, styled, List, Button } from '@mui/material';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import { backgroundColor } from '../../components/theme';
-import { CartItem } from './cartItem';
+import { CartItemComponent } from './cartItem';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { calculateTotalCartAmount } from '../../helpers/cartFunctions';
@@ -39,7 +39,7 @@ export const Cart = () => {
   } else if (isSuccess) {
     const renderedItems = OrderItems.map((cartItem) => (
       <List key={cartItem.id}>
-        <CartItem id={cartItem.productId} quantity={cartItem.quantity} />
+        <CartItemComponent quantity={cartItem.quantity} productId={cartItem.productId}  />
       </List>
     ));
     content = <>{renderedItems}</>;

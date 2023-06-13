@@ -68,3 +68,17 @@ export interface CheckoutInfo {
   order: CartItem[];
   userEmail: string;
 }
+
+export interface CartItemProps {
+  productId : number,
+  quantity: number
+}
+
+export interface FilterProps {
+  chooseCategory: (categoryName: string) => void;
+  choosePriceRange: (priceRange: number[]) => void;
+  chooseSortMethod: (sortMethod: string) => void;
+  search: (searchTerm: string | undefined) => void;
+  sortMethod: string | undefined;
+  categoryName: string | undefined;
+}

@@ -8,6 +8,6 @@ export function isApiResponse(error: unknown): error is ApiErrorResponse {
     typeof error === 'object' &&
     error != null &&
     'status' in error &&
-    typeof (error as any).status === 'number'
+    typeof error.status === 'number'
   );
 }

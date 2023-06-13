@@ -9,11 +9,13 @@ import {
 } from '../orders/ordersApi';
 import { useGetProductQuery } from '../products/productsApi';
 import { Price } from '../../components/price';
+import React from 'react';
+import { CartItemProps } from '../../app/interfaces';
 
-export const CartItem = ({ id, quantity }: any) => {
-  const { data: productInfo } = useGetProductQuery(id);
-  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(id);
-  const totalPerItem = quantity * Number(productInfo?.price);
+export const CartItemComponent: React.FC<CartItemProps> = ({...cartItem}) => {
+  const { data: productInfo } = useGetProductQuery(cartItem.productId);
+  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(cartItem.productId);
+  const totalPerItem = cartItem.quantity * Number(productInfo?.price);
   const [update] = useUpdateQuantityMutation();
   const updateQuantity = (newQuantity: number) => {
     return update({ id: productOrderInfo!.id, quantity: newQuantity });
@@ -49,18 +51,16 @@ export const CartItem = ({ id, quantity }: any) => {
                 <IconButton
                   color="secondary"
                   onClick={() => {
-                    updateQuantity(--quantity);
+                    updateQuantity(--cartItem.quantity);
                   }}
-                  disabled={quantity <= 0}
+                  disabled={cartItem.quantity <= 0}
                 >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
                 {productOrderInfo.quantity}
                 <IconButton
                   color="secondary"
-                  onClick={() => {
-                    updateQuantity(++quantity);
-                  }}
+                  onClick={()=>updateQuantity(++cartItem.quantity)}
                 >
                   <AddCircleOutlineIcon />
                 </IconButton>

@@ -1,3 +1,3 @@
-export const Price = ({ price }: any) => {
-  return <>{`€${Number(price).toFixed(2)}`}</>;
+export const Price = (props: { price: number | string }) => {
+  return <>{`€${Number(props.price).toFixed(2)}`}</>;
 };

@@ -6,6 +6,7 @@ import { useGetProductsQuery } from './productsApi';
 import { Filter } from '../../components/filter';
 import { useState } from 'react';
 import { NothingFound } from '../../components/nothingFound';
+
 export const ProductsContainer = () => {
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined,
@@ -22,7 +23,7 @@ export const ProductsContainer = () => {
   const choosePriceRange = (priceRange: number[]) => {
     setPriceRange(priceRange);
   };
-  const search = (searchTerm: string) => {
+  const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
   const {
@@ -57,9 +58,8 @@ export const ProductsContainer = () => {
     if (renderedItems.length > 0) {
       content = <>{renderedItems}</>;
     } else {
-      content = <NothingFound/>
+      content = <NothingFound />;
     }
-    
   } else if (isError) {
     content = <>{error.toString()}</>;
   }
@@ -68,10 +68,9 @@ export const ProductsContainer = () => {
       <Filter
         chooseCategory={chooseCategory}
         chooseSortMethod={chooseSortMethod}
-        sortMethod={sortMethod}
         choosePriceRange={choosePriceRange}
-        searchTerm={searchTerm}
         search={search}
+        sortMethod={sortMethod}
         categoryName={categoryName}
       />
       <Grid

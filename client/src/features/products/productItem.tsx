@@ -15,7 +15,7 @@ import { routes } from '../../helpers/routes';
 import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
 
-export const ProductItem = (product: Product) => {
+export const ProductItem: React.FC<Product> = (product) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const ProductItemCard = styled(Card)(() => ({
@@ -24,7 +24,7 @@ export const ProductItem = (product: Product) => {
   }));
   return (
     <ProductItemCard>
-      <Box onClick={(): Product => dispatch(selectProduct(product))}>
+      <Box onClick={() => dispatch(selectProduct(product))}>
         <Box
           onClick={() => {
             navigate(`${routes.PRODUCTS}/${product.id}`);

@@ -59,7 +59,7 @@ export class AuthController extends Controller {
    * Updates access token using refresh token.
    */
   @Post("refresh")
-  public async refresh(@Request() req: ExRequest): Promise<any> {
+  public async refresh(@Request() req: ExRequest): Promise<{}> {
     const refreshToken = req.cookies.refresh_token;
     const isValid = jwt.verify(refreshToken, SECRET_KEY);
     if (!isValid) {

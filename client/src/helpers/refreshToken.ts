@@ -3,12 +3,17 @@ import jwt_decode from 'jwt-decode';
 
 axios.defaults.withCredentials = true;
 
+interface DecodedToken {
+  exp: number;
+}
+
 export const securelyGetAccessToken = async () => {
   const token = localStorage.getItem('accessToken');
   if (!token) {
     return null;
   }
-  const decoded: any = jwt_decode(token);
+
+  const decoded: DecodedToken = jwt_decode(token);
   if (Date.now() > decoded.exp * 1000) {
     try {
       const response = await axios.post(

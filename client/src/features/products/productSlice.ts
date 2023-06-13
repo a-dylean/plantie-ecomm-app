@@ -4,13 +4,11 @@ import { Product } from '../../app/interfaces';
 type InitialState = {
   products: Product[];
   selectedProduct: Product | null;
-  loading: boolean;
 };
 
 const initialState: InitialState = {
   products: [],
   selectedProduct: null,
-  loading: false,
 };
 
 export const productsSlice = createSlice({

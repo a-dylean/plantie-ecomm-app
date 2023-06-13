@@ -1,5 +1,6 @@
 import { Product } from '../../app/interfaces';
 import { baseApi } from '../api/baseApi';
+
 type Filters = {
   priceRange: number[],
   categoryName?: string,

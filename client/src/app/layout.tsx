@@ -1,8 +1,9 @@
-import { Topbar } from '../components/toolbar';
+import React from 'react';
+import { Topbar } from '../components/topbar';
 import { Props } from './interfaces';
 import { Container } from '@mui/material';
 
-export const Layout = (props: Props) => {
+export const Layout: React.FC<Props> = (props) => {
   return (
     <>
       <Topbar />

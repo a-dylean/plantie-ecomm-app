@@ -6,14 +6,15 @@ import {
   useGetUserOrderQuery,
   useUpdateQuantityMutation,
 } from '../features/orders/ordersApi';
+import { Product } from '../app/interfaces';
 
-export const AddToCartButton = ({ product }: any) => {
+export const AddToCartButton = (props: {product: Product}) => {
   const [update] = useUpdateQuantityMutation();
   const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(
-    product.id,
+    props.product.id,
   );
   const { data: order } = useGetUserOrderQuery();
-  const addToCart = useCreateNewProductOrder({product: product, order: order});
+  const addToCart = useCreateNewProductOrder({product: props.product, order: order!});
   //eslint-disable-next-line prefer-const
   let quantity = productOrderInfo?.quantity;
   const updateQuantity = (newQuantity: number) => {

@@ -9,8 +9,9 @@ import { ProductPage } from '../features/products/productPage';
 import { SuccessfullPayment } from '../features/checkout/successfullPayment';
 import { CancelledPayment } from '../features/checkout/cancelledPayment';
 import { useRetrieveSession } from '../hooks/useRetrieveSession';
+import React from 'react';
 
-export const App = () => {
+export const App: React.FC = () => {
   useRetrieveSession(); 
   return (
     <>

@@ -10,17 +10,19 @@ import {
 } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import { backgroundColor } from './theme';
-export const Filter = ({
+import { FilterProps } from '../app/interfaces';
+
+export const Filter: React.FC<FilterProps> = ({
   chooseCategory,
   choosePriceRange,
   chooseSortMethod,
+  search,
   sortMethod,
   categoryName,
-  search,
-}: any) => {
+}) => {
   const handleCategoryChange = (event: SelectChangeEvent) => {
     chooseCategory(event.target.value as string);
   };

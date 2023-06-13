@@ -1,17 +1,17 @@
-import { CircularProgress, Link, List, Typography } from '@mui/material';
-import { Order } from './orderItem';
+import { CircularProgress, List, Typography } from '@mui/material';
+import { OrderItem } from './orderItem';
 import { useGetUserOrdersQuery } from './ordersApi';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../helpers/routes';
 import { violet } from '../../components/theme';
-export const OrdersInfo = ({ userId }: any) => {
+export const OrdersInfo = (props: { userId: number }) => {
   const {
     data: orders = [],
     isLoading,
     isSuccess,
     isError,
     error,
-  } = useGetUserOrdersQuery(userId);
+  } = useGetUserOrdersQuery(props.userId);
   const navigate = useNavigate();
   let content;
 
@@ -20,11 +20,8 @@ export const OrdersInfo = ({ userId }: any) => {
   } else if (isSuccess) {
     const renderedItems = orders.map((order) => (
       <List key={order.id}>
-        <Order
-          id={order.id}
-          createdAt={order.createdAt}
-          status={order.status}
-          amount={order.amount}
+        <OrderItem
+          order={order}
         />
       </List>
     ));
@@ -45,6 +42,5 @@ export const OrdersInfo = ({ userId }: any) => {
   } else if (isError) {
     content = <>{error.toString()}</>;
   }
-
   return <>{content}</>;
 };

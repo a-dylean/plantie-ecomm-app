@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { LoginForm } from '../auth/loginPage';
 import { FullProfilePage } from './fullProfilePage';
 import { useGetCurrentUserDetailsQuery } from './usersApi';
 import { CircularProgress } from '@mui/material';
 
-export const UserPage = () => {
+export const UserPage: React.FC = () => {
   const {
     data: user,
     isSuccess,
@@ -13,6 +13,7 @@ export const UserPage = () => {
     isLoading,
     refetch,
   } = useGetCurrentUserDetailsQuery();
+
   useEffect(() => {
     refetch();
   }, [user]);
@@ -24,12 +25,12 @@ export const UserPage = () => {
   if (isSuccess && user.fullProfile === true) {
     content = (
       <FullProfilePage
-        userId={user?.id}
-        userName={user?.name}
-        userSurname={user?.surname}
-        userAddress={user?.address}
-        userEmail={user?.email}
-        userPhone={user?.phone}
+        name={user.name}
+        email={user.email}
+        surname={user.surname}
+        address={user.address}
+        phone={user.phone}
+        id={user.id}
       />
     );
   }

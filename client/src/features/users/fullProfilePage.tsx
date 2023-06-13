@@ -3,10 +3,11 @@ import { Layout } from '../../app/layout';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Image } from 'mui-image';
 import { UserInfo } from './userInfo';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { OrdersInfo } from '../orders/ordersInfo';
+import { User } from '../../app/interfaces';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,14 +41,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const FullProfilePage = ({
-  userId,
-  userName,
-  userSurname,
-  userEmail,
-  userPhone,
-  userAddress,
-}: any) => {
+export const FullProfilePage: React.FC<Partial<User>> = (user) => {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -87,16 +81,16 @@ export const FullProfilePage = ({
                 <TabPanel value={value} index={0}>
                   <Typography variant="h5">Profile information</Typography>
                   <UserInfo
-                    userName={userName}
-                    userSurname={userSurname}
-                    userEmail={userEmail}
-                    userPhone={userPhone}
-                    userAddress={userAddress}
+                    name={user.name}
+                    email={user.email}
+                    surname={user.surname}
+                    address={user.address}
+                    phone={user.phone}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <Typography variant="h5">Orders information</Typography>
-                  <OrdersInfo userId={userId} />
+                  <OrdersInfo userId={user.id!} />
                 </TabPanel>
               </Box>
             </Box>
@@ -108,7 +102,7 @@ export const FullProfilePage = ({
               color="white"
             >
               Welcome,
-              <br /> planties lover {userName}!
+              <br /> planties lover {user.name}!
             </Typography>
             <Image src={image} height="100%" width="100%" duration={50} />
           </Grid>

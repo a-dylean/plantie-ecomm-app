@@ -9,38 +9,35 @@ import { ColoredCard } from '../../components/coloredCard';
 import CallIcon from '@mui/icons-material/Call';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import BalconyIcon from '@mui/icons-material/Balcony';
-export const UserInfo = ({
-  userName,
-  userSurname,
-  userEmail,
-  userPhone,
-  userAddress,
-}: any) => {
+import React from 'react';
+import { User } from '../../app/interfaces';
+
+export const UserInfo: React.FC<Partial<User>> = ({name, surname, email, phone, address}) => {
   return (
     <List>
       <ColoredCard>
         <List dense>
           <ListItem sx={{ fontWeight: 'bold' }}>
-            {userName} {userSurname}
+            {name} {surname}
           </ListItem>
           <Divider />
           <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
             <ListItemIcon>
               <MailOutlineIcon />
             </ListItemIcon>
-            <Typography>{userEmail}</Typography>
+            <Typography>{email}</Typography>
           </ListItem>
           <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
             <ListItemIcon>
               <CallIcon />
             </ListItemIcon>
-            {userPhone}
+            {phone}
           </ListItem>
           <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
             <ListItemIcon>
               <BalconyIcon />
             </ListItemIcon>
-            {userAddress}
+            {address}
           </ListItem>
         </List>
       </ColoredCard>
