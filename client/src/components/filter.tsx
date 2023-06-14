@@ -133,7 +133,9 @@ export const Filter: React.FC<FilterProps> = ({
           >
             <Slider
               size="small"
-              aria-label="Price range"
+              getAriaLabel={() => {
+                return 'Price range';
+              }}
               defaultValue={0}
               value={value}
               onChange={handlePriceRangeChange}
