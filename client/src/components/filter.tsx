@@ -7,6 +7,7 @@ import {
   MenuItem,
   OutlinedInput,
   Slider,
+  styled,
 } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -29,6 +30,17 @@ export const Filter: React.FC<FilterProps> = ({
   orderBy,
   categoryName,
 }) => {
+  const FilterBox = styled(Box)(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginBottom: '2rem',
+    position: 'sticky',
+    top: '3.5rem',
+    backgroundColor: backgroundColor,
+    padding: '1rem',
+    zIndex: 5,
+  }));
   const { data: minPrice } = useGetMinPriceQuery();
   const { data: maxPrice } = useGetMaxPriceQuery();
   const { data: categories } = useGetCategoriesQuery();
@@ -76,25 +88,15 @@ export const Filter: React.FC<FilterProps> = ({
     debouncedTermSearch(newSearchTerm);
   };
 
+  const clearSearch = () => search(undefined);
+
   const clearSearchTermHandler = () => {
     setSearchTerm('');
-    search(undefined);
+    clearSearch();
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        mb: 3,
-        position: 'sticky',
-        top: '3.5rem',
-        backgroundColor: backgroundColor,
-        p: '1rem',
-        zIndex: 5,
-      }}
-    >
+    <FilterBox>
       <FormControl sx={{ width: 200 }}>
         <InputLabel id="select-sort-label">Sort</InputLabel>
         <Select
@@ -184,6 +186,6 @@ export const Filter: React.FC<FilterProps> = ({
           label="Search"
         />
       </FormControl>
-    </Box>
+    </FilterBox>
   );
 };
