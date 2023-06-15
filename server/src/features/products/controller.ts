@@ -29,13 +29,13 @@ export class ProductsController extends Controller {
   public async getProducts(
     @Query() priceRange: string,
     @Query() categoryName?: string,
-    @Query() sortMethod?: Prisma.SortOrder,
+    @Query() orderBy?: Prisma.SortOrder,
     @Query() searchTerm?: string
   ): Promise<Product[]> {
     return new ProductService().sortProducts(
       priceRange,
       categoryName,
-      sortMethod,
+      orderBy,
       searchTerm
     );
   }

@@ -24,13 +24,13 @@ export class ProductService {
   async sortProducts(
     priceRange: string,
     categoryName?: string,
-    sortMethod?: Prisma.SortOrder,
+    orderBy?: Prisma.SortOrder,
     searchItem?: string
   ): Promise<Product[]> {
     return await ProductModelInstance.sortProducts(
       priceRange,
       categoryName,
-      sortMethod,
+      orderBy,
       searchItem
     );
   }

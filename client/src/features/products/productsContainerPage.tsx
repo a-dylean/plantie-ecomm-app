@@ -11,14 +11,14 @@ export const ProductsContainer = () => {
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined,
   );
-  const [sortMethod, setSortMethod] = useState<string | undefined>(undefined);
+  const [orderBy, setSortMethod] = useState<string | undefined>(undefined);
   const [priceRange, setPriceRange] = useState<number[]>([0, 200]);
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
   const chooseCategory = (categoryName: string) => {
     setCategoryName(categoryName);
   };
-  const chooseSortMethod = (sortMethod: string) => {
-    setSortMethod(sortMethod);
+  const chooseSortMethod = (orderBy: string) => {
+    setSortMethod(orderBy);
   };
   const choosePriceRange = (priceRange: number[]) => {
     setPriceRange(priceRange);
@@ -32,7 +32,7 @@ export const ProductsContainer = () => {
     isLoading,
     error,
     isSuccess,
-  } = useGetProductsQuery({ priceRange, categoryName, sortMethod, searchTerm });
+  } = useGetProductsQuery({ priceRange, categoryName, orderBy, searchTerm });
 
   let content;
 
@@ -70,7 +70,7 @@ export const ProductsContainer = () => {
         chooseSortMethod={chooseSortMethod}
         choosePriceRange={choosePriceRange}
         search={search}
-        sortMethod={sortMethod}
+        orderBy={orderBy}
         categoryName={categoryName}
       />
       <Grid

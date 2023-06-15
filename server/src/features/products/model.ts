@@ -60,7 +60,7 @@ export class ProductModel {
   async sortProducts(
     priceRange: string,
     categoryName?: Category["categoryName"],
-    sortMethod?: Prisma.SortOrder,
+    orderBy?: Prisma.SortOrder,
     searchItem?: string
   ): Promise<Product[]> {
     const priceRangeArr = priceRange.split(",");
@@ -84,7 +84,7 @@ export class ProductModel {
         ],
       },
       orderBy: {
-        ...(sortMethod ? { price: sortMethod } : {}),
+        ...(orderBy ? { price: orderBy } : {}),
       },
     });
   }

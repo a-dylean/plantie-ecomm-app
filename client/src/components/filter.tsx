@@ -20,7 +20,7 @@ export const Filter: React.FC<FilterProps> = ({
   choosePriceRange,
   chooseSortMethod,
   search,
-  sortMethod,
+  orderBy,
   categoryName,
 }) => {
   const handleCategoryChange = (event: SelectChangeEvent) => {
@@ -87,7 +87,7 @@ export const Filter: React.FC<FilterProps> = ({
         <Select
           labelId="select-sort-label"
           id="select-sort-label"
-          value={sortMethod}
+          value={orderBy}
           label="Sort"
           onChange={handleSortChange}
           sx={{ width: 200 }}

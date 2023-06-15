@@ -77,8 +77,8 @@ export interface CartItemProps {
 export interface FilterProps {
   chooseCategory: (categoryName: string) => void;
   choosePriceRange: (priceRange: number[]) => void;
-  chooseSortMethod: (sortMethod: string) => void;
+  chooseSortMethod: (orderBy: string) => void;
   search: (searchTerm: string | undefined) => void;
-  sortMethod: string | undefined;
+  orderBy: string | undefined;
   categoryName: string | undefined;
 }

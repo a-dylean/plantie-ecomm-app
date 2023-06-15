@@ -4,16 +4,16 @@ import { baseApi } from '../api/baseApi';
 type Filters = {
   priceRange: number[],
   categoryName?: string,
-  sortMethod?: string,
+  orderBy?: string,
   searchTerm?: string
 }
 const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<Product[], Filters>({
-      query: ({ priceRange, categoryName, sortMethod, searchTerm }) => {
+      query: ({ priceRange, categoryName, orderBy, searchTerm }) => {
         return {
           url: `products`,
-          params: { priceRange, categoryName, sortMethod,  searchTerm },
+          params: { priceRange, categoryName, orderBy,  searchTerm },
         };
       },
       providesTags: ['Products'],
