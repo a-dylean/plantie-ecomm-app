@@ -58,6 +58,11 @@ export interface Order {
   userId: number;
 }
 
+export interface Category {
+  id: number,
+  categoryName: string
+}
+
 export interface UserInfo {
   id: number;
   accessToken: string;
@@ -93,4 +98,11 @@ export interface createNewProductOrderParams {
 
 export interface AddToCartButtonProps {
   product: Product;
+}
+
+export interface Filters {
+  priceRange: number[],
+  categoryName?: string,
+  orderBy?: string,
+  searchTerm?: string
 }

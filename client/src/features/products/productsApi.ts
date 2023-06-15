@@ -1,12 +1,6 @@
-import { Product } from '../../app/interfaces';
+import { Filters, Product } from '../../app/interfaces';
 import { baseApi } from '../api/baseApi';
 
-type Filters = {
-  priceRange: number[],
-  categoryName?: string,
-  orderBy?: string,
-  searchTerm?: string
-}
 const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<Product[], Filters>({

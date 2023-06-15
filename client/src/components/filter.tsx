@@ -15,6 +15,7 @@ import { debounce } from 'lodash';
 import { backgroundColor } from './theme';
 import { FilterProps } from '../app/interfaces';
 import { debounceTime } from '../appconfig';
+import { useGetCategoriesQuery } from '../features/categories/categoriesApi';
 
 export const Filter: React.FC<FilterProps> = ({
   chooseCategory,
@@ -24,6 +25,7 @@ export const Filter: React.FC<FilterProps> = ({
   orderBy,
   categoryName,
 }) => {
+  const { data: categories } = useGetCategoriesQuery();
   const handleCategoryChange = (event: SelectChangeEvent) => {
     chooseCategory(event.target.value as string);
   };
@@ -108,10 +110,13 @@ export const Filter: React.FC<FilterProps> = ({
           sx={{ width: 200 }}
         >
           <MenuItem value={undefined}>All</MenuItem>
-          <MenuItem value={'Interior plants'}>Interior plants</MenuItem>
-          <MenuItem value={'Cactuses'}>Cactuses</MenuItem>
-          <MenuItem value={'Mixes'}>Mixes</MenuItem>
-          <MenuItem value={'Tools'}>Tools</MenuItem>
+          {categories?.map((category) => {
+            return (
+              <MenuItem value={category.categoryName}>
+                {category.categoryName}
+              </MenuItem>
+            );
+          })}
         </Select>
       </FormControl>
       <FormControl sx={{ width: 200 }}>
