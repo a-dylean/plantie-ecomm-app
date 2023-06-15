@@ -12,7 +12,7 @@ export const ProductsContainer = () => {
     undefined,
   );
   const [orderBy, setSortMethod] = useState<string | undefined>(undefined);
-  const [priceRange, setPriceRange] = useState<number[]>([0, 200]);
+  const [priceRange, setPriceRange] = useState<number[] | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
   const chooseCategory = (categoryName: string) => {
     setCategoryName(categoryName);

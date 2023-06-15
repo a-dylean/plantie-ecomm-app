@@ -58,12 +58,12 @@ export class ProductModel {
     });
   }
   async sortProducts(
-    priceRange: string,
+    priceRange?: string,
     categoryName?: Category["categoryName"],
     orderBy?: Prisma.SortOrder,
     searchItem?: string
   ): Promise<Product[]> {
-    const priceRangeArr = priceRange.split(",");
+    const priceRangeArr = priceRange?.split(",") || "";
     return await prisma.product.findMany({
       where: {
         AND: [
@@ -87,5 +87,19 @@ export class ProductModel {
         ...(orderBy ? { price: orderBy } : {}),
       },
     });
+  }
+  async getCheapestProduct(): Promise<Product | null> {
+    return await prisma.product.findFirst({
+      orderBy: {
+        price: 'asc'
+      }
+    })
+  }
+  async getHighestPriceProduct(): Promise<Product | null> {
+    return await prisma.product.findFirst({
+      orderBy: {
+        price: 'desc'
+      }
+    })
   }
 }

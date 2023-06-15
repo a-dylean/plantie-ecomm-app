@@ -101,7 +101,7 @@ export interface AddToCartButtonProps {
 }
 
 export interface Filters {
-  priceRange: number[],
+  priceRange?: number[],
   categoryName?: string,
   orderBy?: string,
   searchTerm?: string

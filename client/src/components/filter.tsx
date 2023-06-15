@@ -16,6 +16,10 @@ import { backgroundColor } from './theme';
 import { FilterProps } from '../app/interfaces';
 import { debounceTime } from '../appconfig';
 import { useGetCategoriesQuery } from '../features/categories/categoriesApi';
+import {
+  useGetMaxPriceQuery,
+  useGetMinPriceQuery,
+} from '../features/products/productsApi';
 
 export const Filter: React.FC<FilterProps> = ({
   chooseCategory,
@@ -25,7 +29,10 @@ export const Filter: React.FC<FilterProps> = ({
   orderBy,
   categoryName,
 }) => {
+  const { data: minPrice } = useGetMinPriceQuery();
+  const { data: maxPrice } = useGetMaxPriceQuery();
   const { data: categories } = useGetCategoriesQuery();
+
   const handleCategoryChange = (event: SelectChangeEvent) => {
     chooseCategory(event.target.value as string);
   };
@@ -33,10 +40,13 @@ export const Filter: React.FC<FilterProps> = ({
   const handleSortChange = (event: SelectChangeEvent) => {
     chooseSortMethod(event.target.value as string);
   };
-  const [value, setValue] = useState<number[]>([0, 200]);
+  const [value, setValue] = useState<number[]>([minPrice ?? 0, maxPrice ?? 0]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const valuetext = (value: number[]) => {
+    if (value[0] === 0 && value[1] === 0) {
+      return "Price range";
+    }
     return `€${value[0]} - €${value[1]}`;
   };
 
@@ -120,11 +130,11 @@ export const Filter: React.FC<FilterProps> = ({
         </Select>
       </FormControl>
       <FormControl sx={{ width: 200 }}>
-        <InputLabel id="select-price-range-label">Price Range</InputLabel>
+        {/* <InputLabel id="select-price-range-label">Price Range</InputLabel> */}
         <Select
           labelId="select-price-range-label"
           id="select-price-range-label"
-          label="Price Range"
+          //  label="Price Range"
           sx={{ width: 200 }}
           value={value}
           renderValue={() => valuetext(value)}
@@ -142,12 +152,12 @@ export const Filter: React.FC<FilterProps> = ({
               getAriaLabel={() => {
                 return 'Price range';
               }}
-              defaultValue={0}
+              defaultValue={undefined}
               value={value}
               onChange={handlePriceRangeChange}
               step={10}
-              min={0}
-              max={200}
+              min={minPrice}
+              max={maxPrice}
             />
           </Box>
         </Select>

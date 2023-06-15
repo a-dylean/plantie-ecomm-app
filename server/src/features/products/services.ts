@@ -22,7 +22,7 @@ export class ProductService {
     return await ProductModelInstance.deleteProductById(id);
   }
   async sortProducts(
-    priceRange: string,
+    priceRange?: string,
     categoryName?: string,
     orderBy?: Prisma.SortOrder,
     searchItem?: string
@@ -33,5 +33,11 @@ export class ProductService {
       orderBy,
       searchItem
     );
+  }
+  async getCheapestProduct(): Promise<Product | null> {
+    return await ProductModelInstance.getCheapestProduct();
+  }
+  async getHighestPriceProduct(): Promise<Product | null> {
+    return await ProductModelInstance.getHighestPriceProduct();
   }
 }

@@ -27,7 +27,7 @@ export class ProductsController extends Controller {
    */
   @Get()
   public async getProducts(
-    @Query() priceRange: string,
+    @Query() priceRange?: string,
     @Query() categoryName?: string,
     @Query() orderBy?: Prisma.SortOrder,
     @Query() searchTerm?: string
@@ -38,6 +38,22 @@ export class ProductsController extends Controller {
       orderBy,
       searchTerm
     );
+  }
+    /**
+   * Retrieves a product with the lowest price.
+   * @returns Cheapest product
+   */
+  @Get("cheapest")
+  public async getCheapest(): Promise<Product | null> {
+    return new ProductService().getCheapestProduct();
+  }
+      /**
+   * Retrieves a product with the highest price.
+   * @returns The most  product
+   */
+  @Get("highestPrice")
+  public async getHighestPrice(): Promise<Product | null> {
+    return new ProductService().getHighestPriceProduct();
   }
   /**
    * Retrieves the detailes of a particular product provided the unique product ID.

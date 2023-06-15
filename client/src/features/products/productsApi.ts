@@ -16,8 +16,22 @@ const productsApi = baseApi.injectEndpoints({
       query: (productId) => `products/${productId}`,
       providesTags: ['Products'],
     }),
+    getMinPrice: build.query<number, void> ({
+      query: () => `products/cheapest`,
+      transformResponse: (product: Product) => {
+        return Number(product.price)
+      },
+      providesTags: ['MinPrice'],
+    }),
+    getMaxPrice: build.query<number, void> ({
+      query: () => `products/highestPrice`,
+      transformResponse: (product: Product) => {
+        return Number(product.price)
+      },
+      providesTags: ['MaxPrice'],
+    })
   }),
   overrideExisting: false,
 });
 
-export const { useGetProductsQuery, useGetProductQuery } = productsApi;
+export const { useGetProductsQuery, useGetProductQuery, useGetMinPriceQuery, useGetMaxPriceQuery } = productsApi;
