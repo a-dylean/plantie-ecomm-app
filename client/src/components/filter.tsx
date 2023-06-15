@@ -45,7 +45,7 @@ export const Filter: React.FC<FilterProps> = ({
 
   const valuetext = (value: number[]) => {
     if (value[0] === 0 && value[1] === 0) {
-      return "Price range";
+      return 'Price range';
     }
     return `€${value[0]} - €${value[1]}`;
   };

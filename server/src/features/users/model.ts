@@ -28,9 +28,9 @@ export class UserModel {
   }
   async update(id: number, data: Partial<User>): Promise<User> {
     const { password, address, phone, email, surname, name } = data;
-    const hashedPassword = await generateHash(password!);
+    const hashedPassword = await generateHash(password || "");
     const customer = await stripe.customers.create({
-      email: email!,
+      email: email || "",
     });
     return await prisma.user.upsert({
       where: {

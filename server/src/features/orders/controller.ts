@@ -17,9 +17,25 @@ import { Order, ProductOrder } from "@prisma/client";
 import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 import Stripe from "stripe";
-import { STRIPE_SK } from "../../../config";
+import {
+  STRIPE_SK,
+  adjustable_quantity_max,
+  allowed_countries,
+  business_day,
+  currency,
+  delivery_estimate_nextday_free_delivery_max,
+  delivery_estimate_nextday_free_delivery_min,
+  delivery_estimate_nextday_shipping_max,
+  delivery_estimate_nextday_shipping_min,
+  freeShipping,
+  nextdayShipping,
+  shipping_rate_fixed_amount_free_delivery,
+  shipping_rate_fixed_amount_nextday_shipping,
+  shipping_rate_type,
+} from "../../../config";
 import { ProductService } from "../products/services";
 import { UserService } from "../users/services";
+import { getStripeValue, getValueFromStripe } from "../../helpers/stripe";
 export const stripe = new Stripe(STRIPE_SK, {
   apiVersion: "2022-11-15",
   typescript: true,
@@ -137,17 +153,17 @@ export class PaymentController extends Controller {
       const product = await new ProductService().get(Number(item.productId));
       return {
         price_data: {
-          currency: "eur",
+          currency: currency,
           product_data: {
             name: product.name,
             images: [product.picture!],
           },
-          unit_amount: Number(product.price) * 100,
+          unit_amount: getStripeValue(product.price),
         },
         quantity: item.quantity,
         adjustable_quantity: {
           enabled: true,
-          maximum: 50,
+          maximum: adjustable_quantity_max,
         },
       };
     });
@@ -161,45 +177,45 @@ export class PaymentController extends Controller {
         success_url: `http://localhost:3000/successfull`,
         cancel_url: `http://localhost:3000/cancelled`,
         shipping_address_collection: {
-          allowed_countries: ["FR"],
+          allowed_countries: [allowed_countries],
         },
         shipping_options: [
           {
             shipping_rate_data: {
-              type: "fixed_amount",
+              type: shipping_rate_type,
               fixed_amount: {
-                amount: 0,
-                currency: "eur",
+                amount: shipping_rate_fixed_amount_free_delivery,
+                currency: currency,
               },
-              display_name: "Free shipping",
+              display_name: freeShipping,
               delivery_estimate: {
                 minimum: {
-                  unit: "business_day",
-                  value: 5,
+                  unit: business_day,
+                  value: delivery_estimate_nextday_free_delivery_min,
                 },
                 maximum: {
-                  unit: "business_day",
-                  value: 7,
+                  unit: business_day,
+                  value: delivery_estimate_nextday_free_delivery_max,
                 },
               },
             },
           },
           {
             shipping_rate_data: {
-              type: "fixed_amount",
+              type: shipping_rate_type,
               fixed_amount: {
-                amount: 1000,
-                currency: "eur",
+                amount: shipping_rate_fixed_amount_nextday_shipping,
+                currency: currency,
               },
-              display_name: "Next day shipping",
+              display_name: nextdayShipping,
               delivery_estimate: {
                 minimum: {
-                  unit: "business_day",
-                  value: 1,
+                  unit: business_day,
+                  value: delivery_estimate_nextday_shipping_min,
                 },
                 maximum: {
-                  unit: "business_day",
-                  value: 1,
+                  unit: business_day,
+                  value: delivery_estimate_nextday_shipping_max,
                 },
               },
             },
@@ -228,7 +244,7 @@ export class PaymentController extends Controller {
         );
         await new OrderService().paymentRecieved(
           prismaOrder!.id,
-          metadata.amount_total / 100
+          getValueFromStripe(metadata.amount_total)
         );
         break;
       default:
