@@ -6,27 +6,27 @@ import {
   useGetUserOrderQuery,
   useUpdateQuantityMutation,
 } from '../features/orders/ordersApi';
-import { Product } from '../app/interfaces';
+import { AddToCartButtonProps } from '../app/interfaces';
 
-export const AddToCartButton = (props: {product: Product}) => {
+export const AddToCartButton = ({
+  product: { id: productId, price: productPrice },
+}: AddToCartButtonProps) => {
   const [update] = useUpdateQuantityMutation();
-  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(
-    props.product.id,
-  );
+  const { data: productOrderInfo } =
+    useGetProductOrderByProductIdQuery(productId);
   const { data: order } = useGetUserOrderQuery();
-  const addToCart = useCreateNewProductOrder({product: props.product, order: order!});
-  //eslint-disable-next-line prefer-const
-  let quantity = productOrderInfo?.quantity;
+  const addToCart = useCreateNewProductOrder();
+  let quantity = productOrderInfo?.quantity || 0;
   const updateQuantity = (newQuantity: number) => {
-    return update({ id: productOrderInfo!.id, quantity: newQuantity });
+    return update({ id: productOrderInfo?.id, quantity: newQuantity });
   };
-
+  const orderId = order?.id;
   const handleClick = () => {
-    addToCart();
+    addToCart({ params: { productId, productPrice, orderId } });
     if (productOrderInfo) {
-      updateQuantity(++quantity!);
+      updateQuantity(++quantity);
     }
-  }
+  };
   return (
     <Button
       variant="text"

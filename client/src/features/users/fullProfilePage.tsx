@@ -90,7 +90,7 @@ export const FullProfilePage: React.FC<Partial<User>> = (user) => {
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <Typography variant="h5">Orders information</Typography>
-                  <OrdersInfo userId={user.id!} />
+                  <OrdersInfo userId={user.id} />
                 </TabPanel>
               </Box>
             </Box>

@@ -14,6 +14,7 @@ import React, { useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import { backgroundColor } from './theme';
 import { FilterProps } from '../app/interfaces';
+import { debounceTime } from '../appconfig';
 
 export const Filter: React.FC<FilterProps> = ({
   chooseCategory,
@@ -40,13 +41,13 @@ export const Filter: React.FC<FilterProps> = ({
   const debouncedPriceSearch = useRef(
     debounce((value) => {
       choosePriceRange(value);
-    }, 300),
+    }, debounceTime),
   ).current;
 
   const debouncedTermSearch = useRef(
     debounce((value) => {
       search(value);
-    }, 400),
+    }, debounceTime),
   ).current;
 
   const handlePriceRangeChange = (

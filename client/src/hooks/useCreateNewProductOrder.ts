@@ -1,13 +1,13 @@
-import { Order, Product } from '../app/interfaces';
+import { createNewProductOrderParams } from '../app/interfaces';
 import { useAddToCartMutation } from '../features/orders/ordersApi';
 
-export const useCreateNewProductOrder = (props: { product: Product, order: Order }) => {
+export const useCreateNewProductOrder = () => {
   const [createProductOrder] = useAddToCartMutation();
-  return async () => {
+  return async ({ params }: createNewProductOrderParams) => {
     await createProductOrder({
-      productId: props.product.id,
-      orderId: props.order.id,
-      price: props.product.price,
+      productId: params.productId,
+      orderId: params.orderId,
+      price: params.productPrice,
       quantity: 1,
     });
   };

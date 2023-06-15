@@ -82,3 +82,15 @@ export interface FilterProps {
   orderBy: string | undefined;
   categoryName: string | undefined;
 }
+
+export interface createNewProductOrderParams {
+  params: {
+    productId: number;
+    orderId?: number;
+    productPrice: string;
+  };
+}
+
+export interface AddToCartButtonProps {
+  product: Product;
+}

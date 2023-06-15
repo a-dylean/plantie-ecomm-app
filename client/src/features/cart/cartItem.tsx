@@ -18,11 +18,11 @@ export const CartItemComponent: React.FC<CartItemProps> = ({...cartItem}) => {
   const totalPerItem = cartItem.quantity * Number(productInfo?.price);
   const [update] = useUpdateQuantityMutation();
   const updateQuantity = (newQuantity: number) => {
-    return update({ id: productOrderInfo!.id, quantity: newQuantity });
+    return update({ id: productOrderInfo?.id, quantity: newQuantity });
   };
   const [deleteItem] = useDeleteProductOrderMutation();
   const removeEntirely = () => {
-    deleteItem(productOrderInfo!.id);
+    deleteItem(productOrderInfo?.id);
   };
   return (
     <>

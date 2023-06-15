@@ -90,7 +90,7 @@ const ordersApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ['ProductOrders'],
     }),
-    getUserOrders: builder.query<Order[], number>({
+    getUserOrders: builder.query<Order[], number | undefined>({
       query: (userId) => `/orders/${userId}`,
       providesTags: ['Orders'],
     }),

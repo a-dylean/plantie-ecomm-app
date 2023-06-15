@@ -4,7 +4,7 @@ import { useGetUserOrdersQuery } from './ordersApi';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../helpers/routes';
 import { violet } from '../../components/theme';
-export const OrdersInfo = (props: { userId: number }) => {
+export const OrdersInfo = (props: { userId?: number }) => {
   const {
     data: orders = [],
     isLoading,
