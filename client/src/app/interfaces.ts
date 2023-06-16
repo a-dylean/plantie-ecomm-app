@@ -84,8 +84,6 @@ export interface FilterProps {
   choosePriceRange: (priceRange: number[]) => void;
   chooseSortMethod: (orderBy: string) => void;
   search: (searchTerm: string | undefined) => void;
-  orderBy: string | undefined;
-  categoryName: string | undefined;
 }
 
 export interface createNewProductOrderParams {

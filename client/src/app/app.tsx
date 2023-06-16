@@ -10,9 +10,10 @@ import { SuccessfullPayment } from '../features/checkout/successfullPayment';
 import { CancelledPayment } from '../features/checkout/cancelledPayment';
 import { useRetrieveSession } from '../hooks/useRetrieveSession';
 import React from 'react';
+import { routes } from '../helpers/routes';
 
 export const App: React.FC = () => {
-  useRetrieveSession(); 
+  useRetrieveSession();
   return (
     <>
       <BrowserRouter>
@@ -20,13 +21,13 @@ export const App: React.FC = () => {
           <CssBaseline />
           <Routes>
             <Route path="/" element={<ProductsContainer />} />
-            <Route path="products/all" element={<ProductsContainer />} />
-            <Route path="products/:productId" element={<ProductPage />} />
-            <Route path="auth/register" element={<RegistrationForm />} />
-            <Route path="auth/login" element={<LoginForm />} />
-            <Route path="me" element={<UserPage />} />
-            <Route path="successfull" element={<SuccessfullPayment />} />
-            <Route path="cancelled" element={<CancelledPayment />} />
+            <Route path={routes.ALL_PRODUCTS} element={<ProductsContainer />} />
+            <Route path={routes.PRODUCT_ITEM} element={<ProductPage />} />
+            <Route path={routes.REGISTER} element={<RegistrationForm />} />
+            <Route path={routes.LOGIN} element={<LoginForm />} />
+            <Route path={routes.ME} element={<UserPage />} />
+            <Route path={routes.SUCCESS} element={<SuccessfullPayment />} />
+            <Route path={routes.CANCEL} element={<CancelledPayment />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

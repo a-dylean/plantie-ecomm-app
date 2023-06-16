@@ -40,8 +40,6 @@ export const Filter: React.FC<FilterProps> = ({
   choosePriceRange,
   chooseSortMethod,
   search,
-  orderBy,
-  categoryName,
 }) => {
   const { data: minPrice } = useGetMinPriceQuery();
   const { data: maxPrice } = useGetMaxPriceQuery();
@@ -110,7 +108,6 @@ export const Filter: React.FC<FilterProps> = ({
           <Select
             labelId="select-sort-label"
             id="select-sort-label"
-            value={orderBy}
             label="Sort"
             onChange={handleSortChange}
             sx={{ width: 200 }}
@@ -124,7 +121,6 @@ export const Filter: React.FC<FilterProps> = ({
           <Select
             labelId="select-product-type-label"
             id="select-product-type-label"
-            value={categoryName}
             label="Product Type"
             onChange={handleCategoryChange}
             sx={{ width: 200 }}
@@ -132,7 +128,7 @@ export const Filter: React.FC<FilterProps> = ({
             <MenuItem value={undefined}>All</MenuItem>
             {categories?.map((category) => {
               return (
-                <MenuItem value={category.categoryName}>
+                <MenuItem key={category.id} value={category.categoryName}>
                   {category.categoryName}
                 </MenuItem>
               );

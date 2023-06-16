@@ -70,8 +70,6 @@ export const ProductsContainer = () => {
         chooseSortMethod={chooseSortMethod}
         choosePriceRange={choosePriceRange}
         search={search}
-        orderBy={orderBy}
-        categoryName={categoryName}
       />
       <Grid
         container
