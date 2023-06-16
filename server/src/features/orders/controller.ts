@@ -242,10 +242,12 @@ export class PaymentController extends Controller {
         const prismaOrder = await new OrderService().getOrderByUserId(
           parseInt(metadata.metadata.userId)
         );
-        await new OrderService().paymentRecieved(
-          prismaOrder!.id,
-          getValueFromStripe(metadata.amount_total)
-        );
+        if (prismaOrder) {
+          await new OrderService().paymentRecieved(
+            prismaOrder.id,
+            getValueFromStripe(metadata.amount_total)
+          );
+        }
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);

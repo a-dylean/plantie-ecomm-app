@@ -12,6 +12,7 @@ import {
 } from '../orders/ordersApi';
 import { useGetCurrentUserDetailsQuery } from '../users/usersApi';
 import { routes } from '../../helpers/routes';
+import { useEffect } from 'react';
 
 const CartBox = styled('div')(({ theme }) => ({
   backgroundColor: backgroundColor,
@@ -27,19 +28,25 @@ export const Cart = () => {
     isSuccess,
     isError,
     error,
+    refetch,
   } = useGetUserCartQuery();
   const { data: user } = useGetCurrentUserDetailsQuery();
   const fullProfile = user?.fullProfile;
   const [deleteItem] = useDeleteProductOrderMutation();
   const [createCheckoutSession] = useCreateCheckoutSessionMutation();
-
+  useEffect(() => {
+    refetch();
+  }, [user]);
   let content;
   if (isLoading) {
     content = <CircularProgress />;
   } else if (isSuccess) {
     const renderedItems = OrderItems.map((cartItem) => (
       <List key={cartItem.id}>
-        <CartItemComponent quantity={cartItem.quantity} productId={cartItem.productId}  />
+        <CartItemComponent
+          quantity={cartItem.quantity}
+          productId={cartItem.productId}
+        />
       </List>
     ));
     content = <>{renderedItems}</>;
@@ -48,10 +55,12 @@ export const Cart = () => {
   }
 
   const handleCheckout = () => {
-    createCheckoutSession({ order: OrderItems, userEmail: user!.email })
-      .unwrap()
-      .then((data) => (window.location.href = data.url));
-    OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
+    if (user) {
+      createCheckoutSession({ order: OrderItems, userEmail: user.email })
+        .unwrap()
+        .then((data) => (window.location.href = data.url));
+      OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
+    }
   };
   return (
     <>

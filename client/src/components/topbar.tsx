@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Cart } from '../features/cart/cart';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getTotalItems } from '../helpers/cartFunctions';
 import { useNavigate } from 'react-router-dom';
 import Face4Icon from '@mui/icons-material/Face4';
@@ -23,7 +23,7 @@ export const Topbar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [cartOpen, setCartOpen] = useState(false);
-  const { data: OrderItems = [] } = useGetUserCartQuery();
+  const { data: OrderItems = [], refetch } = useGetUserCartQuery();
   const { data: user } = useGetCurrentUserDetailsQuery();
   const fullProfile = user?.fullProfile;
   const handleLogout = () => {
@@ -31,6 +31,9 @@ export const Topbar = () => {
     dispatch(baseApi.util.resetApiState());
     navigate(routes.ALL_PRODUCTS);
   };
+  useEffect(() => {
+    refetch();
+  }, [user]);
   return (
     <>
       <AppBar
@@ -72,3 +75,4 @@ export const Topbar = () => {
     </>
   );
 };
+

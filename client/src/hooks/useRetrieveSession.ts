@@ -12,7 +12,9 @@ export const useRetrieveSession = () => {
     localStorage.setItem('accessToken', result.accessToken);
   };
   const createNewOrder = async () => {
-    await createOrder({ userId: user?.id }).unwrap();
+    if (user) {
+      await createOrder({ userId: user.id }).unwrap();
+    }
   };
   useEffect(() => {
     const token = localStorage.getItem('accessToken');

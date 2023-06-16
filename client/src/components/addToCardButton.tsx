@@ -7,10 +7,12 @@ import {
   useUpdateQuantityMutation,
 } from '../features/orders/ordersApi';
 import { AddToCartButtonProps } from '../app/interfaces';
+import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
 
 export const AddToCartButton = ({
   product: { id: productId, price: productPrice },
 }: AddToCartButtonProps) => {
+  const { data: user } = useGetCurrentUserDetailsQuery();
   const [update] = useUpdateQuantityMutation();
   const { data: productOrderInfo } =
     useGetProductOrderByProductIdQuery(productId);
@@ -22,9 +24,11 @@ export const AddToCartButton = ({
   };
   const orderId = order?.id;
   const handleClick = () => {
-    addToCart({ params: { productId, productPrice, orderId } });
-    if (productOrderInfo) {
-      updateQuantity(++quantity);
+    if (orderId) {
+      addToCart({ params: { productId, productPrice, orderId } });
+      if (productOrderInfo) {
+        updateQuantity(++quantity);
+      }
     }
   };
   return (
