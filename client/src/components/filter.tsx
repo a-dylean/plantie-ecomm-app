@@ -21,6 +21,19 @@ import {
   useGetMaxPriceQuery,
   useGetMinPriceQuery,
 } from '../features/products/productsApi';
+import { Price } from './price';
+
+const FilterBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-evenly',
+  marginBottom: theme.spacing(0.5),
+  position: 'sticky',
+  top: theme.spacing(7),
+  backgroundColor: backgroundColor,
+  padding: theme.spacing(2),
+  zIndex: 5,
+}));
 
 export const Filter: React.FC<FilterProps> = ({
   chooseCategory,
@@ -30,17 +43,6 @@ export const Filter: React.FC<FilterProps> = ({
   orderBy,
   categoryName,
 }) => {
-  const FilterBox = styled(Box)(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    marginBottom: '2rem',
-    position: 'sticky',
-    top: '3.5rem',
-    backgroundColor: backgroundColor,
-    padding: '1rem',
-    zIndex: 5,
-  }));
   const { data: minPrice } = useGetMinPriceQuery();
   const { data: maxPrice } = useGetMaxPriceQuery();
   const { data: categories } = useGetCategoriesQuery();
@@ -59,7 +61,12 @@ export const Filter: React.FC<FilterProps> = ({
     if (value[0] === 0 && value[1] === 0) {
       return 'Price range';
     }
-    return `€${value[0]} - €${value[1]}`;
+    return (
+      <>
+        <Price price={value[0]} /> -&nbsp;
+        <Price price={value[1]} />
+      </>
+    );
   };
 
   const debouncedPriceSearch = useRef(
@@ -96,96 +103,96 @@ export const Filter: React.FC<FilterProps> = ({
   };
 
   return (
-    <FilterBox>
-      <FormControl sx={{ width: 200 }}>
-        <InputLabel id="select-sort-label">Sort</InputLabel>
-        <Select
-          labelId="select-sort-label"
-          id="select-sort-label"
-          value={orderBy}
-          label="Sort"
-          onChange={handleSortChange}
-          sx={{ width: 200 }}
-        >
-          <MenuItem value={'desc'}>Price high to low</MenuItem>
-          <MenuItem value={'asc'}>Price low to high</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl sx={{ width: 200 }}>
-        <InputLabel id="select-product-type-label">Product Type</InputLabel>
-        <Select
-          labelId="select-product-type-label"
-          id="select-product-type-label"
-          value={categoryName}
-          label="Product Type"
-          onChange={handleCategoryChange}
-          sx={{ width: 200 }}
-        >
-          <MenuItem value={undefined}>All</MenuItem>
-          {categories?.map((category) => {
-            return (
-              <MenuItem value={category.categoryName}>
-                {category.categoryName}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-      <FormControl sx={{ width: 200 }}>
-        {/* <InputLabel id="select-price-range-label">Price Range</InputLabel> */}
-        <Select
-          labelId="select-price-range-label"
-          id="select-price-range-label"
-          //  label="Price Range"
-          sx={{ width: 200 }}
-          value={value}
-          renderValue={() => valuetext(value)}
-        >
-          <Box
-            sx={{
-              width: '10rem',
-              m: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
+    <>
+      <FilterBox>
+        <FormControl sx={{ width: 200 }}>
+          <InputLabel id="select-sort-label">Sort</InputLabel>
+          <Select
+            labelId="select-sort-label"
+            id="select-sort-label"
+            value={orderBy}
+            label="Sort"
+            onChange={handleSortChange}
+            sx={{ width: 200 }}
           >
-            <Slider
-              size="small"
-              getAriaLabel={() => {
-                return 'Price range';
+            <MenuItem value={'desc'}>Price high to low</MenuItem>
+            <MenuItem value={'asc'}>Price low to high</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl sx={{ width: 200 }}>
+          <InputLabel id="select-product-type-label">Product Type</InputLabel>
+          <Select
+            labelId="select-product-type-label"
+            id="select-product-type-label"
+            value={categoryName}
+            label="Product Type"
+            onChange={handleCategoryChange}
+            sx={{ width: 200 }}
+          >
+            <MenuItem value={undefined}>All</MenuItem>
+            {categories?.map((category) => {
+              return (
+                <MenuItem value={category.categoryName}>
+                  {category.categoryName}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ width: 200 }}>
+          <Select
+            labelId="select-price-range-label"
+            id="select-price-range-label"
+            sx={{ width: 200 }}
+            value={value}
+            renderValue={() => valuetext(value)}
+          >
+            <Box
+              sx={{
+                width: '10rem',
+                m: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
               }}
-              defaultValue={undefined}
-              value={value}
-              onChange={handlePriceRangeChange}
-              step={10}
-              min={minPrice}
-              max={maxPrice}
-            />
-          </Box>
-        </Select>
-      </FormControl>
-      <FormControl sx={{ width: 200 }} variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-        <OutlinedInput
-          id="search-field"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          endAdornment={
-            searchTerm.length > 0 && (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="clear-search-term"
-                  onClick={clearSearchTermHandler}
-                  edge="end"
-                >
-                  <HighlightOffIcon />
-                </IconButton>
-              </InputAdornment>
-            )
-          }
-          label="Search"
-        />
-      </FormControl>
-    </FilterBox>
+            >
+              <Slider
+                size="small"
+                getAriaLabel={() => {
+                  return 'Price range';
+                }}
+                defaultValue={undefined}
+                value={value}
+                onChange={handlePriceRangeChange}
+                step={10}
+                min={minPrice}
+                max={maxPrice}
+              />
+            </Box>
+          </Select>
+        </FormControl>
+        <FormControl sx={{ width: 200 }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
+          <OutlinedInput
+            id="search-field"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            endAdornment={
+              searchTerm.length > 0 && (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="clear-search-term"
+                    onClick={clearSearchTermHandler}
+                    edge="end"
+                  >
+                    <HighlightOffIcon />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }
+            label="Search"
+          />
+        </FormControl>
+      </FilterBox>
+    </>
   );
 };
