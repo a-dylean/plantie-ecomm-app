@@ -3,7 +3,6 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { theme } from '../components/theme';
 import { ProductsContainer } from '../features/products/productsContainerPage';
 import { RegistrationForm } from '../features/auth/registrationPage';
-import { LoginForm } from '../features/auth/loginPage';
 import { UserPage } from '../features/users/userPage';
 import { ProductPage } from '../features/products/productPage';
 import { SuccessfullPayment } from '../features/checkout/successfullPayment';
@@ -24,8 +23,7 @@ export const App: React.FC = () => {
             <Route path={routes.ALL_PRODUCTS} element={<ProductsContainer />} />
             <Route path={routes.PRODUCT_ITEM} element={<ProductPage />} />
             <Route path={routes.REGISTER} element={<RegistrationForm />} />
-            <Route path={routes.LOGIN} element={<LoginForm />} />
-            <Route path={routes.ME} element={<UserPage />} />
+            <Route path={routes.ME} element={<UserPage/>} />
             <Route path={routes.SUCCESS} element={<SuccessfullPayment />} />
             <Route path={routes.CANCEL} element={<CancelledPayment />} />
           </Routes>

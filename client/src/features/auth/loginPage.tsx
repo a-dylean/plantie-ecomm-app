@@ -19,23 +19,23 @@ export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-
   const submitForm = async (data: FieldValues) => {
-    try {
-      const result = await loginUser(data).unwrap();
-      localStorage.setItem('accessToken', result.token);
-      navigate(routes.ME);
-    } catch (error: any) {
-      if (isApiResponse(error)) {
-        enqueueSnackbar(error.data.details, { variant: 'error' });
-      } else {
-        const errMsg =
-          'error' in error ? error.error : JSON.stringify(error.data);
-        enqueueSnackbar(errMsg, { variant: 'error' });
-      }
-    }
+    await loginUser(data)
+      .unwrap()
+      .then((payload) => {
+        localStorage.setItem('accessToken', payload.token);
+        navigate(routes.ME)
+      })
+      .catch((error: any) => {
+        if (isApiResponse(error)) {
+          enqueueSnackbar(error.data.details, { variant: 'error' });
+        } else {
+          const errMsg =
+            'error' in error ? error.error : JSON.stringify(error.data);
+          enqueueSnackbar(errMsg, { variant: 'error' });
+        }
+      });
   };
-
   return (
     <Layout>
       <Box sx={{ m: '0 auto', width: '50%' }}>

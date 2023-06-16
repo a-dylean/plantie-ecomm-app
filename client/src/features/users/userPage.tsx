@@ -16,7 +16,7 @@ export const UserPage: React.FC = () => {
 
   useEffect(() => {
     refetch();
-  }, [user]);
+  });
 
   let content = <LoginForm />;
   if (isLoading) {
@@ -34,10 +34,8 @@ export const UserPage: React.FC = () => {
       />
     );
   }
-
   if (isError) {
     content = <>{error.toString()}</>;
   }
-
   return <>{content}</>;
 };
