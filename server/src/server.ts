@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://plantie.atonkopiy.com"],
     allowedHeaders: ["authorization", "content-type", "cookies"],
   })
 );
