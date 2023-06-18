@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  Header,
   Path,
-  Query,
+  Put,
   Route,
   Security,
   SuccessResponse,
@@ -11,6 +13,8 @@ import {
 } from "tsoa";
 import { User } from "@prisma/client";
 import { UserService } from "./services";
+import { decodeAuthToken } from "../../helpers/jwt";
+import { UserCreationParams } from "./model";
 
 @Route("users")
 @Tags("Users")
@@ -32,7 +36,7 @@ export class UsersController extends Controller {
   @Security("jwt", ["admin"])
   @Get("{userId}")
   public async getUser(@Path() userId: number): Promise<User> {
-    return new UserService().get(userId);
+    return new UserService().getUserById(userId);
   }
   /**
    * Deletes a user from the system.
@@ -47,7 +51,6 @@ export class UsersController extends Controller {
     return;
   }
 }
-
 @Route("me")
 @Tags("Users")
 export class ProfileController extends Controller {
@@ -56,9 +59,24 @@ export class ProfileController extends Controller {
    * @param userId Identifier of the user
    * @returns User
    */
-  @Security("jwt")
+  @Security("jwt", ["user"])
   @Get()
-  public async getUserProfile(@Query() userId: number): Promise<User> {
-    return new UserService().get(userId);
+  public async getUserProfile(
+    @Header("Authorization") accessToken: string
+  ): Promise<User> {
+    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0];
+    return new UserService().getUserById(Number(userId));
+  }
+  @Security("jwt", ["user"])
+  /**
+   * Updates user profile information.
+   */
+  @Put()
+  public async updateUser(
+    @Header("Authorization") accessToken: string,
+    @Body() requestBody: UserCreationParams
+  ): Promise<User> {
+    const userId = Object.values(decodeAuthToken(accessToken.slice(7)))[0];
+    return new UserService().update(Number(userId), requestBody);
   }
 }

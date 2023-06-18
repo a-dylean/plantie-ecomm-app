@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -9,7 +10,7 @@ datasource db {
 
 model Category {
   id           Int       @id @default(autoincrement())
-  categoryName String?   @unique @map("category_name") @db.VarChar(100)
+  categoryName String   @unique @map("category_name") @db.VarChar(100)
   product      Product[]
 
   @@map("category")
@@ -17,25 +18,24 @@ model Category {
 
 model Order {
   id           Int            @id @default(autoincrement())
-  userId       Int?           @map("user_id")
-  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  userId       Int            @map("user_id")
+  createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   amount       Decimal?       @db.Money
+  status       String         @default("Draft")
   user         User?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
-  Product      Product?       @relation(fields: [productId], references: [id])
-  productId    Int?
   @@map("order")
 }
 
 model ProductOrder {
   id        Int      @id(map: "checkout_pkey") @default(autoincrement())
-  // missing createdAt / updatedAt fields
-  // productId should be a foreign key
+  createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
   productId Int?     @map("product_id")
-  quantity  Int?
-  // orderId should be a foreign key
+  quantity  Int      @default(0)
   orderId   Int?     @map("order_id")
+  price     Decimal  @db.Money
   product   Product? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "checkout_product_id_fkey")
   order     Order?   @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   @@map("product_order")
@@ -47,33 +47,41 @@ model Product {
   description  String         @db.Text
   price        Decimal        @db.Money
   available    Boolean        @default(true)
-  categoryId   Int?           @map("category_id")
+  categoryName   String       @map("category_name")
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?      @updatedAt @map("updated_at") @db.Timestamp(6)
-  orders       Order[]
-  category     Category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  picture      String?
+  category     Category?      @relation(fields: [categoryName], references: [categoryName], onDelete: NoAction, onUpdate: NoAction)
   ProductOrder ProductOrder[]
 
   @@map("product")
 }
 
 model User {
-  id               Int           @id @default(autoincrement())
-  name             String        @db.VarChar(256)
-  surname          String        @db.VarChar(256)
-  email            String        @unique @db.VarChar(256)
-  phone            String?       @db.VarChar(50)
-  address          String?       @db.VarChar(256)
-  password         String        @db.VarChar(256)
-  role             RoleEnumType @default(user)
-  verified         Boolean?      @default(false)
-  verificationCode String?       @unique @db.Text
-  createdAt        DateTime?     @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime?     @updatedAt @map("updated_at") @db.Timestamp(6)
-  orders           Order[]
-  @@unique([email, verificationCode])
-  @@index([email, verificationCode])
+  id          Int          @id @default(autoincrement())
+  name        String?      @db.VarChar(256)
+  surname     String?      @db.VarChar(256)
+  email       String?      @unique @db.VarChar(256)
+  phone       String?      @db.VarChar(50)
+  address     String?      @db.VarChar(256)
+  password    String?      @db.VarChar(256)
+  role        RoleEnumType @default(user)
+  fullProfile Boolean?     @default(false) @map("full_profile")
+  createdAt   DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime?    @updatedAt @map("updated_at") @db.Timestamp(6)
+  orders      Order[]
+  token       Token?
+  stripeId    String?      @db.VarChar(256)
   @@map("user")
+}
+
+model Token {
+  id     Int     @id @default(autoincrement())
+  token  String? @db.VarChar(512)
+  userId Int     @unique @map("user_id")
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@map("refresh_token")
 }
 
 enum RoleEnumType {

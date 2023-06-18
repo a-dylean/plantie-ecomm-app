@@ -12,26 +12,48 @@ import {
   Security,
   Query,
 } from "tsoa";
-import { Product } from "@prisma/client";
+import { Prisma, Product, ProductOrder } from "@prisma/client";
 import { ProductService } from "./services";
 import { ProductCreationParams } from "./model";
+import { OrderService } from "../orders/services";
 
 @Route("products")
 @Tags("Products")
 export class ProductsController extends Controller {
   /**
-   * Retrieves a list of all products in the system. If product categoru ID is provided, filters the list of products by category.
+   * Retrieves a list of all products in the system. If filtering criteria are provided, filters the list of products.
    * @param categoryId Identifier of category (number)
    * @returns List of products
    */
   @Get()
   public async getProducts(
-    @Query() categoryId?: number | null
+    @Query() priceRange?: string,
+    @Query() categoryName?: string,
+    @Query() orderBy?: Prisma.SortOrder,
+    @Query() searchTerm?: string
   ): Promise<Product[]> {
-    if (!categoryId) {
-      return new ProductService().getAll();
-    }
-    return new ProductService().filterByCategory(categoryId);
+    return new ProductService().sortProducts(
+      priceRange,
+      categoryName,
+      orderBy,
+      searchTerm
+    );
+  }
+    /**
+   * Retrieves a product with the lowest price.
+   * @returns Cheapest product
+   */
+  @Get("cheapest")
+  public async getCheapest(): Promise<Product | null> {
+    return new ProductService().getCheapestProduct();
+  }
+      /**
+   * Retrieves a product with the highest price.
+   * @returns The most  product
+   */
+  @Get("highestPrice")
+  public async getHighestPrice(): Promise<Product | null> {
+    return new ProductService().getHighestPriceProduct();
   }
   /**
    * Retrieves the detailes of a particular product provided the unique product ID.
@@ -41,6 +63,15 @@ export class ProductsController extends Controller {
   @Get("{productId}")
   public async getProduct(@Path() productId: number): Promise<Product> {
     return new ProductService().get(productId);
+  }
+  /**
+   * Returns a ProductOrder provided the product ID.
+   */
+  @Get("/{productId}/product-orders")
+  public async getProductOrderByProductId(
+    @Path() productId: number
+  ): Promise<ProductOrder | null> {
+    return new OrderService().getProductOrderByProductId(productId);
   }
   /**
    * Creates a new product in the system.

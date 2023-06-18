@@ -1,2 +1,23 @@
-# plantie_ecomm_app_project
-An ecommerce website with a backend REST API made with Prisma, PostgreSQL and Swagger. Functionality includes creating accounts, viewing products, adding them to a cart, placing and viewing orders.
+# Plantie e-comm shop#
+An ecommerce website with a backend REST API.
+
+## Features ##
+* CRUD operations on products, user accounts and orders
+* User authentication with JSON Web Token
+* Full-text search on products
+* Payment procedure with Stripe
+
+## Technologies ##
+⚙️Backend:
+* NodeJS
+* PostgreSQL
+* Prisma
+* Documented with Swagger and Tsoa
+
+🎨Frontend:
+* React
+* Redux Toolkit
+* RTKQ
+* Axios
+* MUI
+* Lodash
