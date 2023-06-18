@@ -11,10 +11,10 @@ COPY tsoa.json /opt/app/
 COPY config.ts /opt/app/
 COPY prisma /opt/app/
 COPY src /opt/app/src
+COPY migrate.production.sh /opt/app/
 RUN npm run build
 
 ARG PORT=8000
 ENV PORT=$PORT
-
 
 CMD ["node", "build/src/server.js"]

@@ -4,5 +4,4 @@ build:
 release:
   image: web
   command:
-    - npx prisma migrate deploy
-    - npx prisma db seed
+    - sh migrate.production.sh
