@@ -18,6 +18,7 @@ import { OrderService } from "./services";
 import { OrderCreationParams, ProductOrderCreationParams } from "./model";
 import Stripe from "stripe";
 import {
+  FRONTEND_ORIGIN,
   STRIPE_SK,
   adjustable_quantity_max,
   allowed_countries,
@@ -174,8 +175,8 @@ export class PaymentController extends Controller {
         customer: user.stripeId?.toString(),
         mode: "payment",
         line_items: line_items,
-        success_url: `http://localhost:3000/successfull`,
-        cancel_url: `http://localhost:3000/cancelled`,
+        success_url: `${FRONTEND_ORIGIN}/successfull`,
+        cancel_url: `${FRONTEND_ORIGIN}/cancelled`,
         shipping_address_collection: {
           allowed_countries: [allowed_countries],
         },
