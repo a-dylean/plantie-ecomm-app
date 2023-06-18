@@ -13,7 +13,7 @@ import swaggerJson from "../build/swagger.json";
 import bodyParser from "body-parser";
 import { Prisma } from "@prisma/client";
 import { AuthError } from "./helpers/errors";
-import { PORT } from "../config";
+import { FRONTEND_ORIGIN, PORT } from "../config";
 import {
   validationErrorHandler,
   uniquenessValidationErrorHandler,
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000"],
+    origin: [FRONTEND_ORIGIN],
     allowedHeaders: ["authorization", "content-type", "cookies"],
   })
 );
