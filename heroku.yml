@@ -1,0 +1,8 @@
+build:
+  docker:
+    web: ./server/Dockerfile
+release:
+  image: web
+  command:
+    - npx prisma migrate deploy
+    - npx prisma db seed
