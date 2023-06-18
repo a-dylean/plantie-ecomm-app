@@ -1,4 +1,4 @@
-# Plantie e-comm shop#
+# Plantie e-comm shop
 An ecommerce website with a backend REST API.
 
 ## Features ##
