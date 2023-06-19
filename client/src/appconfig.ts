@@ -1,2 +1,4 @@
 export const debounceTime = 250;
-export const BASE_URL = "https://plantie-backend-48ac5ff550e2.herokuapp.com/";
+export const BASE_URL = 
+process.env.BASE_URL ||
+"http://localhost:4001";

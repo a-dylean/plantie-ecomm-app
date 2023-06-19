@@ -54,10 +54,6 @@ const ordersApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ['ProductOrders', 'Orders'],
     }),
-    getDraftOrder: builder.query<Order, number>({
-      query: (userId) => `orders/draft/${userId}`,
-      providesTags: ['Orders'],
-    }),
     getProductOrderByProductId: builder.query<CartItem, number>({
       query: (productId) => `/products/${productId}/product-orders`,
       providesTags: ['ProductOrders'],
@@ -102,7 +98,6 @@ export const {
   useAddToCartMutation,
   useCreateOrderMutation,
   useDeleteProductOrderMutation,
-  useGetDraftOrderQuery,
   useGetProductOrderByProductIdQuery,
   useGetUserCartQuery,
   useGetUserOrderQuery,

@@ -8,14 +8,16 @@ import {
 } from '../features/orders/ordersApi';
 import { AddToCartButtonProps } from '../app/interfaces';
 import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
+import { useState } from 'react';
 
 export const AddToCartButton = ({
   product: { id: productId, price: productPrice },
 }: AddToCartButtonProps) => {
   const { data: user } = useGetCurrentUserDetailsQuery();
   const [update] = useUpdateQuantityMutation();
+  const [isProductOrder, setIsProductOrder] = useState(true)
   const { data: productOrderInfo } =
-    useGetProductOrderByProductIdQuery(productId);
+    useGetProductOrderByProductIdQuery(productId, { skip: isProductOrder});
   const { data: order } = useGetUserOrderQuery();
   const addToCart = useCreateNewProductOrder();
   let quantity = productOrderInfo?.quantity || 0;
@@ -24,6 +26,7 @@ export const AddToCartButton = ({
   };
   const orderId = order?.id;
   const handleClick = () => {
+    setIsProductOrder(false)
     if (orderId) {
       addToCart({ params: { productId, productPrice, orderId } });
       if (productOrderInfo) {
