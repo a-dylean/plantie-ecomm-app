@@ -16,7 +16,7 @@ export const UserPage: React.FC = () => {
 
   useEffect(() => {
     refetch();
-  });
+  }, [user]);
 
   let content = <LoginForm />;
   if (isLoading) {
