@@ -23,10 +23,8 @@ import {
 } from 'mui-tel-input';
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
 import { useUpdateUserDetailsMutation } from '../users/usersApi';
-import { routes } from '../../helpers/routes';
 
 export const RegistrationForm = () => {
-  const navigate = useNavigate();
   const { register, control, handleSubmit } = useForm();
   const continents: MuiTelInputContinent[] = ['EU'];
   const [updateUser] = useUpdateUserDetailsMutation();
@@ -35,7 +33,6 @@ export const RegistrationForm = () => {
     try {
       data.email = data.email.toLowerCase();
       await updateUser(data).unwrap();
-      navigate(routes.ME);
     } catch (error: any) {
       if (error.data.details['requestBody.email']) {
         enqueueSnackbar('This email is already in use', { variant: 'error' });

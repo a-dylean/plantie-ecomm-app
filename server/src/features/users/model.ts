@@ -40,7 +40,7 @@ export class UserModel {
         password: hashedPassword,
         address: address,
         phone: phone,
-        email: email,
+        email: email && email.toLowerCase(),
         surname: surname,
         name: name,
         fullProfile: true,
@@ -50,7 +50,7 @@ export class UserModel {
         password: hashedPassword,
         address: address,
         phone: phone,
-        email: email,
+        email: email && email.toLowerCase(),
         surname: surname,
         name: name,
         fullProfile: true,
@@ -61,7 +61,7 @@ export class UserModel {
   async findUserByEmail(email: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: {
-        email: email,
+        email: email.toLowerCase(),
       },
     });
   }

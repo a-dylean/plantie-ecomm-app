@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { BASE_URL } from '../appconfig';
 
 axios.defaults.withCredentials = true;
 
@@ -17,7 +18,7 @@ export const securelyGetAccessToken = async () => {
   if (Date.now() > decoded.exp * 1000) {
     try {
       const response = await axios.post(
-        'http://localhost:4001/session/refresh',
+        `${BASE_URL}/session/refresh`,
       );
       return response.data.token;
     } catch (err) {

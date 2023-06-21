@@ -16,7 +16,6 @@ import { useEffect } from 'react';
 
 const CartBox = styled('div')(({ theme }) => ({
   backgroundColor: backgroundColor,
-  width: '600px',
   padding: theme.spacing(3),
 }));
 
