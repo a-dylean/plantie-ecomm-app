@@ -60,6 +60,7 @@ export const theme = createTheme({
         paper: {
           height: 'auto',
           borderRadius: '0.5rem',
+          width: 'auto',
         },
       },
     },
@@ -67,6 +68,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           display: 'block',
+          padding: '0.5rem',
         },
       },
     },
@@ -124,8 +126,8 @@ export const theme = createTheme({
         },
       },
       defaultProps: {
-        disableRipple : true
-      }
+        disableRipple: true,
+      },
     },
     MuiFormControl: {
       styleOverrides: {
@@ -147,8 +149,8 @@ export const theme = createTheme({
     },
     MuiIconButton: {
       defaultProps: {
-        disableRipple: true
-      }
-    }
+        disableRipple: true,
+      },
+    },
   },
 });

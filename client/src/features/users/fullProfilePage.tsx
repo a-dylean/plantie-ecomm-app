@@ -8,6 +8,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { OrdersInfo } from '../orders/ordersInfo';
 import { User } from '../../app/interfaces';
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,65 +49,63 @@ export const FullProfilePage: React.FC<Partial<User>> = (user) => {
   };
   const image =
     'https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80';
-
+  const size = useWindowSize();
   return (
     <Layout>
       <Paper>
-        <Grid container>
-          <Grid xs={6}>
-            <Box
-              sx={{
-                flexGrow: 1,
-                bgcolor: 'background.paper',
-                display: 'flex',
-                height: '100%',
-              }}
-            >
-              <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={value}
-                onChange={handleChange}
-                aria-label="Profile menu"
-                sx={{
-                  borderRight: 1,
-                  borderColor: 'divider',
-                  overflow: 'visible',
-                }}
-              >
-                <Tab label="Profile" {...a11yProps(0)} />
-                <Tab label="Orders" {...a11yProps(1)} />
-              </Tabs>
-              <Box sx={{ width: '100%' }}>
-                <TabPanel value={value} index={0}>
-                  <Typography variant="h5">Profile information</Typography>
-                  <UserInfo
-                    name={user.name}
-                    email={user.email}
-                    surname={user.surname}
-                    address={user.address}
-                    phone={user.phone}
-                  />
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                  <Typography variant="h5">Orders information</Typography>
-                  <OrdersInfo userId={user.id} />
-                </TabPanel>
-              </Box>
+        <Box
+          sx={{
+            flexGrow: 1,
+            bgcolor: 'background.paper',
+            display: 'flex',
+            height: '100%',
+          }}
+        >
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Profile menu"
+            sx={{
+              borderRight: 1,
+              borderColor: 'divider',
+              overflow: 'visible',
+            }}
+          >
+            <Tab label="Profile" {...a11yProps(0)} />
+            <Tab label="Orders" {...a11yProps(1)} />
+          </Tabs>
+          <TabPanel value={value} index={0}>
+            <Typography variant="h5">Profile information</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <UserInfo
+                name={user.name}
+                email={user.email}
+                surname={user.surname}
+                address={user.address}
+                phone={user.phone}
+              />
+              {size.width > 600 && (
+                <>
+                  <Typography
+                    sx={{ position: 'absolute', zIndex: 5, ml: 70, mt: 3 }}
+                    variant="h5"
+                    color="white"
+                  >
+                    Welcome,
+                    <br /> planties lover {user.name}!
+                  </Typography>
+                  <Image src={image} width="50%" duration={50} />
+                </>
+              )}
             </Box>
-          </Grid>
-          <Grid xs={6} sx={{ display: { md: 'block', xs: 'none' } }}>
-            <Typography
-              sx={{ position: 'absolute', zIndex: 5, ml: 2, mt: 3 }}
-              variant="h5"
-              color="white"
-            >
-              Welcome,
-              <br /> planties lover {user.name}!
-            </Typography>
-            <Image src={image} height="100%" width="100%" duration={50} />
-          </Grid>
-        </Grid>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Typography variant="h5">Orders information</Typography>
+            <OrdersInfo userId={user.id} />
+          </TabPanel>
+        </Box>
       </Paper>
     </Layout>
   );

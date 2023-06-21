@@ -19,12 +19,11 @@ export const LoginForm = () => {
   const [loginUser] = useLoginUserMutation();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const submitForm = async (data: FieldValues) => {
-    await loginUser(data)
+  const submitForm = (data: FieldValues) => {
+    loginUser(data)
       .unwrap()
       .then((payload) => {
         localStorage.setItem('accessToken', payload.token);
-        navigate(routes.ME)
       })
       .catch((error: any) => {
         if (isApiResponse(error)) {

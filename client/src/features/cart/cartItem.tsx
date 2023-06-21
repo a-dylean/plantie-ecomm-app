@@ -11,10 +11,13 @@ import { useGetProductQuery } from '../products/productsApi';
 import { Price } from '../../components/price';
 import React from 'react';
 import { CartItemProps } from '../../app/interfaces';
+import { useWindowSize } from '../../hooks/useWindowSize';
 
-export const CartItemComponent: React.FC<CartItemProps> = ({...cartItem}) => {
+export const CartItemComponent: React.FC<CartItemProps> = ({ ...cartItem }) => {
   const { data: productInfo } = useGetProductQuery(cartItem.productId);
-  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(cartItem.productId);
+  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(
+    cartItem.productId,
+  );
   const totalPerItem = cartItem.quantity * Number(productInfo?.price);
   const [update] = useUpdateQuantityMutation();
   const updateQuantity = (newQuantity: number) => {
@@ -24,6 +27,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({...cartItem}) => {
   const removeEntirely = () => {
     deleteItem(productOrderInfo?.id);
   };
+  const size = useWindowSize();
   return (
     <>
       {productInfo && productOrderInfo && (
@@ -37,7 +41,10 @@ export const CartItemComponent: React.FC<CartItemProps> = ({...cartItem}) => {
                 alignItems: 'center',
               }}
             >
-              <Typography component="div" sx={{ width: '200px' }}>
+              <Typography
+                component="div"
+                sx={{ width: `${size.width > 500 ? '200px' : '130%'}` }}
+              >
                 {productInfo.name} <br />
                 <Price price={productInfo.price} />
               </Typography>
@@ -60,12 +67,12 @@ export const CartItemComponent: React.FC<CartItemProps> = ({...cartItem}) => {
                 {productOrderInfo.quantity}
                 <IconButton
                   color="secondary"
-                  onClick={()=>updateQuantity(++cartItem.quantity)}
+                  onClick={() => updateQuantity(++cartItem.quantity)}
                 >
                   <AddCircleOutlineIcon />
                 </IconButton>
               </Box>
-              <Typography component="div" sx={{ width: '30px' }}>
+              <Typography component="div">
                 <Price price={totalPerItem} />
               </Typography>
               <IconButton onClick={removeEntirely}>

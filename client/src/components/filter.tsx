@@ -33,6 +33,7 @@ const FilterBox = styled(Box)(({ theme }) => ({
   backgroundColor: backgroundColor,
   padding: theme.spacing(2),
   zIndex: 5,
+  gap: theme.spacing(1),
 }));
 
 export const Filter: React.FC<FilterProps> = ({
@@ -103,27 +104,27 @@ export const Filter: React.FC<FilterProps> = ({
   return (
     <>
       <FilterBox>
-        <FormControl sx={{ width: 200 }}>
+        <FormControl sx={{ width: '100%' }}>
           <InputLabel id="select-sort-label">Sort</InputLabel>
           <Select
             labelId="select-sort-label"
             id="select-sort-label"
             label="Sort"
             onChange={handleSortChange}
-            sx={{ width: 200 }}
+            sx={{ width: '100%' }}
           >
             <MenuItem value={'desc'}>Price high to low</MenuItem>
             <MenuItem value={'asc'}>Price low to high</MenuItem>
           </Select>
         </FormControl>
-        <FormControl sx={{ width: 200 }}>
+        <FormControl sx={{ width: '100%' }}>
           <InputLabel id="select-product-type-label">Product Type</InputLabel>
           <Select
             labelId="select-product-type-label"
             id="select-product-type-label"
             label="Product Type"
             onChange={handleCategoryChange}
-            sx={{ width: 200 }}
+            sx={{ width: '100%' }}
           >
             <MenuItem value={undefined}>All</MenuItem>
             {categories?.map((category) => {
@@ -135,11 +136,11 @@ export const Filter: React.FC<FilterProps> = ({
             })}
           </Select>
         </FormControl>
-        <FormControl sx={{ width: 200 }}>
+        <FormControl sx={{ width: '100%' }}>
           <Select
             labelId="select-price-range-label"
             id="select-price-range-label"
-            sx={{ width: 200 }}
+            sx={{ width: 'auto' }}
             value={value}
             renderValue={() => valuetext(value)}
           >
@@ -166,7 +167,7 @@ export const Filter: React.FC<FilterProps> = ({
             </Box>
           </Select>
         </FormControl>
-        <FormControl sx={{ width: 200 }} variant="outlined">
+        <FormControl sx={{ width: '100%' }} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
           <OutlinedInput
             id="search-field"

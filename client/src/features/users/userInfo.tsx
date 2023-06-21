@@ -12,7 +12,13 @@ import BalconyIcon from '@mui/icons-material/Balcony';
 import React from 'react';
 import { User } from '../../app/interfaces';
 
-export const UserInfo: React.FC<Partial<User>> = ({name, surname, email, phone, address}) => {
+export const UserInfo: React.FC<Partial<User>> = ({
+  name,
+  surname,
+  email,
+  phone,
+  address,
+}) => {
   return (
     <List>
       <ColoredCard>
