@@ -20,33 +20,31 @@ export const UserInfo: React.FC<Partial<User>> = ({
   address,
 }) => {
   return (
-    <List>
-      <ColoredCard>
-        <List dense>
-          <ListItem sx={{ fontWeight: 'bold' }}>
-            {name} {surname}
-          </ListItem>
-          <Divider />
-          <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
-            <ListItemIcon>
-              <MailOutlineIcon />
-            </ListItemIcon>
-            <Typography>{email}</Typography>
-          </ListItem>
-          <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
-            <ListItemIcon>
-              <CallIcon />
-            </ListItemIcon>
-            {phone}
-          </ListItem>
-          <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
-            <ListItemIcon>
-              <BalconyIcon />
-            </ListItemIcon>
-            {address}
-          </ListItem>
-        </List>
-      </ColoredCard>
-    </List>
+    <ColoredCard>
+      <List dense>
+        <ListItem sx={{ fontWeight: 'bold' }}>
+          {name} {surname}
+        </ListItem>
+        <Divider />
+        <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
+          <ListItemIcon>
+            <MailOutlineIcon />
+          </ListItemIcon>
+          <Typography>{email}</Typography>
+        </ListItem>
+        <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
+          <ListItemIcon>
+            <CallIcon />
+          </ListItemIcon>
+          {phone}
+        </ListItem>
+        <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
+          <ListItemIcon>
+            <BalconyIcon />
+          </ListItemIcon>
+          {address}
+        </ListItem>
+      </List>
+    </ColoredCard>
   );
 };
