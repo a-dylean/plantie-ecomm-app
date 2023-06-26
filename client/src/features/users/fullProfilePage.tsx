@@ -1,6 +1,5 @@
-import { Typography, Box, Paper } from '@mui/material';
+import { Typography, Box, Paper, List } from '@mui/material';
 import { Layout } from '../../app/layout';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Image } from 'mui-image';
 import { UserInfo } from './userInfo';
 import React, { useState } from 'react';
@@ -78,26 +77,18 @@ export const FullProfilePage: React.FC<Partial<User>> = (user) => {
           </Tabs>
           <TabPanel value={value} index={0}>
             <Typography variant="h5">Profile information</Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <UserInfo
-                name={user.name}
-                email={user.email}
-                surname={user.surname}
-                address={user.address}
-                phone={user.phone}
-              />
-              {size.width > 600 && (
-                <>
-                  <Typography
-                    sx={{ position: 'absolute', zIndex: 5, ml: 70, mt: 3 }}
-                    variant="h5"
-                    color="white"
-                  >
-                    Welcome,
-                    <br /> planties lover {user.name}!
-                  </Typography>
-                  <Image src={image} width="50%" duration={50} />
-                </>
+            <Box sx={{ display: 'flex' }}>
+              <List>
+                <UserInfo
+                  name={user.name}
+                  email={user.email}
+                  surname={user.surname}
+                  address={user.address}
+                  phone={user.phone}
+                />
+              </List>
+              {size.width > 700 && (
+                <Image src={image} width="40%" duration={50} />
               )}
             </Box>
           </TabPanel>

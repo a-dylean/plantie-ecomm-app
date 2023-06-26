@@ -44,7 +44,8 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: `
               body {
-                background-color: ${backgroundColor}
+                background-color: ${backgroundColor};
+                word-break: break-word;
               }
             `,
     },

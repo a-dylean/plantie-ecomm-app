@@ -37,5 +37,5 @@ export const UserPage: React.FC = () => {
   if (isError) {
     content = <>{error.toString()}</>;
   }
-  return <>{content}</>;
+  return <>{ content }</>;
 };
