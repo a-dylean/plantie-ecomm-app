@@ -19,10 +19,8 @@ const setCookie = async (id: number, role: string, req: ExRequest) => {
   const refreshToken = await new AuthService().generateRefreshToken(id, role);
   req.res?.cookie("refresh_token", refreshToken, {
     httpOnly: true,
-    secure: true,
     path: "/session/refresh",
-    sameSite: "none",
-
+    sameSite: false,
   });
   return refreshToken;
 };
