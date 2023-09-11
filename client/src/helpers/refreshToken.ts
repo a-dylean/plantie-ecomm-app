@@ -22,8 +22,10 @@ export const securelyGetAccessToken = async () => {
       );
       return response.data.token;
     } catch (err) {
+      const response = '';
       console.error(err);
-      throw err;
+      //throw err;
+      return response;
     }
   }
   return token;
