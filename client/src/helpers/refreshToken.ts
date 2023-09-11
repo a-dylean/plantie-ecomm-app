@@ -13,7 +13,6 @@ export const securelyGetAccessToken = async () => {
   if (!token) {
     return null;
   }
-
   const decoded: DecodedToken = jwt_decode(token);
   if (Date.now() > decoded.exp * 1000) {
     try {
@@ -22,10 +21,8 @@ export const securelyGetAccessToken = async () => {
       );
       return response.data.token;
     } catch (err) {
-      const response = '';
       console.error(err);
-      //throw err;
-      return response;
+      throw err;
     }
   }
   return token;
