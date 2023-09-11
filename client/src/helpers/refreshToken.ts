@@ -13,7 +13,6 @@ export const securelyGetAccessToken = async () => {
   if (!token) {
     return null;
   }
-
   const decoded: DecodedToken = jwt_decode(token);
   if (Date.now() > decoded.exp * 1000) {
     try {
@@ -22,7 +21,6 @@ export const securelyGetAccessToken = async () => {
       );
       return response.data.token;
     } catch (err) {
-      document.cookie = 'accessToken' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;domain=.plantie.atonkopiy.com;';
       console.error(err);
       throw err;
     }
