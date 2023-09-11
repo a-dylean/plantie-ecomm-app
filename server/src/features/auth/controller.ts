@@ -61,7 +61,17 @@ export class AuthController extends Controller {
    */
   @Post("refresh")
   public async refresh(@Request() req: ExRequest): Promise<{}> {
+    if (req.cookies.refresh_token == undefined) {
+      //req.res?.clearCookie("refresh_token")
+      const user = await new AuthService().createUser();
+      const accessToken = createAccessToken({
+        id: user.id,
+        scopes: [user.role],
+      });
+      setCookie(user.id, user.role, req);
+    }
     const refreshToken = req.cookies.refresh_token;
+    console.log(req.cookies);
     const isValid = jwt.verify(refreshToken, SECRET_KEY);
     if (!isValid) {
       throw new AuthError("Invalid token, login again!");
