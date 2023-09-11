@@ -22,10 +22,9 @@ export const securelyGetAccessToken = async () => {
       );
       return response.data.token;
     } catch (err) {
-      const response = '';
+      document.cookie = 'accessToken' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;domain=.plantie.atonkopiy.com;';
       console.error(err);
-      //throw err;
-      return response;
+      throw err;
     }
   }
   return token;
