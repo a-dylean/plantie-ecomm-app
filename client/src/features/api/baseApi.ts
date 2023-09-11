@@ -8,6 +8,9 @@ const baseQuery = fetchBaseQuery({
   baseUrl,
   prepareHeaders: async (headers) => {
     const token = await securelyGetAccessToken();
+    if (!token) {
+      document.cookie = 'accessToken' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;domain=.plantie.atonkopiy.com;';
+    }
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }
