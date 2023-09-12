@@ -6,9 +6,7 @@ import {
 import productsReducer from '../features/products/productSlice';
 import { baseApi } from '../features/api/baseApi';
 import { setupListeners } from '@reduxjs/toolkit/dist/query/react';
-
 import { isRejectedWithValue } from '@reduxjs/toolkit';
-import {} from '../helpers/refreshToken';
 import { createNewSession } from '../hooks/useRetrieveSession';
 
 const refreshTokenErrorListener = createListenerMiddleware();
