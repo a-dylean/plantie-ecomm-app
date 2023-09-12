@@ -3,13 +3,17 @@ import { useCreateNewUserMutation } from '../features/users/usersApi';
 import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
 import { useCreateOrderMutation } from '../features/orders/ordersApi';
 
+export const createNewSession = async (sessionQuery: any) => {
+  const result = await sessionQuery.unwrap();
+  localStorage.setItem('accessToken', result.accessToken);
+};
+
 export const useRetrieveSession = () => {
   const { data: user } = useGetCurrentUserDetailsQuery();
   const [startSession] = useCreateNewUserMutation();
   const [createOrder] = useCreateOrderMutation();
   const createNewUser = async () => {
     const result = await startSession().unwrap();
-    localStorage.setItem('accessToken', result.accessToken);
   };
   const createNewOrder = async () => {
     if (user) {
@@ -19,7 +23,7 @@ export const useRetrieveSession = () => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      createNewUser();
+      createNewSession(createNewUser);
     }
     createNewOrder();
   }, [user]);

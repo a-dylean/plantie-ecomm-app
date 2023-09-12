@@ -59,8 +59,8 @@ export interface Order {
 }
 
 export interface Category {
-  id: number,
-  categoryName: string
+  id: number;
+  categoryName: string;
 }
 
 export interface UserInfo {
@@ -75,8 +75,8 @@ export interface CheckoutInfo {
 }
 
 export interface CartItemProps {
-  productId : number,
-  quantity: number
+  productId: number;
+  quantity: number;
 }
 
 export interface FilterProps {
@@ -99,8 +99,19 @@ export interface AddToCartButtonProps {
 }
 
 export interface Filters {
-  priceRange?: number[],
-  categoryName?: string,
-  orderBy?: string,
-  searchTerm?: string
+  priceRange?: number[];
+  categoryName?: string;
+  orderBy?: string;
+  searchTerm?: string;
+}
+
+export interface DecodedToken {
+  exp: number;
+}
+
+export class RefreshTokenError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, RefreshTokenError.prototype);
+  }
 }

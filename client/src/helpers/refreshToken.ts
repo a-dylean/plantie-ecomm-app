@@ -1,12 +1,9 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../appconfig';
+import { DecodedToken } from '../app/interfaces';
 
 axios.defaults.withCredentials = true;
-
-interface DecodedToken {
-  exp: number;
-}
 
 export const securelyGetAccessToken = async () => {
   const token = localStorage.getItem('accessToken');
@@ -16,13 +13,17 @@ export const securelyGetAccessToken = async () => {
   const decoded: DecodedToken = jwt_decode(token);
   if (Date.now() > decoded.exp * 1000) {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/session/refresh`,
-      );
+      const response = await axios.post(`${BASE_URL}/session/refresh`);
       return response.data.token;
     } catch (err) {
-      console.error(err);
-      throw err;
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 403) {
+          localStorage.removeItem('accessToken');
+          return null;
+        }
+      } else {
+        console.error(err);
+      }
     }
   }
   return token;
