@@ -21,6 +21,8 @@ const setCookie = async (id: number, role: string, req: ExRequest) => {
     httpOnly: true,
     path: "/session/refresh",
     sameSite: false,
+    maxAge: 60 * 60 * 24 * 100,
+    expires: new Date(Date.now() + 60 * 60 * 24 * 100),
   });
   return refreshToken;
 };
@@ -61,19 +63,8 @@ export class AuthController extends Controller {
    */
   @Post("refresh")
   public async refresh(@Request() req: ExRequest): Promise<{}> {
-    if (req.cookies.refresh_token == undefined) {
-      //req.res?.clearCookie("refresh_token")
-      const user = await new AuthService().createUser();
-      const accessToken = createAccessToken({
-        id: user.id,
-        scopes: [user.role],
-      });
-      setCookie(user.id, user.role, req);
-    }
     const refreshToken = req.cookies.refresh_token;
-    console.log(req.cookies);
-    const isValid = jwt.verify(refreshToken, SECRET_KEY);
-    if (!isValid) {
+    if (!refreshToken || !jwt.verify(refreshToken, SECRET_KEY)) {
       throw new AuthError("Invalid token, login again!");
     }
     const decoded = decodeAuthToken(refreshToken);
