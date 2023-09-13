@@ -20,6 +20,7 @@ export const LoginForm = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const submitForm = (data: FieldValues) => {
+    navigate(routes.ME);
     loginUser(data)
       .unwrap()
       .then((payload) => {
@@ -76,7 +77,8 @@ export const LoginForm = () => {
             control={<Checkbox value="remember" color="secondary" />}
             label="Remember me"
           />
-          <Button type="submit" fullWidth variant="contained" color="secondary">
+          <Button type="submit" fullWidth variant="contained" color="secondary"
+          onClick={() => navigate(routes.ME)}>
             Sign In
           </Button>
           <Box display="flex" justifyContent="space-evenly" sx={{ mt: 1 }}>

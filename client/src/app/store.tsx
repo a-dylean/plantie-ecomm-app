@@ -14,7 +14,8 @@ refreshTokenErrorListener.startListening({
   predicate: () => true,
   effect: async (action: any, listenerApi) => {
     if (isRejectedWithValue(action) && action?.payload?.status == 403) {
-      listenerApi.unsubscribe();
+      listenerApi.cancelActiveListeners();
+      await listenerApi.delay(1000);
       const newUserQuery = listenerApi.dispatch(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

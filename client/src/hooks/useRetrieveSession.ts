@@ -12,9 +12,6 @@ export const useRetrieveSession = () => {
   const { data: user } = useGetCurrentUserDetailsQuery();
   const [startSession] = useCreateNewUserMutation();
   const [createOrder] = useCreateOrderMutation();
-  const createNewUser = async () => {
-    const result = await startSession().unwrap();
-  };
   const createNewOrder = async () => {
     if (user) {
       await createOrder({ userId: user.id }).unwrap();
@@ -23,7 +20,7 @@ export const useRetrieveSession = () => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      createNewSession(createNewUser);
+      createNewSession(startSession());
     }
     createNewOrder();
   }, [user]);
