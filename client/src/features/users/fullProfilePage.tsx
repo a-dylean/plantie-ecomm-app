@@ -46,8 +46,8 @@ export const FullProfilePage: React.FC<Partial<User>> = (user) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const image =
-    'https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80';
+  // const image =
+  //   'https://images.unsplash.com/photo-1680677463262-4e2b0ffc7f93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80';
   const size = useWindowSize();
   return (
     <Layout>
@@ -87,9 +87,9 @@ export const FullProfilePage: React.FC<Partial<User>> = (user) => {
                   phone={user.phone}
                 />
               </List>
-              {size.width > 700 && (
+              {/* {size.width > 700 && (
                 <Image src={image} width="40%" duration={50} />
-              )}
+              )} */}
             </Box>
           </TabPanel>
           <TabPanel value={value} index={1}>
