@@ -1,22 +1,16 @@
 import React, { useEffect } from 'react';
 import { LoginForm } from '../auth/loginPage';
 import { FullProfilePage } from './fullProfilePage';
-import { useGetCurrentUserDetailsQuery } from './usersApi';
 import { CircularProgress } from '@mui/material';
+import { useAppSelector } from '../../hooks/reactReduxHooks';
 
 export const UserPage: React.FC = () => {
   const {
-    data: user,
+    user,
     isSuccess,
-    isError,
     error,
     isLoading,
-    refetch,
-  } = useGetCurrentUserDetailsQuery();
-
-  useEffect(() => {
-    refetch();
-  }, [user]);
+  } = useAppSelector((state) => state.user)
 
   let content = <LoginForm />;
   if (isLoading) {
@@ -34,7 +28,7 @@ export const UserPage: React.FC = () => {
       />
     );
   }
-  if (isError) {
+  if (error) {
     content = <>{error.toString()}</>;
   }
   return <>{ content }</>;

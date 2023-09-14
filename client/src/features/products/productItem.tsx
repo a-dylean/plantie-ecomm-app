@@ -9,22 +9,19 @@ import {
 } from '@mui/material';
 import { Product } from '../../app/interfaces';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/reactReduxHooks';
-import { selectProduct } from './productSlice';
 import { routes } from '../../helpers/routes';
-import { AddToCartButton } from '../../components/addToCardButton';
+//import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
 
 export const ProductItem: React.FC<Product> = (product) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const ProductItemCard = styled(Card)(() => ({
     width: 345,
     height: 650,
   }));
   return (
     <ProductItemCard>
-      <Box onClick={() => dispatch(selectProduct(product))}>
+      <Box>
         <Box
           onClick={() => {
             navigate(`${routes.PRODUCTS}/${product.id}`);
@@ -58,7 +55,7 @@ export const ProductItem: React.FC<Product> = (product) => {
           </CardContent>
         </Box>
         <CardActions>
-          <AddToCartButton product={product} />
+          {/* <AddToCartButton product={product} /> */}
         </CardActions>
       </Box>
     </ProductItemCard>

@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
-import { useCreateNewUserMutation } from '../features/users/usersApi';
-import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
-import { useCreateOrderMutation } from '../features/orders/ordersApi';
+import { useAppDispatch, useAppSelector } from './reactReduxHooks';
+import {
+  createNewUser,
+  getCurrentUserDetails,
+} from '../features/users/userSlice';
 
 export const createNewSession = async (sessionQuery: any) => {
   const result = await sessionQuery.unwrap();
@@ -9,19 +11,23 @@ export const createNewSession = async (sessionQuery: any) => {
 };
 
 export const useRetrieveSession = () => {
-  const { data: user } = useGetCurrentUserDetailsQuery();
-  const [startSession] = useCreateNewUserMutation();
-  const [createOrder] = useCreateOrderMutation();
-  const createNewOrder = async () => {
-    if (user) {
-      await createOrder({ userId: user.id }).unwrap();
-    }
-  };
+  const dispatch = useAppDispatch();
+  //   const { data: user } = useGetCurrentUserDetailsQuery();
+  //   const [startSession] = useCreateNewUserMutation();
+  //   const [createOrder] = useCreateOrderMutation();
+  //   const createNewOrder = async () => {
+  //     if (user) {
+  //       await createOrder({ userId: user.id }).unwrap();
+  //     }
+  //   };
+  const { user } = useAppSelector((state) => state.user);
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      createNewSession(startSession());
+      dispatch(createNewUser());
+      localStorage.setItem('accessToken', user.accessToken);
     }
-    createNewOrder();
+    // createNewOrder();
   }, [user]);
 };
+export {};

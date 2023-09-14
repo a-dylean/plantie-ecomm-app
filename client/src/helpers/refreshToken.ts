@@ -4,6 +4,10 @@ import { BASE_URL } from '../appconfig';
 import { DecodedToken } from '../app/interfaces';
 
 axios.defaults.withCredentials = true;
+axios.defaults.baseURL = BASE_URL;
+export const api = axios.create({
+  baseURL: BASE_URL
+});
 
 export const securelyGetAccessToken = async () => {
   const token = localStorage.getItem('accessToken');

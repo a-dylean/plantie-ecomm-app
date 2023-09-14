@@ -4,19 +4,19 @@ import { BASE_URL } from '../../appconfig';
 
 const baseUrl = BASE_URL;
 
-const baseQuery = fetchBaseQuery({
-  baseUrl,
-  prepareHeaders: async (headers) => {
-    const token = await securelyGetAccessToken();
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
-    }
-  },
-  credentials: 'include',
-});
+// const baseQuery = fetchBaseQuery({
+//   baseUrl,
+//   prepareHeaders: async (headers) => {
+//     const token = await securelyGetAccessToken();
+//     if (token) {
+//       headers.set('Authorization', `Bearer ${token}`);
+//     }
+//   },
+//   credentials: 'include',
+// });
 
-export const baseApi = createApi({
-  baseQuery,
-  endpoints: () => ({}),
-  tagTypes: ['Products', 'ProductOrders', 'Orders', 'Users', 'Categories', 'MinPrice', 'MaxPrice'],
-});
+// export const baseApi = createApi({
+//   baseQuery,
+//   endpoints: () => ({}),
+//   tagTypes: ['Products', 'ProductOrders', 'Orders', 'Users', 'Categories', 'MinPrice', 'MaxPrice'],
+// });

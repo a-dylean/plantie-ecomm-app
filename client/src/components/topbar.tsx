@@ -7,15 +7,12 @@ import {
   Badge,
 } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-import { Cart } from '../features/cart/cart';
+//import { Cart } from '../features/cart/cart';
 import { useEffect, useState } from 'react';
 import { getTotalItems } from '../helpers/cartFunctions';
 import { useNavigate } from 'react-router-dom';
 import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useGetUserCartQuery } from '../features/orders/ordersApi';
-import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
-import { baseApi } from '../features/api/baseApi';
 import { useAppDispatch } from '../hooks/reactReduxHooks';
 import { routes } from '../helpers/routes';
 
@@ -23,17 +20,17 @@ export const Topbar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [cartOpen, setCartOpen] = useState(false);
-  const { data: OrderItems = [], refetch } = useGetUserCartQuery();
-  const { data: user } = useGetCurrentUserDetailsQuery();
-  const fullProfile = user?.fullProfile;
+  // const { data: OrderItems = [], refetch } = useGetUserCartQuery();
+  // const { data: user } = useGetCurrentUserDetailsQuery();
+  //const fullProfile = user?.fullProfile;
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
-    dispatch(baseApi.util.resetApiState());
+    //dispatch(baseApi.util.resetApiState());
     navigate(routes.ALL_PRODUCTS);
   };
-  useEffect(() => {
-    refetch();
-  }, [user]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [user]);
   return (
     <>
       <AppBar
@@ -56,20 +53,20 @@ export const Topbar = () => {
         </Box>
         <IconButton onClick={() => setCartOpen(true)}>
           <LocalMallIcon />
-          <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />
+          {/* <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" /> */}
         </IconButton>
         <IconButton onClick={() => navigate(routes.ME)}>
           <Face4Icon />
         </IconButton>
-        {fullProfile && (
+        {/* {fullProfile && (
           <IconButton>
             <LogoutIcon onClick={handleLogout} />
           </IconButton>
-        )}
+        )} */}
       </AppBar>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
         <Box sx={{ mt: '3rem' }}>
-          <Cart />
+          {/* <Cart /> */}
         </Box>
       </Drawer>
     </>

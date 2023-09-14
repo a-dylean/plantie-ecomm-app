@@ -64,6 +64,12 @@ export interface Category {
 }
 
 export interface UserInfo {
+  fullProfile: boolean;
+  name: string | undefined;
+  email: string | undefined;
+  surname: string | undefined;
+  address: string | undefined;
+  phone: string | undefined;
   id: number;
   accessToken: string;
   refreshToken: string;
@@ -114,4 +120,25 @@ export class RefreshTokenError extends Error {
     super(message);
     Object.setPrototypeOf(this, RefreshTokenError.prototype);
   }
+}
+
+export interface ProductsState {
+  products: Product[];
+  isLoading: boolean;
+  isSuccess: boolean;
+  error?: string;
+}
+
+export interface CartState {
+  cartItems: CartItem[];
+  isLoading: boolean;
+  isSuccess: boolean;
+  error?: string;
+}
+
+export interface UserState {
+  user: UserInfo;
+  isLoading: boolean;
+  isSuccess: boolean;
+  error?: string;
 }

@@ -2,12 +2,18 @@ import { ProductItem } from './productItem';
 import { LinearProgress } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Layout } from '../../app/layout';
-import { useGetProductsQuery } from './productsApi';
 import { Filter } from '../../components/filter';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NothingFound } from '../../components/nothingFound';
+import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
+import { getProducts } from './productsSlice';
+import { Product } from '../../app/interfaces';
+import { getUserCart } from '../cart/cartSlice';
 
 export const ProductsContainer = () => {
+  const { products, isLoading, isSuccess, error } = useAppSelector(
+    (state) => state.products,
+  );
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined,
   );
@@ -26,20 +32,19 @@ export const ProductsContainer = () => {
   const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
-  const {
-    data: products = [],
-    isError,
-    isLoading,
-    error,
-    isSuccess,
-  } = useGetProductsQuery({ priceRange, categoryName, orderBy, searchTerm });
-
+  const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    dispatch(getProducts());
+    dispatch(getUserCart())
+  }, [dispatch]);
+  
   let content;
 
   if (isLoading) {
     content = <LinearProgress />;
   } else if (isSuccess) {
-    const renderedItems = products.map((product) => (
+    const renderedItems = products?.map((product: Product) => (
       <Grid key={product.id}>
         <ProductItem
           name={product.name}
@@ -60,7 +65,7 @@ export const ProductsContainer = () => {
     } else {
       content = <NothingFound />;
     }
-  } else if (isError) {
+  } else if (error) {
     content = <>{error.toString()}</>;
   }
   return (

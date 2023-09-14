@@ -16,11 +16,6 @@ import { debounce } from 'lodash';
 import { backgroundColor } from './theme';
 import { FilterProps } from '../app/interfaces';
 import { debounceTime } from '../appconfig';
-import { useGetCategoriesQuery } from '../features/categories/categoriesApi';
-import {
-  useGetMaxPriceQuery,
-  useGetMinPriceQuery,
-} from '../features/products/productsApi';
 import { Price } from './price';
 
 const FilterBox = styled(Box)(({ theme }) => ({
@@ -42,9 +37,9 @@ export const Filter: React.FC<FilterProps> = ({
   chooseSortMethod,
   search,
 }) => {
-  const { data: minPrice } = useGetMinPriceQuery();
-  const { data: maxPrice } = useGetMaxPriceQuery();
-  const { data: categories } = useGetCategoriesQuery();
+  const minPrice = 10;
+  const maxPrice = 100;
+  //const { data: categories } = useGetCategoriesQuery();
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     chooseCategory(event.target.value as string);
@@ -127,13 +122,13 @@ export const Filter: React.FC<FilterProps> = ({
             sx={{ width: '100%' }}
           >
             <MenuItem value={undefined}>All</MenuItem>
-            {categories?.map((category) => {
+            {/* {categories?.map((category) => {
               return (
                 <MenuItem key={category.id} value={category.categoryName}>
                   {category.categoryName}
                 </MenuItem>
               );
-            })}
+            })} */}
           </Select>
         </FormControl>
         <FormControl sx={{ width: '100%' }}>

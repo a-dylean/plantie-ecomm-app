@@ -12,20 +12,23 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { Layout } from '../../app/layout';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { isApiResponse } from '../../helpers/errors';
-import { useLoginUserMutation } from '../users/usersApi';
+//import { useLoginUserMutation } from '../users/usersApi';
 import { routes } from '../../helpers/routes';
+import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../hooks/reactReduxHooks';
+import { getCurrentUserDetails, loginUser } from '../users/userSlice';
 
 export const LoginForm = () => {
-  const [loginUser] = useLoginUserMutation();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const submitForm = (data: FieldValues) => {
-    navigate(routes.ME);
-    loginUser(data)
-      .unwrap()
-      .then((payload) => {
-        localStorage.setItem('accessToken', payload.token);
-      })
+    // console.log(data)
+    // navigate(routes.ME);
+    dispatch(loginUser(data))
+    //   .then((payload) => {
+    //     localStorage.setItem('accessToken', payload.token);
+    //   })
       .catch((error: any) => {
         if (isApiResponse(error)) {
           enqueueSnackbar(error.data.details, { variant: 'error' });
@@ -34,7 +37,7 @@ export const LoginForm = () => {
             'error' in error ? error.error : JSON.stringify(error.data);
           enqueueSnackbar(errMsg, { variant: 'error' });
         }
-      });
+       })
   };
   return (
     <Layout>

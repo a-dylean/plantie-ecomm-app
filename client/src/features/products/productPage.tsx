@@ -1,14 +1,21 @@
 import { Typography, Card, CardMedia, CardContent, Grid } from '@mui/material';
-import { useAppSelector } from '../../hooks/reactReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
 import { Layout } from '../../app/layout';
 import { Product } from '../../app/interfaces';
-import { AddToCartButton } from '../../components/addToCardButton';
+//import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const ProductPage = () => {
-  const product: Product = useAppSelector(
-    (state) => state.products.selectedProduct,
-  );
+
+  //change this into fetch from server by id
+  const {productId} = useParams();
+  // const dispatch = useAppDispatch();
+  // useEffect(() => {
+  //   dispatch(getProductById(productId))
+  // })
+  const product = useAppSelector((state) => state.products.products[parseInt(productId!)])
   return (
     <>
       {product && (
@@ -30,7 +37,7 @@ export const ProductPage = () => {
                     product.available ? 'in stock' : 'out of stock'
                   }`}</Typography>
                   <Typography variant="h6">Price: <Price price={product.price}/></Typography>
-                  <AddToCartButton product={product} />
+                  {/* <AddToCartButton product={product} /> */}
                 </CardContent>
               </Grid>
             </Grid>

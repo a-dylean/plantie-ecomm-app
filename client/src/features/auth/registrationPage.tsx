@@ -22,17 +22,17 @@ import {
   matchIsValidTel,
 } from 'mui-tel-input';
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
-import { useUpdateUserDetailsMutation } from '../users/usersApi';
+//import { useUpdateUserDetailsMutation } from '../users/usersApi';
 
 export const RegistrationForm = () => {
   const { register, control, handleSubmit } = useForm();
   const continents: MuiTelInputContinent[] = ['EU'];
-  const [updateUser] = useUpdateUserDetailsMutation();
+ // const [updateUser] = useUpdateUserDetailsMutation();
 
   const submitForm: SubmitHandler<FieldValues> = async (data) => {
     try {
       data.email = data.email.toLowerCase();
-      await updateUser(data).unwrap();
+      //await updateUser(data).unwrap();
     } catch (error: any) {
       if (error.data.details['requestBody.email']) {
         enqueueSnackbar('This email is already in use', { variant: 'error' });
