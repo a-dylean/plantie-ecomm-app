@@ -1,24 +1,24 @@
 import { Typography, Card, CardMedia, CardContent, Grid } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
+//import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
 import { Layout } from '../../app/layout';
 import { Product } from '../../app/interfaces';
-//import { AddToCartButton } from '../../components/addToCardButton';
+// import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../helpers/refreshToken';
 
 export const ProductPage = () => {
-
-  //change this into fetch from server by id
   const {productId} = useParams();
-  // const dispatch = useAppDispatch();
-  // useEffect(() => {
-  //   dispatch(getProductById(productId))
-  // })
-  const product = useAppSelector((state) => state.products.products[parseInt(productId!)])
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['product'],
+    queryFn: () => 
+    api.get(`products/${productId}`)
+    .then((res) => res.data)
+  });
   return (
     <>
-      {product && (
+      {data && (
         <Layout>
           <Card>
             <Grid container>
@@ -26,18 +26,18 @@ export const ProductPage = () => {
                 <CardMedia
                   component="img"
                   alt="product img"
-                  image={product.picture}
+                  image={data.picture}
                 />
               </Grid>
               <Grid xs={6}>
                 <CardContent>
-                  <Typography variant="h5">{product.name}</Typography>
-                  <Typography variant="body1">{product.description}</Typography>
+                  <Typography variant="h5">{data.name}</Typography>
+                  <Typography variant="body1">{data.description}</Typography>
                   <Typography variant="h6">{`Availability: ${
-                    product.available ? 'in stock' : 'out of stock'
+                    data.available ? 'in stock' : 'out of stock'
                   }`}</Typography>
-                  <Typography variant="h6">Price: <Price price={product.price}/></Typography>
-                  {/* <AddToCartButton product={product} /> */}
+                  <Typography variant="h6">Price: <Price price={data.price}/></Typography>
+                  {/* <AddToCartButton product={data} /> */}
                 </CardContent>
               </Grid>
             </Grid>

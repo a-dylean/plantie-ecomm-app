@@ -13,24 +13,40 @@ import { getTotalItems } from '../helpers/cartFunctions';
 import { useNavigate } from 'react-router-dom';
 import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useAppDispatch } from '../hooks/reactReduxHooks';
 import { routes } from '../helpers/routes';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { User } from '../app/interfaces';
+import { securelyGetAccessToken, api } from '../helpers/refreshToken';
 
 export const Topbar = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [cartOpen, setCartOpen] = useState(false);
   // const { data: OrderItems = [], refetch } = useGetUserCartQuery();
-  // const { data: user } = useGetCurrentUserDetailsQuery();
-  //const fullProfile = user?.fullProfile;
+  const queryClient = useQueryClient();
+  const { data } = useQuery<User | undefined>({
+    queryKey: ['user'],
+    queryFn: async () => {
+      let fetchData;
+      const token = await securelyGetAccessToken();
+      await api
+        .get<User>('me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => (fetchData = res.data));
+      return fetchData;
+    },
+    initialData: () => {
+      return queryClient.getQueryData(['user']);
+    },
+  });
+  const fullProfile = data?.fullProfile;
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
-    //dispatch(baseApi.util.resetApiState());
+    queryClient.setQueryData(['user'], null);
     navigate(routes.ALL_PRODUCTS);
   };
-  // useEffect(() => {
-  //   refetch();
-  // }, [user]);
   return (
     <>
       <AppBar
@@ -58,16 +74,14 @@ export const Topbar = () => {
         <IconButton onClick={() => navigate(routes.ME)}>
           <Face4Icon />
         </IconButton>
-        {/* {fullProfile && (
+        {fullProfile && (
           <IconButton>
             <LogoutIcon onClick={handleLogout} />
           </IconButton>
-        )} */}
+        )}
       </AppBar>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
-        <Box sx={{ mt: '3rem' }}>
-          {/* <Cart /> */}
-        </Box>
+        <Box sx={{ mt: '3rem' }}>{/* <Cart /> */}</Box>
       </Drawer>
     </>
   );

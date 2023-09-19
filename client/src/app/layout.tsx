@@ -6,7 +6,7 @@ import { Container } from '@mui/material';
 export const Layout: React.FC<Props> = (props) => {
   return (
     <>
-      <Topbar />
+      <Topbar/>
       <Container>
         <main>{props.children}</main>
       </Container>

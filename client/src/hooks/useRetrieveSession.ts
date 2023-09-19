@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from './reactReduxHooks';
-import {
-  createNewUser,
-  getCurrentUserDetails,
-} from '../features/users/userSlice';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { api, securelyGetAccessToken } from '../helpers/refreshToken';
+import { createNewUser } from '../features/auth/useRegister';
 
 export const createNewSession = async (sessionQuery: any) => {
   const result = await sessionQuery.unwrap();
@@ -11,23 +9,33 @@ export const createNewSession = async (sessionQuery: any) => {
 };
 
 export const useRetrieveSession = () => {
-  const dispatch = useAppDispatch();
-  //   const { data: user } = useGetCurrentUserDetailsQuery();
-  //   const [startSession] = useCreateNewUserMutation();
-  //   const [createOrder] = useCreateOrderMutation();
-  //   const createNewOrder = async () => {
-  //     if (user) {
-  //       await createOrder({ userId: user.id }).unwrap();
-  //     }
-  //   };
-  const { user } = useAppSelector((state) => state.user);
+  const createNewUser = useMutation({
+    mutationFn: async () => {
+      const res = await api.post('session/start');
+      return res.data;
+    },
+    onSuccess(data) {
+      localStorage.setItem('accessToken', data.accessToken);
+    },
+  });
+
+  const { data } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      const token = await securelyGetAccessToken();
+      api
+        .get('me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => res.data);
+    },
+  });
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      dispatch(createNewUser());
-      localStorage.setItem('accessToken', user.accessToken);
+      createNewUser.mutate();
     }
-    // createNewOrder();
-  }, [user]);
+  }, [data]);
 };
-export {};

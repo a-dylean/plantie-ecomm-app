@@ -14,31 +14,27 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { isApiResponse } from '../../helpers/errors';
 //import { useLoginUserMutation } from '../users/usersApi';
 import { routes } from '../../helpers/routes';
-import { useDispatch } from 'react-redux';
-import { useAppDispatch } from '../../hooks/reactReduxHooks';
-import { getCurrentUserDetails, loginUser } from '../users/userSlice';
+import { useSignIn } from './useLogin';
+import { FormEventHandler } from 'react';
 
 export const LoginForm = () => {
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const submitForm = (data: FieldValues) => {
-    // console.log(data)
-    // navigate(routes.ME);
-    dispatch(loginUser(data))
-    //   .then((payload) => {
-    //     localStorage.setItem('accessToken', payload.token);
-    //   })
-      .catch((error: any) => {
-        if (isApiResponse(error)) {
-          enqueueSnackbar(error.data.details, { variant: 'error' });
-        } else {
-          const errMsg =
-            'error' in error ? error.error : JSON.stringify(error.data);
-          enqueueSnackbar(errMsg, { variant: 'error' });
-        }
-       })
+  const signIn = useSignIn();
+  const onSignIn: FormEventHandler<HTMLFormElement> = (form) => {
+    form.preventDefault();
+    const formData = new FormData(form.currentTarget);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    if (typeof email === 'string' && typeof password === 'string') {
+      signIn({
+        email,
+        password,
+      });
+    }
   };
+
   return (
     <Layout>
       <Box sx={{ m: '0 auto', width: '50%' }}>
@@ -51,7 +47,7 @@ export const LoginForm = () => {
             horizontal: 'left',
           }}
         />
-        <form name="login-form" onSubmit={handleSubmit(submitForm)}>
+        <form name="login-form" onSubmit={onSignIn}>
           <TextField
             color="secondary"
             variant="outlined"
@@ -80,8 +76,13 @@ export const LoginForm = () => {
             control={<Checkbox value="remember" color="secondary" />}
             label="Remember me"
           />
-          <Button type="submit" fullWidth variant="contained" color="secondary"
-          onClick={() => navigate(routes.ME)}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate(routes.ME)}
+          >
             Sign In
           </Button>
           <Box display="flex" justifyContent="space-evenly" sx={{ mt: 1 }}>

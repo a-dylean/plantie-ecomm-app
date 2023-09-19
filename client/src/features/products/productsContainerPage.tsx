@@ -5,15 +5,18 @@ import { Layout } from '../../app/layout';
 import { Filter } from '../../components/filter';
 import { useEffect, useState } from 'react';
 import { NothingFound } from '../../components/nothingFound';
-import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
-import { getProducts } from './productsSlice';
+//import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
+// import { getProducts } from './productsSlice';
 import { Product } from '../../app/interfaces';
 import { getUserCart } from '../cart/cartSlice';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../helpers/refreshToken';
 
 export const ProductsContainer = () => {
-  const { products, isLoading, isSuccess, error } = useAppSelector(
-    (state) => state.products,
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: () => api.get('products').then((res) => res.data),
+  });
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined,
   );
@@ -32,19 +35,20 @@ export const ProductsContainer = () => {
   const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
-  const dispatch = useAppDispatch();
-  
-  useEffect(() => {
-    dispatch(getProducts());
-    dispatch(getUserCart())
-  }, [dispatch]);
-  
-  let content;
+  // const dispatch = useAppDispatch();
 
+  // useEffect(() => {
+  //   dispatch(getProducts());
+  //   dispatch(getUserCart())
+  // }, [dispatch]);
+
+  let content;
   if (isLoading) {
     content = <LinearProgress />;
-  } else if (isSuccess) {
-    const renderedItems = products?.map((product: Product) => (
+  } else if (error) {
+    content = <>{error.toString()}</>;
+  } else {
+    const renderedItems = data?.map((product: Product) => (
       <Grid key={product.id}>
         <ProductItem
           name={product.name}
@@ -65,8 +69,6 @@ export const ProductsContainer = () => {
     } else {
       content = <NothingFound />;
     }
-  } else if (error) {
-    content = <>{error.toString()}</>;
   }
   return (
     <Layout>
