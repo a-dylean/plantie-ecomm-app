@@ -6,7 +6,7 @@ import { Product } from '../../app/interfaces';
 import { Price } from '../../components/price';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../../helpers/refreshToken';
+import { api } from '../../helpers/axios';
 
 export const ProductPage = () => {
   const {productId} = useParams();

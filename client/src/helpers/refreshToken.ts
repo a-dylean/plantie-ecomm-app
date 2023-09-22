@@ -1,13 +1,8 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { BASE_URL } from '../appconfig';
 import { DecodedToken } from '../app/interfaces';
+import { api } from './axios';
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = BASE_URL;
-export const api = axios.create({
-  baseURL: BASE_URL
-});
 
 export const securelyGetAccessToken = async () => {
   const token = localStorage.getItem('accessToken');
@@ -17,7 +12,7 @@ export const securelyGetAccessToken = async () => {
   const decoded: DecodedToken = jwt_decode(token);
   if (Date.now() > decoded.exp * 1000) {
     try {
-      const response = await axios.post(`${BASE_URL}/session/refresh`);
+      const response = await api.post(`/session/refresh`);
       return response.data.token;
     } catch (err) {
       if (axios.isAxiosError(err)) {

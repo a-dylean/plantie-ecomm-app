@@ -8,31 +8,35 @@ import {
   Link,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Layout } from '../../app/layout';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { isApiResponse } from '../../helpers/errors';
-//import { useLoginUserMutation } from '../users/usersApi';
 import { routes } from '../../helpers/routes';
-import { useSignIn } from './useLogin';
 import { FormEventHandler } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { User } from '../../models/api';
+import { queryClient } from '../..';
+import { loginUser } from '../../helpers/userActions';
 
 export const LoginForm = () => {
   const { register } = useForm();
   const navigate = useNavigate();
-  const signIn = useSignIn();
-  const onSignIn: FormEventHandler<HTMLFormElement> = (form) => {
+  const { mutate: login } = useMutation<
+    Partial<User>,
+    unknown,
+    Partial<User>,
+    unknown
+  >((data) => loginUser(data), {
+    onSuccess: () => queryClient.invalidateQueries(['user']),
+    onError: (error: any) => {
+      enqueueSnackbar(error.response.data.details, { variant: 'error' });
+    },
+  });
+  const handleSignIn: FormEventHandler<HTMLFormElement> = (form) => {
     form.preventDefault();
     const formData = new FormData(form.currentTarget);
-    const email = formData.get('email');
-    const password = formData.get('password');
-
-    if (typeof email === 'string' && typeof password === 'string') {
-      signIn({
-        email,
-        password,
-      });
-    }
+    const userData = Object.fromEntries(formData);
+    login(userData);
   };
 
   return (
@@ -47,7 +51,7 @@ export const LoginForm = () => {
             horizontal: 'left',
           }}
         />
-        <form name="login-form" onSubmit={onSignIn}>
+        <form name="login-form" onSubmit={handleSignIn}>
           <TextField
             color="secondary"
             variant="outlined"

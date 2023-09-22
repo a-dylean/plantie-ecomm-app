@@ -16,13 +16,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { routes } from '../helpers/routes';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from '../app/interfaces';
-import { securelyGetAccessToken, api } from '../helpers/refreshToken';
+import { securelyGetAccessToken } from '../helpers/refreshToken';
+import { api } from '../helpers/axios';
+import { queryClient } from '..';
 
 export const Topbar = () => {
   const navigate = useNavigate();
   const [cartOpen, setCartOpen] = useState(false);
   // const { data: OrderItems = [], refetch } = useGetUserCartQuery();
-  const queryClient = useQueryClient();
+  //const queryClient = useQueryClient();
   const { data } = useQuery<User | undefined>({
     queryKey: ['user'],
     queryFn: async () => {

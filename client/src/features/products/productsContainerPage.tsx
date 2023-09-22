@@ -10,7 +10,7 @@ import { NothingFound } from '../../components/nothingFound';
 import { Product } from '../../app/interfaces';
 import { getUserCart } from '../cart/cartSlice';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../../helpers/refreshToken';
+import { api } from '../../helpers/axios';
 
 export const ProductsContainer = () => {
   const { data, isLoading, error } = useQuery({
