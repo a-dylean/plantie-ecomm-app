@@ -8,13 +8,12 @@ import { NothingFound } from '../../components/nothingFound';
 //import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
 // import { getProducts } from './productsSlice';
 import { Product } from '../../app/interfaces';
-import { getUserCart } from '../cart/cartSlice';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../helpers/axios';
 
 export const ProductsContainer = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products'],
+    queryKey: ["products"],
     queryFn: () => api.get('products').then((res) => res.data),
   });
   const [categoryName, setCategoryName] = useState<string | undefined>(
@@ -35,13 +34,6 @@ export const ProductsContainer = () => {
   const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
-  // const dispatch = useAppDispatch();
-
-  // useEffect(() => {
-  //   dispatch(getProducts());
-  //   dispatch(getUserCart())
-  // }, [dispatch]);
-
   let content;
   if (isLoading) {
     content = <LinearProgress />;

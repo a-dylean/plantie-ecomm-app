@@ -7,9 +7,9 @@ import {
   Badge,
 } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-//import { Cart } from '../features/cart/cart';
+import { Cart } from '../features/cart/cart';
 import { useEffect, useState } from 'react';
-import { getTotalItems } from '../helpers/cartFunctions';
+import { getTotalItems } from '../helpers/helperFunctions';
 import { useNavigate } from 'react-router-dom';
 import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -83,7 +83,9 @@ export const Topbar = () => {
         )}
       </AppBar>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
-        <Box sx={{ mt: '3rem' }}>{/* <Cart /> */}</Box>
+        <Box sx={{ mt: '3rem' }}>
+          <Cart />
+        </Box>
       </Drawer>
     </>
   );

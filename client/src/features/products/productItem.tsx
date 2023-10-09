@@ -10,7 +10,7 @@ import {
 import { Product } from '../../app/interfaces';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../helpers/routes';
-//import { AddToCartButton } from '../../components/addToCardButton';
+import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
 
 export const ProductItem: React.FC<Product> = (product) => {
@@ -55,7 +55,7 @@ export const ProductItem: React.FC<Product> = (product) => {
           </CardContent>
         </Box>
         <CardActions>
-          {/* <AddToCartButton product={product} /> */}
+          <AddToCartButton product={product} />
         </CardActions>
       </Box>
     </ProductItemCard>

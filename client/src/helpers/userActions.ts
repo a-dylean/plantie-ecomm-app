@@ -26,21 +26,25 @@ export const useCreateUser = () => {
 };
 
 export const useGetUser = () => {
+  let fetchData: User;
   const getUser = async () => {
-    let fetchData;
     const token = await securelyGetAccessToken();
     await api
-      .get<User>('me', {
+      .get('me', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => (fetchData = res.data));
+      .then((res) => (fetchData = res.data as User));
     return fetchData;
   };
   return useQuery({
     queryKey: ['user'],
     queryFn: getUser,
+    // onSuccess: async () => {
+    //   const res =  await api.post('orders', {userId: fetchData.id});
+    //   return res.data
+    // }
   });
 };
 
