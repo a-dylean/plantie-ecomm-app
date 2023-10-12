@@ -11,10 +11,6 @@ import { useEffect } from 'react';
 import { routes } from '../helpers/routes';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useCreateUser, useGetUser } from '../helpers/userActions';
-import { useMutation } from '@tanstack/react-query';
-import { api } from '../helpers/axios';
-import { Order } from '../models/api';
-import { useCreateOrder } from '../helpers/ordersActions';
 
 export const App = () => {
   const token = localStorage.getItem('accessToken');

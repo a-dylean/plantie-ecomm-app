@@ -6,15 +6,16 @@ import { Price } from '../../components/price';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import { queryClient } from '../..';
 import { Product, ProductOrder } from '../../models/api';
-import { useUpdateQuantity } from '../../helpers/ordersActions';
+import { useDeleteItem, useUpdateQuantity } from '../orders/ordersActions';
 
 export const CartItemComponent = ({quantity, productId}: any) => {
   const products: Product[] | undefined = queryClient.getQueryData(['products']);
   const productOrder: ProductOrder | undefined = queryClient.getQueryData(['productOrder']);
   const productOrderId = productOrder?.id;
   const updateQuantity = useUpdateQuantity(productOrderId);
+  const deleteItem = useDeleteItem(productOrderId);
   const removeEntirely = () => {
-    //deleteItem(productOrderInfo?.id);
+    deleteItem();
   };
   const size = useWindowSize();
   return (
@@ -47,16 +48,16 @@ export const CartItemComponent = ({quantity, productId}: any) => {
                 <IconButton
                   color="secondary"
                   onClick={() => {
-                    updateQuantity(--productOrder!.quantity);
+                    updateQuantity(--quantity);
                   }}
-                  disabled={productOrder!.quantity <= 0}
+                  disabled={quantity <= 0}
                 >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
-                {productOrder?.quantity}
+                {quantity}
                 <IconButton
                   color="secondary"
-                  onClick={() => updateQuantity(++productOrder!.quantity)}
+                  onClick={() => updateQuantity(++quantity)}
                 >
                   <AddCircleOutlineIcon />
                 </IconButton>

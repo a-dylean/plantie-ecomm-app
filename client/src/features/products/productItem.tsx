@@ -7,13 +7,13 @@ import {
   Box,
   styled,
 } from '@mui/material';
-import { Product } from '../../app/interfaces';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../helpers/routes';
 import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
+import { Product } from '../../models/api';
 
-export const ProductItem: React.FC<Product> = (product) => {
+export const ProductItem = (product: Product) => {
   const navigate = useNavigate();
   const ProductItemCard = styled(Card)(() => ({
     width: 345,
@@ -32,7 +32,7 @@ export const ProductItem: React.FC<Product> = (product) => {
             component="img"
             alt="product img"
             height="400px"
-            image={product.picture}
+            image={product.picture || ""}
           />
           <CardContent>
             <Box display="flex" justifyContent="space-between">
@@ -55,7 +55,7 @@ export const ProductItem: React.FC<Product> = (product) => {
           </CardContent>
         </Box>
         <CardActions>
-          <AddToCartButton product={product} />
+          <AddToCartButton {...product} />
         </CardActions>
       </Box>
     </ProductItemCard>

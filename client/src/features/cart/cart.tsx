@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../helpers/axios';
 import { queryClient } from '../..';
 import { Order, ProductOrder, User } from '../../models/api';
+import { useGetCart, useGetDraftOrder } from '../orders/ordersActions';
 
 const CartBox = styled('div')(({ theme }) => ({
   backgroundColor: backgroundColor,
@@ -19,43 +20,15 @@ const CartBox = styled('div')(({ theme }) => ({
 
 export const Cart = () => {
   const navigate = useNavigate();
-  //   const {
-  //     data: OrderItems = [],
-  //     isLoading,
-  //     isSuccess,
-  //     isError,
-  //     error,
-  //     refetch,
-  //   } = useGetUserCartQuery();
-  //   const { data: user } = useGetCurrentUserDetailsQuery();
-  // const fullProfile = user?.fullProfile;
-  //   const [deleteItem] = useDeleteProductOrderMutation();
   //   const [createCheckoutSession] = useCreateCheckoutSessionMutation();
   const user: User | undefined = queryClient.getQueryData(['user']);
   const userId = user?.id;
-  const { data: draftOrder } = useQuery({
-    queryKey: ['draftOrder', userId],
-    queryFn: async () => {
-      const draftOrder = await api.get(`orders/draft/${userId}`);
-      return draftOrder.data as Order;
-    },
-    enabled: !!userId,
-  });
-
+  const fullProfile = user?.fullProfile;
+  //const draftOrder: Order | undefined = queryClient.getQueryData(['draft']);
+  const { data: draftOrder} = useGetDraftOrder(userId);
   const draftOrderId = draftOrder?.id;
-  const {
-    data: cartItems,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['cartItems', draftOrderId],
-    queryFn: async () => {
-      const res = await api.get(`orders/${draftOrderId}/product-orders`);
-      return res.data as ProductOrder[];
-    },
-    enabled: !!draftOrderId,
-  });
-
+  const { data: cartItems, isLoading, error } = useGetCart(draftOrderId);
+  console.log(draftOrderId)
   let content;
   if (isLoading) {
     content = <CircularProgress />;
@@ -72,7 +45,8 @@ export const Cart = () => {
     ));
     content = <>{renderedItems}</>;
   }
-
+console.log(cartItems)
+console.log(content)
   const handleCheckout = () => {
     // if (user) {
     //   createCheckoutSession({ order: OrderItems, userEmail: user.email })
@@ -98,15 +72,15 @@ export const Cart = () => {
               <Button
                 color="secondary"
                 variant="text"
-                // onClick={() =>
-                //  fullProfile ? handleCheckout() : navigate(routes.ME)
-                // }
+                onClick={() =>
+                 fullProfile ? handleCheckout() : navigate(routes.ME)
+                }
                 startIcon={<ShoppingCartCheckoutIcon />}
               >
                 Checkout
               </Button>
               <Typography variant="h6">
-                {/* Total: €{calculateTotalCartAmount(cartItems)} */}
+                Total: €{calculateTotalCartAmount(cartItems)}
               </Typography>
             </Box>
           </>

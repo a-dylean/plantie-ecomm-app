@@ -41,10 +41,6 @@ export const useGetUser = () => {
   return useQuery({
     queryKey: ['user'],
     queryFn: getUser,
-    // onSuccess: async () => {
-    //   const res =  await api.post('orders', {userId: fetchData.id});
-    //   return res.data
-    // }
   });
 };
 

@@ -93,7 +93,7 @@ export const Filter: React.FC<FilterProps> = ({
     newValue: number | number[],
   ) => {
     setValue(newValue as number[]);
-    debouncedPriceSearch(value);
+    debouncedPriceSearch(value.toString());
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

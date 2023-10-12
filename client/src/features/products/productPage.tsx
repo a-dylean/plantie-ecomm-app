@@ -1,24 +1,23 @@
 import { Typography, Card, CardMedia, CardContent, Grid } from '@mui/material';
-//import { useAppDispatch, useAppSelector } from '../../hooks/reactReduxHooks';
 import { Layout } from '../../app/layout';
-import { Product } from '../../app/interfaces';
-// import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../helpers/axios';
+import { AddToCartButton } from '../../components/addToCardButton';
+import { Product } from '../../models/api';
 
 export const ProductPage = () => {
   const {productId} = useParams();
-  const { data, isLoading, error } = useQuery({
+  const { data: product, isLoading, error } = useQuery({
     queryKey: ['product'],
     queryFn: () => 
     api.get(`products/${productId}`)
-    .then((res) => res.data)
+    .then((res) => res.data as Product)
   });
   return (
     <>
-      {data && (
+      {product && (
         <Layout>
           <Card>
             <Grid container>
@@ -26,18 +25,18 @@ export const ProductPage = () => {
                 <CardMedia
                   component="img"
                   alt="product img"
-                  image={data.picture}
+                  image={product.picture || ""}
                 />
               </Grid>
               <Grid xs={6}>
                 <CardContent>
-                  <Typography variant="h5">{data.name}</Typography>
-                  <Typography variant="body1">{data.description}</Typography>
+                  <Typography variant="h5">{product.name}</Typography>
+                  <Typography variant="body1">{product.description}</Typography>
                   <Typography variant="h6">{`Availability: ${
-                    data.available ? 'in stock' : 'out of stock'
+                    product.available ? 'in stock' : 'out of stock'
                   }`}</Typography>
-                  <Typography variant="h6">Price: <Price price={data.price}/></Typography>
-                  {/* <AddToCartButton product={data} /> */}
+                  <Typography variant="h6">Price: <Price price={product.price}/></Typography>
+                  <AddToCartButton {...product} />
                 </CardContent>
               </Grid>
             </Grid>

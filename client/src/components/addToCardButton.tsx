@@ -6,50 +6,33 @@ import {
   useAddToCart,
   useCreateOrder,
   useGetDraftOrder,
+  useGetProductOrder,
   useUpdateQuantity,
-} from '../helpers/ordersActions';
-import { api } from '../helpers/axios';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Order, ProductOrder, User } from '../models/api';
+} from '../features/orders/ordersActions';
+import { Product, User } from '../models/api';
 import { queryClient } from '..';
 
-export const AddToCartButton = ({
-  product: { id: productId, price: productPrice },
-}: AddToCartButtonProps) => {
+export const AddToCartButton = (product: Product) => {
   const [isCartItem, setIsCartItem] = useState(false);
-  const { data: productOrder } = useQuery({
-    queryKey: ['productOrder', productId],
-    queryFn: async () => {
-      const res = await api.get(`/products/${productId}/product-orders`);
-      return res.data as ProductOrder;
-    },
-  });
+  const { data: productOrder } = useGetProductOrder(product.id);
   const user: User | undefined = queryClient.getQueryData(['user']);
   const userId = user?.id;
   const { data: draftOrder } = useGetDraftOrder(userId);
   const draftOrderId = draftOrder?.id;
   const productOrderId = productOrder?.id;
   let quantity = productOrder?.quantity || 0;
-  const { mutate: addToCart } = useMutation(
-    async () =>
-      await api.post('product-orders', {
-        productId: productId,
-        orderId: draftOrderId,
-        price: productPrice,
-        quantity: 1,
-      }),
-  );
+  const addToCart = useAddToCart()
   const updateQuantity = useUpdateQuantity(productOrderId);
   const createOrder = useCreateOrder({ userId: userId });
   const handleClick = () => {
     if (!draftOrder) {
       createOrder();
     }
-
     if (isCartItem) {
       updateQuantity(++quantity);
     } else {
-      addToCart();
+      console.log(product.id)
+      addToCart({productId: product.id, draftOrderId, productProce: product.price});
       setIsCartItem(true);
     }
   };
