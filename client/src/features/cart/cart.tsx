@@ -28,7 +28,7 @@ export const Cart = () => {
   const { data: draftOrder} = useGetDraftOrder(userId);
   const draftOrderId = draftOrder?.id;
   const { data: cartItems, isLoading, error } = useGetCart(draftOrderId);
-  console.log(draftOrderId)
+  console.log(cartItems)
   let content;
   if (isLoading) {
     content = <CircularProgress />;
@@ -38,15 +38,12 @@ export const Cart = () => {
     const renderedItems = cartItems?.map((cartItem) => (
       <List key={cartItem.id}>
         <CartItemComponent
-          quantity={cartItem.quantity}
-          productId={cartItem.productId}
+          {...cartItem}
         />
       </List>
     ));
     content = <>{renderedItems}</>;
   }
-console.log(cartItems)
-console.log(content)
   const handleCheckout = () => {
     // if (user) {
     //   createCheckoutSession({ order: OrderItems, userEmail: user.email })
@@ -59,7 +56,7 @@ console.log(content)
     <>
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
-        {cartItems?.length === 0 ? (
+        {!cartItems || cartItems?.length === 0 ? (
           <Typography>
             So far empty...
             <br /> We have plenty of beautiful plants to choose from. Happy

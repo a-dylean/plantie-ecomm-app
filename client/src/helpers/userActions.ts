@@ -1,7 +1,7 @@
 import { api } from './axios';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { securelyGetAccessToken } from './refreshToken';
-import { User } from '../models/api';
+import { UserInfo, User, Order } from '../models/api';
 
 export const updateUser = async (data: any) => {
   const token = await securelyGetAccessToken();
@@ -12,14 +12,26 @@ export const updateUser = async (data: any) => {
   return res.data;
 };
 
+// export const useCreateOrder = (data: { userId: number | undefined }) => {
+//   const { mutate: createNewOrder } = useMutation({
+//     mutationFn: async () => {
+//       const res = await api.post('orders', data);
+//       return res.data as Order;
+//     }
+//   });
+//   return createNewOrder;
+// };
+
 export const useCreateUser = () => {
   const { mutate: createNewUser } = useMutation({
     mutationFn: async () => {
-      const res = await api.post('session/start');
-      return res.data;
+      const user = await api.post('session/start');
+      return user.data as UserInfo;
     },
-    onSuccess(data) {
-      localStorage.setItem('accessToken', data.accessToken);
+    onSuccess: async (user) => {
+      localStorage.setItem('accessToken', user.accessToken);
+      const res = await api.post('orders', {userId: user.id});
+      return res.data as Order
     },
   });
   return createNewUser;

@@ -8,12 +8,15 @@ import { AddToCartButton } from '../../components/addToCardButton';
 import { Product } from '../../models/api';
 
 export const ProductPage = () => {
-  const {productId} = useParams();
-  const { data: product, isLoading, error } = useQuery({
+  const { productId } = useParams();
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['product'],
-    queryFn: () => 
-    api.get(`products/${productId}`)
-    .then((res) => res.data as Product)
+    queryFn: () =>
+      api.get(`products/${productId}`).then((res) => res.data as Product),
   });
   return (
     <>
@@ -25,7 +28,7 @@ export const ProductPage = () => {
                 <CardMedia
                   component="img"
                   alt="product img"
-                  image={product.picture || ""}
+                  image={product.picture || ''}
                 />
               </Grid>
               <Grid xs={6}>
@@ -35,7 +38,9 @@ export const ProductPage = () => {
                   <Typography variant="h6">{`Availability: ${
                     product.available ? 'in stock' : 'out of stock'
                   }`}</Typography>
-                  <Typography variant="h6">Price: <Price price={product.price}/></Typography>
+                  <Typography variant="h6">
+                    Price: <Price price={product.price} />
+                  </Typography>
                   <AddToCartButton {...product} />
                 </CardContent>
               </Grid>

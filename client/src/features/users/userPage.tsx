@@ -1,24 +1,22 @@
+import { queryClient } from '../..';
+import { useGetUser } from '../../helpers/userActions';
+import { User } from '../../models/api';
 import { LoginForm } from '../auth/loginPage';
 import { FullProfilePage } from './fullProfilePage';
 import { CircularProgress } from '@mui/material';
 
-export const UserPage = ({data, error,
-  isLoading,
-  isSuccess}: any) => {
+export const UserPage = () => {
+  const user: User | undefined = queryClient.getQueryData([
+    'user',
+  ]);
+  const { error, isLoading, isSuccess } = useGetUser();
   let content = <LoginForm />;
   if (isLoading) {
     content = <CircularProgress />;
   }
-  if (isSuccess && data?.fullProfile === true ) {
+  if (isSuccess && user?.fullProfile === true ) {
     content = (
-      <FullProfilePage
-        name={data.name}
-        email={data.email}
-        surname={data.surname}
-        address={data.address}
-        phone={data.phone}
-        id={data.id}
-      />
+      <FullProfilePage {...user}/>
    );
   }
   if (error) {

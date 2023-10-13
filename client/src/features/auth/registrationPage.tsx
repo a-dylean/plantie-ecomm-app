@@ -32,7 +32,6 @@ export const RegistrationForm = () => {
     {
       onSuccess: () => navigate(routes.ME),
       onError: (error: any) => {
-        console.log();
         if (error.response.data.details['requestBody.email']) {
           enqueueSnackbar('This email is already in use', { variant: 'error' });
         } else {

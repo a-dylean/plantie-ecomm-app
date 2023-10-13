@@ -15,13 +15,12 @@ import { useCreateUser, useGetUser } from '../helpers/userActions';
 export const App = () => {
   const token = localStorage.getItem('accessToken');
   const createNewUser = useCreateUser();
-  const { data, error, isLoading, isSuccess } = useGetUser();
-
+  const { data: user } = useGetUser();
   useEffect(() => {
     if (!token) {
       createNewUser();
     }
-  }, [data, token]);
+  }, [user, token]);
   return (
     <>
       <BrowserRouter>
@@ -34,14 +33,7 @@ export const App = () => {
             <Route path={routes.REGISTER} element={<RegistrationForm />} />
             <Route
               path={routes.ME}
-              element={
-                <UserPage
-                  data={data}
-                  error={error}
-                  isLoading={isLoading}
-                  isSuccess={isSuccess}
-                />
-              }
+              element={<UserPage/>}
             />
             <Route path={routes.SUCCESS} element={<SuccessfullPayment />} />
             <Route path={routes.CANCEL} element={<CancelledPayment />} />
@@ -52,7 +44,4 @@ export const App = () => {
     </>
   );
 };
-function enabled(variables: void): Promise<unknown> {
-  throw new Error('Function not implemented.');
-}
 

@@ -6,14 +6,9 @@ import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 //import { OrdersInfo } from '../orders/ordersInfo';
-import { User } from '../../app/interfaces';
 import { useWindowSize } from '../../hooks/useWindowSize';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+import { User } from '../../models/api';
+import { TabPanelProps } from '../../app/interfaces';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -41,7 +36,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const FullProfilePage: React.FC<Partial<User>> = (user) => {
+export const FullProfilePage = (user: User) => {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -80,11 +75,7 @@ export const FullProfilePage: React.FC<Partial<User>> = (user) => {
             <Box sx={{ display: 'flex' }}>
               <List>
                 <UserInfo
-                  name={user.name}
-                  email={user.email}
-                  surname={user.surname}
-                  address={user.address}
-                  phone={user.phone}
+                  {...user}
                 />
               </List>
               {/* {size.width > 700 && (

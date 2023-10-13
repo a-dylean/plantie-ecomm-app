@@ -14,9 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { routes } from '../helpers/routes';
-import { User } from '../app/interfaces';
 import { queryClient } from '..';
-import { ProductOrder } from '../models/api';
+import { ProductOrder, User } from '../models/api';
 
 export const Topbar = () => {
   const navigate = useNavigate();
