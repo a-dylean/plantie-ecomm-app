@@ -16,12 +16,12 @@ import { debounce } from 'lodash';
 import { backgroundColor } from './theme';
 import { FilterProps } from '../app/interfaces';
 import { debounceTime } from '../appconfig';
-import { useGetCategoriesQuery } from '../features/categories/categoriesApi';
-import {
-  useGetMaxPriceQuery,
-  useGetMinPriceQuery,
-} from '../features/products/productsApi';
 import { Price } from './price';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../helpers/axios';
+import { Category, Product } from '../models/api';
+import { queryClient } from '..';
+import { getMax, getMin } from '../helpers/helperFunctions';
 
 const FilterBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -42,9 +42,18 @@ export const Filter: React.FC<FilterProps> = ({
   chooseSortMethod,
   search,
 }) => {
-  const { data: minPrice } = useGetMinPriceQuery();
-  const { data: maxPrice } = useGetMaxPriceQuery();
-  const { data: categories } = useGetCategoriesQuery();
+  const products: Product[] | undefined = queryClient.getQueryData([
+    'products',
+  ]);
+  const minPrice = getMin(products);
+  const maxPrice = getMax(products);
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories');
+      return res.data as Category[];
+    },
+  });
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
     chooseCategory(event.target.value as string);
@@ -55,7 +64,6 @@ export const Filter: React.FC<FilterProps> = ({
   };
   const [value, setValue] = useState<number[]>([minPrice ?? 0, maxPrice ?? 0]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-
   const valuetext = (value: number[]) => {
     if (value[0] === 0 && value[1] === 0) {
       return 'Price range';
@@ -85,7 +93,7 @@ export const Filter: React.FC<FilterProps> = ({
     newValue: number | number[],
   ) => {
     setValue(newValue as number[]);
-    debouncedPriceSearch(value);
+    debouncedPriceSearch(value.toString());
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +165,6 @@ export const Filter: React.FC<FilterProps> = ({
                 getAriaLabel={() => {
                   return 'Price range';
                 }}
-                defaultValue={undefined}
                 value={value}
                 onChange={handlePriceRangeChange}
                 step={10}

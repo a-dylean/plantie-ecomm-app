@@ -2,10 +2,12 @@ import { ProductItem } from './productItem';
 import { LinearProgress } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Layout } from '../../app/layout';
-import { useGetProductsQuery } from './productsApi';
 import { Filter } from '../../components/filter';
 import { useState } from 'react';
 import { NothingFound } from '../../components/nothingFound';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../helpers/axios';
+import { Product } from '../../models/api';
 
 export const ProductsContainer = () => {
   const [categoryName, setCategoryName] = useState<string | undefined>(
@@ -26,42 +28,32 @@ export const ProductsContainer = () => {
   const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
-  const {
-    data: products = [],
-    isError,
-    isLoading,
-    error,
-    isSuccess,
-  } = useGetProductsQuery({ priceRange, categoryName, orderBy, searchTerm });
 
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['products', priceRange, categoryName, orderBy, searchTerm],
+    queryFn: () =>
+      api
+        .get('products', {
+          params: { priceRange, categoryName, orderBy, searchTerm },
+        })
+        .then((res) => res.data as Product[]),
+  });
   let content;
-
   if (isLoading) {
     content = <LinearProgress />;
-  } else if (isSuccess) {
-    const renderedItems = products.map((product) => (
+  } else if (error) {
+    content = <>{error.toString()}</>;
+  } else {
+    const renderedItems = data?.map((product: Product) => (
       <Grid key={product.id}>
-        <ProductItem
-          name={product.name}
-          id={product.id}
-          description={product.description}
-          price={product.price}
-          available={product.available}
-          categoryId={product.categoryId}
-          createdAt={product.createdAt}
-          updatedAt={product.updatedAt}
-          picture={product.picture}
-          quantity={product.quantity}
-        />
+        <ProductItem {...product} />
       </Grid>
     ));
-    if (renderedItems.length > 0) {
+    if (renderedItems!.length > 0) {
       content = <>{renderedItems}</>;
     } else {
       content = <NothingFound />;
     }
-  } else if (isError) {
-    content = <>{error.toString()}</>;
   }
   return (
     <Layout>

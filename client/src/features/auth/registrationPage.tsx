@@ -8,12 +8,7 @@ import {
   Link,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import {
-  Controller,
-  useForm,
-  SubmitHandler,
-  FieldValues,
-} from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../../app/layout';
 import {
@@ -22,25 +17,38 @@ import {
   matchIsValidTel,
 } from 'mui-tel-input';
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
-import { useUpdateUserDetailsMutation } from '../users/usersApi';
+import { useMutation } from '@tanstack/react-query';
+import { User } from '../../models/api';
+import { FormEventHandler } from 'react';
+import { routes } from '../../helpers/routes';
+import { updateUser } from '../../helpers/userActions';
 
 export const RegistrationForm = () => {
-  const { register, control, handleSubmit } = useForm();
   const continents: MuiTelInputContinent[] = ['EU'];
-  const [updateUser] = useUpdateUserDetailsMutation();
+  const navigate = useNavigate();
+  const { register, control } = useForm();
+  const { mutate } = useMutation<User, unknown, Partial<User>, unknown>(
+    (data) => updateUser(data),
+    {
+      onSuccess: () => navigate(routes.ME),
+      onError: (error: any) => {
+        if (error.response.data.details['requestBody.email']) {
+          enqueueSnackbar('This email is already in use', { variant: 'error' });
+        } else {
+          enqueueSnackbar(error.response.data.message, { variant: 'error' });
+        }
+      },
+    },
+  );
 
-  const submitForm: SubmitHandler<FieldValues> = async (data) => {
-    try {
-      data.email = data.email.toLowerCase();
-      await updateUser(data).unwrap();
-    } catch (error: any) {
-      if (error.data.details['requestBody.email']) {
-        enqueueSnackbar('This email is already in use', { variant: 'error' });
-      } else {
-        enqueueSnackbar(error.data.message, { variant: 'error' });
-      }
-    }
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (form) => {
+    form.preventDefault();
+    const formData = new FormData(form.currentTarget);
+    const userData = Object.fromEntries(formData);
+    userData.email.toString().toLowerCase();
+    mutate(userData);
   };
+
   return (
     <Layout>
       <SnackbarProvider
@@ -53,7 +61,7 @@ export const RegistrationForm = () => {
         <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
           Sign up
         </Typography>
-        <form name="registration-form" onSubmit={handleSubmit(submitForm)}>
+        <form name="registration-form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid xs={12} sm={6}>
               <TextField
@@ -89,7 +97,8 @@ export const RegistrationForm = () => {
                 label="Email Address"
                 type="email"
                 {...register('email', {
-                  pattern: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+                  pattern:
+                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                 })}
               />
             </Grid>

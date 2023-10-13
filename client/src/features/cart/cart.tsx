@@ -4,15 +4,19 @@ import { backgroundColor } from '../../components/theme';
 import { CartItemComponent } from './cartItem';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
-import { calculateTotalCartAmount } from '../../helpers/cartFunctions';
-import {
-  useCreateCheckoutSessionMutation,
-  useDeleteProductOrderMutation,
-  useGetUserCartQuery,
-} from '../orders/ordersApi';
-import { useGetCurrentUserDetailsQuery } from '../users/usersApi';
+import { calculateTotalCartAmount } from '../../helpers/helperFunctions';
 import { routes } from '../../helpers/routes';
 import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../helpers/axios';
+import { queryClient } from '../..';
+import { Order, ProductOrder, User } from '../../models/api';
+import {
+  useCreateCheckoutSession,
+  useDeleteItem,
+  useGetCart,
+  useGetDraftOrder,
+} from '../orders/ordersActions';
 
 const CartBox = styled('div')(({ theme }) => ({
   backgroundColor: backgroundColor,
@@ -21,51 +25,43 @@ const CartBox = styled('div')(({ theme }) => ({
 
 export const Cart = () => {
   const navigate = useNavigate();
-  const {
-    data: OrderItems = [],
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-    refetch,
-  } = useGetUserCartQuery();
-  const { data: user } = useGetCurrentUserDetailsQuery();
+  const createCheckoutSession = useCreateCheckoutSession();
+  const user: User | undefined = queryClient.getQueryData(['user']);
+  const userId = user?.id;
   const fullProfile = user?.fullProfile;
-  const [deleteItem] = useDeleteProductOrderMutation();
-  const [createCheckoutSession] = useCreateCheckoutSessionMutation();
-  useEffect(() => {
-    refetch();
-  }, [user]);
+  const { data: draftOrder } = useGetDraftOrder(userId);
+  const draftOrderId = draftOrder?.id;
+  const { data: cartItems, isLoading, error } = useGetCart(draftOrderId);
+  const deleteItem = useDeleteItem();     
+
   let content;
   if (isLoading) {
     content = <CircularProgress />;
-  } else if (isSuccess) {
-    const renderedItems = OrderItems.map((cartItem) => (
+  } else if (error) {
+    content = <>{error.toString()}</>;
+  } else {
+    const renderedItems = cartItems?.map((cartItem) => (
       <List key={cartItem.id}>
-        <CartItemComponent
-          quantity={cartItem.quantity}
-          productId={cartItem.productId}
-        />
+        <CartItemComponent {...cartItem} />
       </List>
     ));
     content = <>{renderedItems}</>;
-  } else if (isError) {
-    content = <>{error.toString()}</>;
   }
-
   const handleCheckout = () => {
     if (user) {
-      createCheckoutSession({ order: OrderItems, userEmail: user.email })
-        .unwrap()
-        .then((data) => (window.location.href = data.url));
-      OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
+      createCheckoutSession({ order: cartItems, userEmail: user.email })
+      cartItems
+        ?.map((item) => item.id)
+        .forEach((id) => {
+          deleteItem(id);
+        });
     }
   };
   return (
     <>
       <CartBox>
         <Typography variant="h5">Your Cart</Typography>
-        {OrderItems.length === 0 ? (
+        {!cartItems || cartItems?.length === 0 ? (
           <Typography>
             So far empty...
             <br /> We have plenty of beautiful plants to choose from. Happy
@@ -86,7 +82,7 @@ export const Cart = () => {
                 Checkout
               </Button>
               <Typography variant="h6">
-                Total: €{calculateTotalCartAmount(OrderItems).toFixed(2)}
+                Total: €{calculateTotalCartAmount(cartItems)}
               </Typography>
             </Box>
           </>

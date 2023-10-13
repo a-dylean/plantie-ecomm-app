@@ -2,35 +2,31 @@ import { Typography, Box, IconButton, ListItem, Divider } from '@mui/material';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import {
-  useGetProductOrderByProductIdQuery,
-  useDeleteProductOrderMutation,
-  useUpdateQuantityMutation,
-} from '../orders/ordersApi';
-import { useGetProductQuery } from '../products/productsApi';
 import { Price } from '../../components/price';
-import React from 'react';
-import { CartItemProps } from '../../app/interfaces';
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { Product, ProductOrder } from '../../models/api';
+import { useDeleteItem, useUpdateQuantity } from '../orders/ordersActions';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../helpers/axios';
 
-export const CartItemComponent: React.FC<CartItemProps> = ({ ...cartItem }) => {
-  const { data: productInfo } = useGetProductQuery(cartItem.productId);
-  const { data: productOrderInfo } = useGetProductOrderByProductIdQuery(
-    cartItem.productId,
-  );
-  const totalPerItem = cartItem.quantity * Number(productInfo?.price);
-  const [update] = useUpdateQuantityMutation();
-  const updateQuantity = (newQuantity: number) => {
-    return update({ id: productOrderInfo?.id, quantity: newQuantity });
-  };
-  const [deleteItem] = useDeleteProductOrderMutation();
+export const CartItemComponent = (cartItem: ProductOrder) => {
+  const { data: product } = useQuery({
+    queryKey: ['product', cartItem.productId],
+    queryFn: () =>
+      api
+        .get(`products/${cartItem.productId}`)
+        .then((res) => res.data as Product),
+  });
+  const updateQuantity = useUpdateQuantity(cartItem.id);
+  const deleteItem = useDeleteItem();
   const removeEntirely = () => {
-    deleteItem(productOrderInfo?.id);
+    deleteItem(cartItem.id);
   };
   const size = useWindowSize();
+  let quantity = cartItem.quantity;
   return (
     <>
-      {productInfo && productOrderInfo && (
+      {product && (
         <>
           <ListItem dense>
             <Box
@@ -45,8 +41,8 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ ...cartItem }) => {
                 component="div"
                 sx={{ width: `${size.width > 500 ? '200px' : '130%'}` }}
               >
-                {productInfo.name} <br />
-                <Price price={productInfo.price} />
+                {product.name} <br />
+                <Price price={product.price} />
               </Typography>
               <Box
                 sx={{
@@ -58,22 +54,22 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ ...cartItem }) => {
                 <IconButton
                   color="secondary"
                   onClick={() => {
-                    updateQuantity(--cartItem.quantity);
+                    updateQuantity(--quantity);
                   }}
                   disabled={cartItem.quantity <= 0}
                 >
                   <RemoveCircleOutlineIcon />
                 </IconButton>
-                {productOrderInfo.quantity}
+                {cartItem.quantity}
                 <IconButton
                   color="secondary"
-                  onClick={() => updateQuantity(++cartItem.quantity)}
+                  onClick={() => updateQuantity(++quantity)}
                 >
                   <AddCircleOutlineIcon />
                 </IconButton>
               </Box>
               <Typography component="div">
-                <Price price={totalPerItem} />
+                <Price price={cartItem.quantity * Number(product.price)} />
               </Typography>
               <IconButton onClick={removeEntirely}>
                 <HighlightOffIcon color="secondary" />

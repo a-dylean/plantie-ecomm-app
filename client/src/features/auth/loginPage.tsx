@@ -8,34 +8,37 @@ import {
   Link,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Layout } from '../../app/layout';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { isApiResponse } from '../../helpers/errors';
-import { useLoginUserMutation } from '../users/usersApi';
 import { routes } from '../../helpers/routes';
+import { FormEventHandler } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { User } from '../../models/api';
+import { queryClient } from '../..';
+import { loginUser } from '../../helpers/userActions';
 
 export const LoginForm = () => {
-  const [loginUser] = useLoginUserMutation();
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
   const navigate = useNavigate();
-  const submitForm = (data: FieldValues) => {
-    navigate(routes.ME);
-    loginUser(data)
-      .unwrap()
-      .then((payload) => {
-        localStorage.setItem('accessToken', payload.token);
-      })
-      .catch((error: any) => {
-        if (isApiResponse(error)) {
-          enqueueSnackbar(error.data.details, { variant: 'error' });
-        } else {
-          const errMsg =
-            'error' in error ? error.error : JSON.stringify(error.data);
-          enqueueSnackbar(errMsg, { variant: 'error' });
-        }
-      });
+  const { mutate: login } = useMutation<
+    Partial<User>,
+    unknown,
+    Partial<User>,
+    unknown
+  >((data) => loginUser(data), {
+    onSuccess: () => queryClient.invalidateQueries(['user']),
+    onError: (error: any) => {
+      enqueueSnackbar(error.response.data.details, { variant: 'error' });
+    },
+  });
+  const handleSignIn: FormEventHandler<HTMLFormElement> = (form) => {
+    form.preventDefault();
+    const formData = new FormData(form.currentTarget);
+    const userData = Object.fromEntries(formData);
+    login(userData);
   };
+
   return (
     <Layout>
       <Box sx={{ m: '0 auto', width: '50%' }}>
@@ -48,7 +51,7 @@ export const LoginForm = () => {
             horizontal: 'left',
           }}
         />
-        <form name="login-form" onSubmit={handleSubmit(submitForm)}>
+        <form name="login-form" onSubmit={handleSignIn}>
           <TextField
             color="secondary"
             variant="outlined"
@@ -77,8 +80,13 @@ export const LoginForm = () => {
             control={<Checkbox value="remember" color="secondary" />}
             label="Remember me"
           />
-          <Button type="submit" fullWidth variant="contained" color="secondary"
-          onClick={() => navigate(routes.ME)}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate(routes.ME)}
+          >
             Sign In
           </Button>
           <Box display="flex" justifyContent="space-evenly" sx={{ mt: 1 }}>

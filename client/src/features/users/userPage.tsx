@@ -1,40 +1,25 @@
-import React, { useEffect } from 'react';
+import { queryClient } from '../..';
+import { useGetUser } from '../../helpers/userActions';
+import { User } from '../../models/api';
 import { LoginForm } from '../auth/loginPage';
 import { FullProfilePage } from './fullProfilePage';
-import { useGetCurrentUserDetailsQuery } from './usersApi';
 import { CircularProgress } from '@mui/material';
 
-export const UserPage: React.FC = () => {
-  const {
-    data: user,
-    isSuccess,
-    isError,
-    error,
-    isLoading,
-    refetch,
-  } = useGetCurrentUserDetailsQuery();
-
-  useEffect(() => {
-    refetch();
-  }, [user]);
-
+export const UserPage = () => {
+  const user: User | undefined = queryClient.getQueryData([
+    'user',
+  ]);
+  const { error, isLoading, isSuccess } = useGetUser();
   let content = <LoginForm />;
   if (isLoading) {
     content = <CircularProgress />;
   }
-  if (isSuccess && user.fullProfile === true) {
+  if (isSuccess && user?.fullProfile === true ) {
     content = (
-      <FullProfilePage
-        name={user.name}
-        email={user.email}
-        surname={user.surname}
-        address={user.address}
-        phone={user.phone}
-        id={user.id}
-      />
-    );
+      <FullProfilePage {...user}/>
+   );
   }
-  if (isError) {
+  if (error) {
     content = <>{error.toString()}</>;
   }
   return <>{ content }</>;

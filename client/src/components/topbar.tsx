@@ -8,32 +8,27 @@ import {
 } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Cart } from '../features/cart/cart';
-import { useEffect, useState } from 'react';
-import { getTotalItems } from '../helpers/cartFunctions';
+import { useState } from 'react';
+import { getTotalItems } from '../helpers/helperFunctions';
 import { useNavigate } from 'react-router-dom';
 import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useGetUserCartQuery } from '../features/orders/ordersApi';
-import { useGetCurrentUserDetailsQuery } from '../features/users/usersApi';
-import { baseApi } from '../features/api/baseApi';
-import { useAppDispatch } from '../hooks/reactReduxHooks';
 import { routes } from '../helpers/routes';
+import { queryClient } from '..';
+import { ProductOrder, User } from '../models/api';
 
 export const Topbar = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [cartOpen, setCartOpen] = useState(false);
-  const { data: OrderItems = [], refetch } = useGetUserCartQuery();
-  const { data: user } = useGetCurrentUserDetailsQuery();
+  const user: User | undefined = queryClient.getQueryData(['user']);
+  const productOrders: ProductOrder[] | undefined = queryClient.getQueryData(['cart']);
   const fullProfile = user?.fullProfile;
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
-    dispatch(baseApi.util.resetApiState());
+    queryClient.setQueryData(['user'], null);
+    queryClient.setQueryData(['cart'], null);
     navigate(routes.ALL_PRODUCTS);
   };
-  useEffect(() => {
-    refetch();
-  }, [user]);
   return (
     <>
       <AppBar
@@ -56,7 +51,7 @@ export const Topbar = () => {
         </Box>
         <IconButton onClick={() => setCartOpen(true)}>
           <LocalMallIcon />
-          <Badge badgeContent={getTotalItems(OrderItems)} color="secondary" />
+          <Badge badgeContent={getTotalItems(productOrders)} color="secondary" />
         </IconButton>
         <IconButton onClick={() => navigate(routes.ME)}>
           <Face4Icon />

@@ -1,14 +1,23 @@
 import { Typography, Card, CardMedia, CardContent, Grid } from '@mui/material';
-import { useAppSelector } from '../../hooks/reactReduxHooks';
 import { Layout } from '../../app/layout';
-import { Product } from '../../app/interfaces';
-import { AddToCartButton } from '../../components/addToCardButton';
 import { Price } from '../../components/price';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../helpers/axios';
+import { AddToCartButton } from '../../components/addToCardButton';
+import { Product } from '../../models/api';
 
 export const ProductPage = () => {
-  const product: Product = useAppSelector(
-    (state) => state.products.selectedProduct,
-  );
+  const { productId } = useParams();
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['product'],
+    queryFn: () =>
+      api.get(`products/${productId}`).then((res) => res.data as Product),
+  });
   return (
     <>
       {product && (
@@ -19,7 +28,7 @@ export const ProductPage = () => {
                 <CardMedia
                   component="img"
                   alt="product img"
-                  image={product.picture}
+                  image={product.picture || ''}
                 />
               </Grid>
               <Grid xs={6}>
@@ -29,8 +38,10 @@ export const ProductPage = () => {
                   <Typography variant="h6">{`Availability: ${
                     product.available ? 'in stock' : 'out of stock'
                   }`}</Typography>
-                  <Typography variant="h6">Price: <Price price={product.price}/></Typography>
-                  <AddToCartButton product={product} />
+                  <Typography variant="h6">
+                    Price: <Price price={product.price} />
+                  </Typography>
+                  <AddToCartButton {...product} />
                 </CardContent>
               </Grid>
             </Grid>
