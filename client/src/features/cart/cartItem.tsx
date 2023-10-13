@@ -10,23 +10,17 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../helpers/axios';
 
 export const CartItemComponent = (cartItem: ProductOrder) => {
-  // const products: Product[] | undefined = queryClient.getQueryData([
-  //   'products',
-  //   null,
-  //   null,
-  //   null,
-  //   null,
-  // ]);
   const { data: product } = useQuery({
     queryKey: ['product', cartItem.productId],
-    queryFn: () => 
-    api.get(`products/${cartItem.productId}`)
-    .then((res) => res.data as Product)
+    queryFn: () =>
+      api
+        .get(`products/${cartItem.productId}`)
+        .then((res) => res.data as Product),
   });
   const updateQuantity = useUpdateQuantity(cartItem.id);
-  const deleteItem = useDeleteItem(cartItem.id);
+  const deleteItem = useDeleteItem();
   const removeEntirely = () => {
-    deleteItem();
+    deleteItem(cartItem.id);
   };
   const size = useWindowSize();
   let quantity = cartItem.quantity;
@@ -75,12 +69,7 @@ export const CartItemComponent = (cartItem: ProductOrder) => {
                 </IconButton>
               </Box>
               <Typography component="div">
-                <Price
-                  price={
-                    cartItem.quantity *
-                    Number(product.price)
-                  }
-                />
+                <Price price={cartItem.quantity * Number(product.price)} />
               </Typography>
               <IconButton onClick={removeEntirely}>
                 <HighlightOffIcon color="secondary" />

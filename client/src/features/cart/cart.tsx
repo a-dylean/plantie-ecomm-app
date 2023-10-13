@@ -11,7 +11,12 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../helpers/axios';
 import { queryClient } from '../..';
 import { Order, ProductOrder, User } from '../../models/api';
-import { useGetCart, useGetDraftOrder } from '../orders/ordersActions';
+import {
+  useCreateCheckoutSession,
+  useDeleteItem,
+  useGetCart,
+  useGetDraftOrder,
+} from '../orders/ordersActions';
 
 const CartBox = styled('div')(({ theme }) => ({
   backgroundColor: backgroundColor,
@@ -20,15 +25,15 @@ const CartBox = styled('div')(({ theme }) => ({
 
 export const Cart = () => {
   const navigate = useNavigate();
-  //   const [createCheckoutSession] = useCreateCheckoutSessionMutation();
+  const createCheckoutSession = useCreateCheckoutSession();
   const user: User | undefined = queryClient.getQueryData(['user']);
   const userId = user?.id;
   const fullProfile = user?.fullProfile;
-  //const draftOrder: Order | undefined = queryClient.getQueryData(['draft']);
-  const { data: draftOrder} = useGetDraftOrder(userId);
+  const { data: draftOrder } = useGetDraftOrder(userId);
   const draftOrderId = draftOrder?.id;
   const { data: cartItems, isLoading, error } = useGetCart(draftOrderId);
-  console.log(cartItems)
+  const deleteItem = useDeleteItem();     
+
   let content;
   if (isLoading) {
     content = <CircularProgress />;
@@ -37,20 +42,20 @@ export const Cart = () => {
   } else {
     const renderedItems = cartItems?.map((cartItem) => (
       <List key={cartItem.id}>
-        <CartItemComponent
-          {...cartItem}
-        />
+        <CartItemComponent {...cartItem} />
       </List>
     ));
     content = <>{renderedItems}</>;
   }
   const handleCheckout = () => {
-    // if (user) {
-    //   createCheckoutSession({ order: OrderItems, userEmail: user.email })
-    //     .unwrap()
-    //     .then((data) => (window.location.href = data.url));
-    //   OrderItems.map((item) => item.id).forEach((id) => deleteItem(id));
-    // }
+    if (user) {
+      createCheckoutSession({ order: cartItems, userEmail: user.email })
+      cartItems
+        ?.map((item) => item.id)
+        .forEach((id) => {
+          deleteItem(id);
+        });
+    }
   };
   return (
     <>
@@ -70,7 +75,7 @@ export const Cart = () => {
                 color="secondary"
                 variant="text"
                 onClick={() =>
-                 fullProfile ? handleCheckout() : navigate(routes.ME)
+                  fullProfile ? handleCheckout() : navigate(routes.ME)
                 }
                 startIcon={<ShoppingCartCheckoutIcon />}
               >

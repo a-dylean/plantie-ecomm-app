@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import {User} from '../models/api';
+import {ProductOrder, User} from '../models/api';
 
 export interface Product {
   id: number;
@@ -155,4 +155,13 @@ export interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+}
+
+export interface StripeResponse {
+  url: string
+}
+
+export interface StripeRequestProps {
+  order?: ProductOrder[]
+  userEmail?: string | null
 }

@@ -3,7 +3,6 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { useState } from 'react';
 import {
   useAddToCart,
-  useCreateOrder,
   useGetDraftOrder,
   useGetProductOrder,
   useUpdateQuantity,
