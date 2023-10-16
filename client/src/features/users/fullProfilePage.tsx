@@ -5,10 +5,10 @@ import { UserInfo } from './userInfo';
 import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-//import { OrdersInfo } from '../orders/ordersInfo';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import { User } from '../../models/api';
 import { TabPanelProps } from '../../app/interfaces';
+import { OrdersInfo } from '../orders/ordersInfo';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -85,7 +85,7 @@ export const FullProfilePage = (user: User) => {
           </TabPanel>
           <TabPanel value={value} index={1}>
             <Typography variant="h5">Orders information</Typography>
-            {/* <OrdersInfo userId={user.id} /> */}
+            <OrdersInfo {...user} />
           </TabPanel>
         </Box>
       </Paper>
