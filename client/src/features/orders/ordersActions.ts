@@ -4,7 +4,6 @@ import { Order, ProductOrder } from '../../models/api';
 import { queryClient } from '../..';
 import { securelyGetAccessToken } from '../../helpers/refreshToken';
 import { StripeRequestProps, StripeResponse } from '../../app/interfaces';
-import { forEachTrailingCommentRange } from 'typescript';
 
 export const useAddToCart = () => {
   const { mutate: addToCart } = useMutation({
