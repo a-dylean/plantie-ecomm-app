@@ -4,6 +4,7 @@ import { Order, ProductOrder } from '../../models/api';
 import { queryClient } from '../..';
 import { securelyGetAccessToken } from '../../helpers/refreshToken';
 import { StripeRequestProps, StripeResponse } from '../../app/interfaces';
+import { forEachTrailingCommentRange } from 'typescript';
 
 export const useAddToCart = () => {
   const { mutate: addToCart } = useMutation({
@@ -47,6 +48,22 @@ export const useGetDraftOrder = (userId?: number) => {
     enabled: !!userId,
   });
 };
+
+export const useGetUserOrders = (userId?: number) => {
+  const fetchOrders = async () => {
+    const token = await securelyGetAccessToken();
+    const res = await api.get(`orders/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },);
+    return res.data as Order[]};
+  return useQuery({
+    queryKey: ['orders'],
+    queryFn: fetchOrders,
+    enabled: !!userId
+  })
+}
 
 // export const useCreateOrder = (data: { userId: number | undefined }) => {
 //   const { mutate: createNewOrder } = useMutation({

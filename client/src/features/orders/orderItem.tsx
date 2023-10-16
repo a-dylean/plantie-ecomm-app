@@ -7,10 +7,10 @@ import {
 } from '@mui/material';
 import { ColoredCard } from '../../components/coloredCard';
 import EmojiNatureIcon from '@mui/icons-material/EmojiNature';
-import { Order } from '../../app/interfaces';
-export const OrderItem = (props: { order: Order }) => {
-  const creationDate = props.order.createdAt.toString().slice(0, 10);
-  const total = Number(props.order.amount).toFixed(2);
+import { Order } from '../../models/api';
+export const OrderItem = (order: Order) => {
+  const creationDate = order?.createdAt?.toString().slice(0, 10);
+  const total = Number(order.amount).toFixed(2);
   return (
     <ColoredCard>
       <List dense>
@@ -19,7 +19,7 @@ export const OrderItem = (props: { order: Order }) => {
             <EmojiNatureIcon />
           </ListItemIcon>
           <Typography sx={{ fontWeight: 700 }}>
-            Order #{props.order.id}
+            Order #{order.id}
           </Typography>
         </ListItem>
         <Divider />
@@ -28,7 +28,7 @@ export const OrderItem = (props: { order: Order }) => {
           {creationDate}
         </ListItem>
         <ListItem>Total amount: €{total}</ListItem>
-        <ListItem>Status: {props.order.status}</ListItem>
+        <ListItem>Status: {order.status}</ListItem>
       </List>
     </ColoredCard>
   );
