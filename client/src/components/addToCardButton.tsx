@@ -8,18 +8,21 @@ import {
 } from '../features/orders/ordersActions';
 import { Product, User } from '../models/api';
 import { queryClient } from '..';
+import { useState } from 'react';
 
 export const AddToCartButton = (product: Product) => {
+  const [isCartItem, setIsCartItem] = useState(false);
   const user: User | undefined = queryClient.getQueryData(['user']);
   const userId = user?.id;
   const { data: draftOrder } = useGetDraftOrder(userId);
-  const { data: productOrder, refetch } = useGetProductOrder(product.id);
+  const { data: productOrder, refetch } = useGetProductOrder({productId: product.id, isCartItem: isCartItem});
   const productOrderId = productOrder?.id;
   let quantity = productOrder?.quantity || 0;
   const addToCart = useAddToCart();
   const updateQuantity = useUpdateQuantity(productOrderId!);
   const handleClick = () => {
     refetch();
+    setIsCartItem(true);
     if (productOrderId) {
       updateQuantity(++quantity);
     }

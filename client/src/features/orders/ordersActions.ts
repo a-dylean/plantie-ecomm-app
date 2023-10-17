@@ -65,7 +65,7 @@ export const useGetUserOrders = (userId?: number) => {
   });
 };
 
-export const useGetProductOrder = (productId: number) => {
+export const useGetProductOrder = ({productId, isCartItem}: any) => {
   const fetchProductOrder = () =>
     api
       .get(`/products/${productId}/product-orders`)
@@ -73,6 +73,7 @@ export const useGetProductOrder = (productId: number) => {
   return useQuery({
     queryKey: ['cart', productId],
     queryFn: fetchProductOrder,
+    enabled: isCartItem
   });
 };
 
