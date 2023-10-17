@@ -26,7 +26,7 @@ export const CartItemComponent = (cartItem: ProductOrder) => {
   let quantity = cartItem.quantity;
   return (
     <>
-      {product && (
+      {product && cartItem && (
         <>
           <ListItem dense>
             <Box
