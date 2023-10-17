@@ -49,7 +49,7 @@ export const ProductsContainer = () => {
         <ProductItem {...product} />
       </Grid>
     ));
-    if (renderedItems!.length > 0) {
+    if (renderedItems && renderedItems.length > 0) {
       content = <>{renderedItems}</>;
     } else {
       content = <NothingFound />;

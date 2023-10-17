@@ -15,11 +15,14 @@ export const AddToCartButton = (product: Product) => {
   const user: User | undefined = queryClient.getQueryData(['user']);
   const userId = user?.id;
   const { data: draftOrder } = useGetDraftOrder(userId);
-  const { data: productOrder, refetch } = useGetProductOrder({productId: product.id, isCartItem: isCartItem});
+  const { data: productOrder, refetch } = useGetProductOrder({
+    productId: product.id,
+    isCartItem: isCartItem,
+  });
   const productOrderId = productOrder?.id;
   let quantity = productOrder?.quantity || 0;
   const addToCart = useAddToCart();
-  const updateQuantity = useUpdateQuantity(productOrderId!);
+  const updateQuantity = useUpdateQuantity(productOrderId);
   const handleClick = () => {
     refetch();
     setIsCartItem(true);

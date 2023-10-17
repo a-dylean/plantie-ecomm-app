@@ -12,18 +12,9 @@ export const updateUser = async (data: any) => {
   return res.data;
 };
 
-// export const useCreateOrder = (data: { userId: number | undefined }) => {
-//   const { mutate: createNewOrder } = useMutation({
-//     mutationFn: async () => {
-//       const res = await api.post('orders', data);
-//       return res.data as Order;
-//     }
-//   });
-//   return createNewOrder;
-// };
-
 export const useCreateUser = () => {
   const { mutate: createNewUser } = useMutation({
+    mutationKey: ['user', 'draft'],
     mutationFn: async () => {
       const user = await api.post('session/start');
       return user.data as UserInfo;

@@ -15,14 +15,13 @@ import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { routes } from '../helpers/routes';
 import { queryClient } from '..';
-import { User } from '../models/api';
 import { useGetCart, useGetDraftOrder } from '../features/orders/ordersActions';
-import { useCreateUser } from '../helpers/userActions';
+import { useCreateUser, useGetUser } from '../helpers/userActions';
 
 export const Topbar = () => {
   const navigate = useNavigate();
   const [cartOpen, setCartOpen] = useState(false);
-  const user: User | undefined = queryClient.getQueryData(['user']);
+  const {data: user} = useGetUser();
   const userId = user?.id;
   const fullProfile = user?.fullProfile;
   const { data: draftOrder } = useGetDraftOrder(userId);

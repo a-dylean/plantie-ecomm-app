@@ -3,11 +3,11 @@ import { api } from '../../helpers/axios';
 import { Order, ProductOrder } from '../../models/api';
 import { queryClient } from '../..';
 import { securelyGetAccessToken } from '../../helpers/refreshToken';
-import { StripeRequestProps, StripeResponse } from '../../app/interfaces';
+import { StripeRequestProps, StripeResponse, getProductOrderProps, newProductOrderProps } from '../../app/interfaces';
 
 export const useAddToCart = () => {
   const { mutate: addToCart } = useMutation({
-    mutationFn: async ({ productId, orderId, price, quantity }: any) => {
+    mutationFn: async ({ productId, orderId, price, quantity }: newProductOrderProps) => {
       const res = await api.post('product-orders', {
         productId,
         orderId,
@@ -23,7 +23,7 @@ export const useAddToCart = () => {
   return addToCart;
 };
 
-export const useUpdateQuantity = (productOrderId: number | null) => {
+export const useUpdateQuantity = (productOrderId?: number | null) => {
   const { mutate: updateQuantity } = useMutation({
     mutationFn: async (quantity: number) => {
       const res = await api.put(`product-orders/${productOrderId}`, {
@@ -65,7 +65,7 @@ export const useGetUserOrders = (userId?: number) => {
   });
 };
 
-export const useGetProductOrder = ({productId, isCartItem}: any) => {
+export const useGetProductOrder = ({productId, isCartItem}: getProductOrderProps) => {
   const fetchProductOrder = () =>
     api
       .get(`/products/${productId}/product-orders`)
