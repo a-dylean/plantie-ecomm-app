@@ -28,7 +28,6 @@ export const ProductsContainer = () => {
   const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
-
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', priceRange, categoryName, orderBy, searchTerm],
     queryFn: () =>

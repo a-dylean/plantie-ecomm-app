@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { securelyGetAccessToken } from './refreshToken';
 import { UserInfo, User, Order } from '../models/api';
 
-export const updateUser = async (data: any) => {
+export const updateUser = async (data: Partial<User>) => {
   const token = await securelyGetAccessToken();
   const headers = {
     Authorization: `Bearer ${token}`,
