@@ -10,17 +10,16 @@ import { CancelledPayment } from '../features/checkout/cancelledPayment';
 import { useEffect } from 'react';
 import { routes } from '../helpers/routes';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useCreateUser, useGetUser } from '../helpers/userActions';
+import { useCreateUser} from '../helpers/userActions';
 
 export const App = () => {
   const token = localStorage.getItem('accessToken');
   const createNewUser = useCreateUser();
-  const { data: user } = useGetUser();
   useEffect(() => {
     if (!token) {
       createNewUser();
     }
-  }, [user, token]);
+  }, []);
   return (
     <>
       <BrowserRouter>

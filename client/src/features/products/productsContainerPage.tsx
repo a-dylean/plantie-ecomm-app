@@ -28,7 +28,6 @@ export const ProductsContainer = () => {
   const search = (searchTerm: string | undefined) => {
     setSearchTerm(searchTerm);
   };
-
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', priceRange, categoryName, orderBy, searchTerm],
     queryFn: () =>
@@ -49,7 +48,7 @@ export const ProductsContainer = () => {
         <ProductItem {...product} />
       </Grid>
     ));
-    if (renderedItems!.length > 0) {
+    if (renderedItems && renderedItems.length > 0) {
       content = <>{renderedItems}</>;
     } else {
       content = <NothingFound />;

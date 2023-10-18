@@ -1,4 +1,11 @@
-import { Typography, Card, CardMedia, CardContent, Grid } from '@mui/material';
+import {
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Grid,
+  LinearProgress,
+} from '@mui/material';
 import { Layout } from '../../app/layout';
 import { Price } from '../../components/price';
 import { useParams } from 'react-router-dom';
@@ -18,36 +25,46 @@ export const ProductPage = () => {
     queryFn: () =>
       api.get(`products/${productId}`).then((res) => res.data as Product),
   });
+  let content;
+  if (isLoading) {
+    content = <LinearProgress />;
+  } else if (error) {
+    content = <>{error.toString()}</>;
+  } else {
+    content = (
+      <>
+        {product && (
+          <Grid container>
+            <Grid xs={6}>
+              <CardMedia
+                component="img"
+                alt="product img"
+                image={product.picture || ''}
+              />
+            </Grid>
+            <Grid xs={6}>
+              <CardContent>
+                <Typography variant="h5">{product.name}</Typography>
+                <Typography variant="body1">{product.description}</Typography>
+                <Typography variant="h6">{`Availability: ${
+                  product.available ? 'in stock' : 'out of stock'
+                }`}</Typography>
+                <Typography variant="h6">
+                  Price: <Price price={product.price} />
+                </Typography>
+                <AddToCartButton {...product} />
+              </CardContent>
+            </Grid>
+          </Grid>
+        )}
+      </>
+    );
+  }
   return (
     <>
-      {product && (
-        <Layout>
-          <Card>
-            <Grid container>
-              <Grid xs={6}>
-                <CardMedia
-                  component="img"
-                  alt="product img"
-                  image={product.picture || ''}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <CardContent>
-                  <Typography variant="h5">{product.name}</Typography>
-                  <Typography variant="body1">{product.description}</Typography>
-                  <Typography variant="h6">{`Availability: ${
-                    product.available ? 'in stock' : 'out of stock'
-                  }`}</Typography>
-                  <Typography variant="h6">
-                    Price: <Price price={product.price} />
-                  </Typography>
-                  <AddToCartButton {...product} />
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Layout>
-      )}
+      <Layout>
+        <Card>{content}</Card>
+      </Layout>
     </>
   );
 };

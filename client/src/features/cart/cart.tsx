@@ -6,11 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { calculateTotalCartAmount } from '../../helpers/helperFunctions';
 import { routes } from '../../helpers/routes';
-import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../../helpers/axios';
 import { queryClient } from '../..';
-import { Order, ProductOrder, User } from '../../models/api';
+import { User } from '../../models/api';
 import {
   useCreateCheckoutSession,
   useDeleteItem,
@@ -33,7 +30,6 @@ export const Cart = () => {
   const draftOrderId = draftOrder?.id;
   const { data: cartItems, isLoading, error } = useGetCart(draftOrderId);
   const deleteItem = useDeleteItem();     
-
   let content;
   if (isLoading) {
     content = <CircularProgress />;

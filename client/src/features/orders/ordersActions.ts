@@ -3,16 +3,16 @@ import { api } from '../../helpers/axios';
 import { Order, ProductOrder } from '../../models/api';
 import { queryClient } from '../..';
 import { securelyGetAccessToken } from '../../helpers/refreshToken';
-import { StripeRequestProps, StripeResponse } from '../../app/interfaces';
+import { StripeRequestProps, StripeResponse, getProductOrderProps, newProductOrderProps } from '../../app/interfaces';
 
 export const useAddToCart = () => {
   const { mutate: addToCart } = useMutation({
-    mutationFn: async ({ productId, orderId, price }: any) => {
+    mutationFn: async ({ productId, orderId, price, quantity }: newProductOrderProps) => {
       const res = await api.post('product-orders', {
         productId,
         orderId,
         price,
-        quantity: 1,
+        quantity,
       });
       return res.data as ProductOrder;
     },
@@ -23,11 +23,11 @@ export const useAddToCart = () => {
   return addToCart;
 };
 
-export const useUpdateQuantity = (productOrderId: number | null) => {
+export const useUpdateQuantity = (productOrderId?: number | null) => {
   const { mutate: updateQuantity } = useMutation({
     mutationFn: async (quantity: number) => {
       const res = await api.put(`product-orders/${productOrderId}`, {
-        quantity: quantity,
+        quantity,
       });
       return res.data as ProductOrder;
     },
@@ -55,40 +55,33 @@ export const useGetUserOrders = (userId?: number) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    },);
-    return res.data as Order[]};
+    });
+    return res.data as Order[];
+  };
   return useQuery({
     queryKey: ['orders'],
     queryFn: fetchOrders,
-    enabled: !!userId
-  })
-}
+    enabled: !!userId,
+  });
+};
 
-// export const useCreateOrder = (data: { userId: number | undefined }) => {
-//   const { mutate: createNewOrder } = useMutation({
-//     mutationFn: async () => {
-//       const res = await api.post('orders', data);
-//       return res.data as Order;
-//     }
-//   });
-//   return createNewOrder;
-// };
-
-export const useGetProductOrder = (productId: number) => {
+export const useGetProductOrder = ({productId, isCartItem}: getProductOrderProps) => {
   const fetchProductOrder = () =>
     api
       .get(`/products/${productId}/product-orders`)
       .then((res) => res.data as ProductOrder);
   return useQuery({
+    queryKey: ['cart', productId],
     queryFn: fetchProductOrder,
+    enabled: isCartItem
   });
 };
 
 export const useGetCart = (orderId?: number) => {
-  const fetchCart = () =>
-    api
-      .get(`orders/${orderId}/product-orders`)
-      .then((res) => res.data as ProductOrder[]);
+  const fetchCart = async () => {
+    const res = await api.get(`orders/${orderId}/product-orders`);
+    return res.data as ProductOrder[];
+  };
   return useQuery({
     queryKey: ['cart'],
     queryFn: fetchCart,
@@ -98,8 +91,10 @@ export const useGetCart = (orderId?: number) => {
 
 export const useDeleteItem = () => {
   const { mutate: deleteItem } = useMutation({
-    mutationFn: (productOrderId?: number) => api.delete(`product-orders/${productOrderId}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+    mutationFn: (productOrderId?: number) =>
+      api.delete(`product-orders/${productOrderId}`),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['cart'] }),
   });
   return deleteItem;
 };
@@ -119,14 +114,12 @@ export const useCreateCheckoutSession = () => {
             },
           },
         )
-        .then((res) => (data = res.data));  
-        console.log(data)  
+        .then((res) => (data = res.data));
       return data;
     },
     onSuccess(data) {
-   
-        window.location.href = data.url
-    }
+      window.location.href = data.url;
+    },
   });
   return createCheckoutSession;
 };

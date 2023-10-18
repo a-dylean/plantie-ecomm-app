@@ -15,18 +15,23 @@ import Face4Icon from '@mui/icons-material/Face4';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { routes } from '../helpers/routes';
 import { queryClient } from '..';
-import { ProductOrder, User } from '../models/api';
+import { useGetCart, useGetDraftOrder } from '../features/orders/ordersActions';
+import { useCreateUser, useGetUser } from '../helpers/userActions';
 
 export const Topbar = () => {
   const navigate = useNavigate();
   const [cartOpen, setCartOpen] = useState(false);
-  const user: User | undefined = queryClient.getQueryData(['user']);
-  const productOrders: ProductOrder[] | undefined = queryClient.getQueryData(['cart']);
+  const {data: user} = useGetUser();
+  const userId = user?.id;
   const fullProfile = user?.fullProfile;
+  const { data: draftOrder } = useGetDraftOrder(userId);
+  const draftOrderId = draftOrder?.id;
+  const { data: productOrders } = useGetCart(draftOrderId);
+  const createNewUser = useCreateUser();
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
-    queryClient.setQueryData(['user'], null);
-    queryClient.setQueryData(['cart'], null);
+    queryClient.clear();
+    createNewUser();
     navigate(routes.ALL_PRODUCTS);
   };
   return (
@@ -51,7 +56,10 @@ export const Topbar = () => {
         </Box>
         <IconButton onClick={() => setCartOpen(true)}>
           <LocalMallIcon />
-          <Badge badgeContent={getTotalItems(productOrders)} color="secondary" />
+          <Badge
+            badgeContent={getTotalItems(productOrders)}
+            color="secondary"
+          />
         </IconButton>
         <IconButton onClick={() => navigate(routes.ME)}>
           <Face4Icon />

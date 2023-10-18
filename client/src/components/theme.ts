@@ -153,5 +153,12 @@ export const theme = createTheme({
         disableRipple: true,
       },
     },
+    MuiBadge: {
+      styleOverrides: {
+        badge: {
+          padding: 0
+        }
+      }
+    }
   },
 });

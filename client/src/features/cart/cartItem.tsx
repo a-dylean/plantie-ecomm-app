@@ -3,11 +3,11 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Price } from '../../components/price';
-import { useWindowSize } from '../../hooks/useWindowSize';
 import { Product, ProductOrder } from '../../models/api';
 import { useDeleteItem, useUpdateQuantity } from '../orders/ordersActions';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../helpers/axios';
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 export const CartItemComponent = (cartItem: ProductOrder) => {
   const { data: product } = useQuery({
@@ -26,7 +26,7 @@ export const CartItemComponent = (cartItem: ProductOrder) => {
   let quantity = cartItem.quantity;
   return (
     <>
-      {product && (
+      {product && cartItem && (
         <>
           <ListItem dense>
             <Box
