@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: plantie-server
+    runtime: docker
+    region: frankfurt
+    rootDir: server
+    plan: free
+    healthCheckPath: /api-docs
+    preDeployCommand: sh migrate.production.sh
+    envVars:
+      - fromGroup: plantie-backend-settings
+      - key: DATABASE_URL
+        fromDatabase:
+          name: plantie-database
+          property: connectionString
+databases:
+  - name: plantie-database
+    plan: free
+    region: frankfurt
+    databaseName: plantie_database # optional (Render may add a suffix)
+    user: plantie_backend # optional
+    postgresMajorVersion: 15

@@ -1,7 +1,0 @@
-build:
-  docker:
-    web: ./server/Dockerfile
-release:
-  image: web
-  command:
-    - sh migrate.production.sh
