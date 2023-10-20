@@ -2,7 +2,7 @@
 An ecommerce website with a backend REST API
 
 [Deployed version](https://plantie.atonkopiy.com/)
-(Note that loading might be slow due to free plan on hosting platform)
+(Note that loading might be slow due to free plan on Render hosting platform)
 
 ## Features ##
 * CRUD operations on products, user accounts and orders
