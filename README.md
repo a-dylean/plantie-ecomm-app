@@ -1,5 +1,5 @@
 # Plantie e-comm shop
-An ecommerce website with a backend REST API
+An ecommerce website with standard functionality using backend REST API
 
 [Deployed version](https://plantie.atonkopiy.com/)
 (Note that loading might be slow due to free plan on Render hosting platform)
