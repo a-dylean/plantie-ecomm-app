@@ -12,10 +12,9 @@ import { UserService } from "../users/services";
 export interface UserInfo {
   id: number;
   accessToken: string;
-  refreshToken: string;
 }
 
-const setCookie = async (id: number, role: string, req: ExRequest) => {
+const setRefreshTokenCookie = async (id: number, role: string, req: ExRequest) => {
   const refreshToken = await new AuthService().generateRefreshToken(id, role);
   req.res?.cookie("refresh_token", refreshToken, {
     httpOnly: true,
@@ -24,7 +23,6 @@ const setCookie = async (id: number, role: string, req: ExRequest) => {
     maxAge: 60 * 60 * 24 * 100,
     expires: new Date(Date.now() + 60 * 60 * 24 * 100),
   });
-  return refreshToken;
 };
 
 @Route("session")
@@ -41,7 +39,7 @@ export class AuthController extends Controller {
     @Body() requestBody: UserLoginParams
   ): Promise<Partial<User>> {
     const data = await new AuthService().getUserId(requestBody);
-    setCookie(data.id, data.role, req);
+    await setRefreshTokenCookie(data.id, data.role, req);
     return data;
   }
   /**
@@ -51,11 +49,10 @@ export class AuthController extends Controller {
   public async createUser(@Request() req: ExRequest): Promise<UserInfo> {
     const user = await new AuthService().createUser();
     const accessToken = createAccessToken({ id: user.id, scopes: [user.role] });
-    setCookie(user.id, user.role, req);
+    await setRefreshTokenCookie(user.id, user.role, req);
     return {
       id: user.id,
       accessToken: accessToken,
-      refreshToken: await setCookie(user.id, user.role, req),
     };
   }
   /**
